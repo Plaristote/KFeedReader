@@ -1,0 +1,138 @@
+#include "feedfolder.h"
+#include "feed.h"
+#include <QJsonArray>
+#include <QJsonObject>
+
+FeedFolder *FeedFolder::createFromJson(QJsonObject &root, QObject *parent)
+{
+    FeedFolder *item = new FeedFolder(parent);
+
+    item->loadFromJson(root);
+    return item;
+}
+
+void FeedFolder::loadFromJson(QJsonObject &root)
+{
+    QJsonArray jsonItems = root.value(QStringLiteral("items")).toArray();
+
+    MenuItem::loadFromJson(root);
+    for (QJsonValue value : jsonItems) {
+        QJsonObject jsonItem = value.toObject();
+        ItemType type = static_cast<ItemType>(jsonItem.value(QStringLiteral("type")).toInt(0));
+
+        switch (type) {
+        case FolderMenuItem:
+            addItem(createFromJson(jsonItem));
+            break;
+        case FeedMenuItem:
+            addItem(Feed::createFromJson(jsonItem));
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void FeedFolder::saveToJson(QJsonObject &root)
+{
+    QJsonArray itemsJson;
+
+    for (QObject *item : m_items) {
+        MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+        QJsonObject itemJson;
+
+        menuItem->saveToJson(itemJson);
+        itemsJson << itemJson;
+    }
+    MenuItem::saveToJson(root);
+    root.insert(QStringLiteral("items"), itemsJson);
+}
+
+void FeedFolder::addItem(QObject *item)
+{
+    MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+
+    item->setParent(this);
+    if (m_items.indexOf(item) < 0) {
+        connect(menuItem, &MenuItem::unreadCountChanged, this, &FeedFolder::unreadCountChanged);
+        connect(menuItem, &MenuItem::fetchingChanged, this, &FeedFolder::fetchingChanged);
+        connect(menuItem, &MenuItem::progressChanged, this, &FeedFolder::progressChanged);
+        connect(menuItem, &MenuItem::removed, this, &FeedFolder::removeItem);
+        m_items << item;
+        Q_EMIT itemsChanged();
+        Q_EMIT unreadCountChanged();
+    }
+}
+
+void FeedFolder::removeItem(QObject *item)
+{
+    MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+    auto index = m_items.indexOf(item);
+
+    if (index >= 0) {
+        disconnect(menuItem, &MenuItem::unreadCountChanged, this, &FeedFolder::unreadCountChanged);
+        disconnect(menuItem, &MenuItem::fetchingChanged, this, &FeedFolder::fetchingChanged);
+        disconnect(menuItem, &MenuItem::progressChanged, this, &FeedFolder::progressChanged);
+        m_items.removeAt(index);
+        Q_EMIT itemsChanged();
+        Q_EMIT unreadCountChanged();
+    }
+}
+
+qint64 FeedFolder::unreadCount() const
+{
+    qint64 total = 0;
+    for (QObject *item : m_items) {
+        MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+
+        if (menuItem)
+            total += menuItem->unreadCount();
+    }
+    return total;
+}
+
+void FeedFolder::fetch()
+{
+    for (QObject *item : m_items) {
+        MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+
+        menuItem->fetch();
+    }
+}
+
+void FeedFolder::remove()
+{
+    for (QObject *item : m_items) {
+        MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+
+        menuItem->remove();
+    }
+    MenuItem::remove();
+}
+
+bool FeedFolder::fetching() const
+{
+    for (QObject *item : m_items) {
+        MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+
+        if (menuItem->fetching())
+            return true;
+    }
+    return false;
+}
+
+double FeedFolder::progress() const
+{
+    int fetchingCount = 0;
+    double totalProgress = 0;
+
+    for (QObject *item : m_items) {
+        MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+
+        if (menuItem->fetching()) {
+            fetchingCount++;
+            totalProgress += menuItem->progress();
+        }
+    }
+    return totalProgress / fetchingCount;
+}

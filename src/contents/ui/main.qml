@@ -6,6 +6,7 @@ import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 import org.kde.kfeedreader 1.0
+import "."
 
 Kirigami.ApplicationWindow {
     id: root
@@ -42,14 +43,10 @@ Kirigami.ApplicationWindow {
         isMenu: !root.isMobile
         actions: [
             Kirigami.Action {
-                text: i18n("Plus One")
-                icon.name: "list-add"
-                onTriggered: counter += 1
-            },
-            Kirigami.Action {
                 text: i18n("About KFeedReader")
                 icon.name: "help-about"
-                onTriggered: pageStack.layers.pushDialogLayer('qrc:About.qml')
+                //onTriggered: pageStack.layers.pushDialogLayer('qrc:About.qml')
+                onTriggered: pageStack.layers.push('qrc:About.qml')
             },
             Kirigami.Action {
                 text: i18n("Quit")
@@ -63,35 +60,10 @@ Kirigami.ApplicationWindow {
         id: contextDrawer
     }
 
-    pageStack.initialPage: page
+    pageStack.initialPage: rootPage
 
-    Kirigami.Page {
-        id: page
-
-        title: i18n("Main Page")
-
-        actions.main: Kirigami.Action {
-            text: i18n("Plus One")
-            icon.name: "list-add"
-            tooltip: i18n("Add one to the counter")
-            onTriggered: counter += 1
-        }
-
-        ColumnLayout {
-            width: page.width
-
-            anchors.centerIn: parent
-
-            Kirigami.Heading {
-                Layout.alignment: Qt.AlignCenter
-                text: counter == 0 ? i18n("Hello, World!") : counter
-            }
-
-            Controls.Button {
-                Layout.alignment: Qt.AlignHCenter
-                text: i18n("+ 1")
-                onClicked: counter += 1
-            }
-        }
+    FeedFolder {
+        id: rootPage
+        model: App.rootFolder
     }
 }

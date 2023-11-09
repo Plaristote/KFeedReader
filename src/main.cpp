@@ -18,7 +18,11 @@
 #include <KLocalizedContext>
 #include <KLocalizedString>
 
+#include "feed.h"
+#include "feedarticle.h"
+#include "feedfolder.h"
 #include "kfeedreaderconfig.h"
+#include <QtWebEngine/qtwebengineglobal.h>
 
 #ifdef Q_OS_ANDROID
 Q_DECL_EXPORT
@@ -26,6 +30,7 @@ Q_DECL_EXPORT
 int main(int argc, char *argv[])
 {
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QtWebEngine::initialize();
 
 #ifdef Q_OS_ANDROID
     QGuiApplication app(argc, argv);
@@ -62,18 +67,18 @@ int main(int argc, char *argv[])
         // The program version string.
         QStringLiteral(KFEEDREADER_VERSION_STRING),
         // Short description of what the app does.
-        i18n("Application Description"),
+        i18n("RSS feed aggregator"),
         // The license this code is released under.
         KAboutLicense::GPL,
         // Copyright Statement.
         i18n("(c) %{CURRENT_YEAR}"));
-    aboutData.addAuthor(i18nc("@info:credit", "%{AUTHOR}"),
-                        i18nc("@info:credit", "Maintainer"),
-                        QStringLiteral("%{EMAIL}"),
-                        QStringLiteral("https://yourwebsite.com"));
-    aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"), i18nc("EMAIL OF TRANSLATORS", "Your emails"));
+    aboutData.addAuthor(i18nc("@info:credit", "Michael Martin Moro"),
+                        i18nc("@info:credit", "Developer"),
+                        QStringLiteral("michael@planed.es"),
+                        QStringLiteral("https://github.com/Plaristote"));
+    // aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"), i18nc("EMAIL OF TRANSLATORS", "Your emails"));
     KAboutData::setApplicationData(aboutData);
-    QGuiApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("org.kde.kfeedreader")));
+    QGuiApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("akregator")));
 
     QQmlApplicationEngine engine;
 
@@ -88,8 +93,15 @@ int main(int argc, char *argv[])
     App application;
     qmlRegisterSingletonInstance("org.kde.kfeedreader", 1, 0, "App", &application);
 
+    qmlRegisterType<MenuItem>("org.kde.kfeedreader", 1, 0, "MenuItem");
+    qmlRegisterType<FeedFolder>("org.kde.kfeedreader", 1, 0, "FeedFolder");
+    qmlRegisterType<FeedArticle>("org.kde.kfeedreader", 1, 0, "FeedArticle");
+    qmlRegisterType<Feed>("org.kde.kfeedreader", 1, 0, "Feed");
+
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
+    application.load();
 
     if (engine.rootObjects().isEmpty()) {
         return -1;

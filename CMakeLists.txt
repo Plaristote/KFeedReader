@@ -32,7 +32,7 @@ ecm_setup_version(${PROJECT_VERSION}
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/src/version-kfeedreader.h"
 )
 
-set(QT_EXTRA_COMPONENTS)
+set(QT_EXTRA_COMPONENTS Xml WebEngine)
 if (NOT ANDROID)
     list(APPEND QT_EXTRA_COMPONENTS Widgets)
 endif()

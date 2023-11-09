@@ -4,6 +4,12 @@
 add_executable(kfeedreader
     main.cpp
     app.cpp
+    menuitem.cpp
+    feedfolder.cpp
+    feed.cpp
+    feedarticle.cpp
+    feedarticlemedia.cpp
+    feedarticleenclosure.cpp
     resources.qrc)
 
 target_link_libraries(kfeedreader
@@ -13,6 +19,8 @@ target_link_libraries(kfeedreader
     Qt5::Quick
     Qt5::QuickControls2
     Qt5::Svg
+    Qt5::Xml
+    Qt5::WebEngine
     KF5::I18n
     KF5::CoreAddons
     KF5::ConfigCore

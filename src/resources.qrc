@@ -6,5 +6,16 @@
     <qresource prefix="/">
         <file alias="main.qml">contents/ui/main.qml</file>
         <file alias="About.qml">contents/ui/About.qml</file>
+        <file alias="AddFeed.qml">contents/ui/AddFeed.qml</file>
+        <file alias="AddFolder.qml">contents/ui/AddFolder.qml</file>
+        <file alias="FeedFolder.qml">contents/ui/FeedFolder.qml</file>
+        <file alias="Feed.qml">contents/ui/Feed.qml</file>
+        <file alias="Article.qml">contents/ui/Article.qml</file>
+        <file alias="ArticleMedia.qml">contents/ui/ArticleMedia.qml</file>
+        <file alias="BrowserView.qml">contents/ui/BrowserView.qml</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file alias="feed.png">contents/icons/feed.png</file>
+        <file alias="folder.png">contents/icons/folder.png</file>
     </qresource>
 </RCC>
