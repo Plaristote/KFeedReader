@@ -22,10 +22,8 @@ public:
     FeedArticleMedia(QObject *parent = nullptr);
 
     void loadFromXml(const QDomElement &);
-    Q_INVOKABLE QUrl qmlView() const
-    {
-        return QUrl(QStringLiteral("qrc:/ArticleMedia.qml"));
-    }
+    Q_INVOKABLE QUrl qmlView() const;
+    Q_INVOKABLE QString youtubeVideoTag() const;
 
     const QString &title() const
     {

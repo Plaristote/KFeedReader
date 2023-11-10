@@ -5,6 +5,8 @@ import org.kde.kirigami 2.19 as Kirigami
 import org.kde.kfeedreader 1.0
 
 ColumnLayout {
+  property alias contentComponent: content.sourceComponent
+  property size contentSize: model.thumbnailSize
   id: layout
 
   Kirigami.Separator {
@@ -16,14 +18,19 @@ ColumnLayout {
     level: 3
   }
 
-  Text {
-    text: model.description
+  Component {
+    id: thumbnailComponent
+    Image {
+      source: model.thumbnailUrl
+      fillMode: Image.PreserveAspectCrop
+    }
   }
 
-  Image {
-    source: model.thumbnailUrl
-    fillMode: Image.PreserveAspectCrop
-    Layout.preferredWidth: model.thumbnailSize.width > layout.width ? layout.width : model.thumbnailSize.width
+  Loader {
+    id: content
+    sourceComponent: thumbnailComponent
+    Layout.preferredWidth: contentSize.width
+    Layout.preferredHeight: contentSize.height
   }
 
   GridLayout {
@@ -44,5 +51,14 @@ ColumnLayout {
       text: model.viewCount
       visible: model.viewCount > 0
     }
+  }
+
+  Kirigami.Separator {
+    Layout.fillWidth: true
+  }
+
+  Text {
+    text: model.description
+    wrapMode: Text.WordWrap
   }
 }

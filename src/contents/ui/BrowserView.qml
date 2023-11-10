@@ -4,8 +4,8 @@ import QtWebEngine 1.10
 
 Kirigami.Page {
   property alias url: webview.url
+  title: webview.title
 
-  title: webView.title
   WebEngineView {
     id: webview
     anchors.fill: parent

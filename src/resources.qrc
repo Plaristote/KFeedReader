@@ -12,6 +12,7 @@
         <file alias="Feed.qml">contents/ui/Feed.qml</file>
         <file alias="Article.qml">contents/ui/Article.qml</file>
         <file alias="ArticleMedia.qml">contents/ui/ArticleMedia.qml</file>
+        <file alias="ArticleYoutube.qml">contents/ui/ArticleYoutube.qml</file>
         <file alias="BrowserView.qml">contents/ui/BrowserView.qml</file>
     </qresource>
     <qresource prefix="/icons">

@@ -117,3 +117,15 @@ void FeedArticleMedia::setViewCount(qint64 value)
         Q_EMIT viewCountChanged(value);
     }
 }
+
+QString FeedArticleMedia::youtubeVideoTag() const
+{
+    return m_contentUrl.path().split(QStringLiteral("/")).last();
+}
+
+QUrl FeedArticleMedia::qmlView() const
+{
+    if (m_contentUrl.host() == QStringLiteral("www.youtube.com"))
+        return QUrl(QStringLiteral("qrc:/ArticleYoutube.qml"));
+    return QUrl(QStringLiteral("qrc:/ArticleMedia.qml"));
+}
