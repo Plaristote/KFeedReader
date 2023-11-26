@@ -11,30 +11,22 @@ class FeedFolder : public MenuItem
     Q_PROPERTY(QUrl faviconUrl READ faviconUrl CONSTANT)
     Q_PROPERTY(QQmlListProperty<QObject> items READ items NOTIFY itemsChanged)
 public:
-    FeedFolder(QObject *parent = nullptr)
-        : MenuItem(parent)
-    {
-    }
+    FeedFolder(QObject *parent = nullptr);
+    FeedFolder(FeedFolder &parent);
+    ~FeedFolder();
 
-    QString view() const override
-    {
-        return QStringLiteral("qrc:/FeedFolder.qml");
-    }
-    QUrl faviconUrl() const
-    {
-        return QUrl(QStringLiteral("qrc:/icons/folder.png"));
-    }
+    QString view() const override;
+    QUrl faviconUrl() const override;
     qint64 unreadCount() const override;
     bool fetching() const override;
     double progress() const override;
-    ItemType itemType() const override
-    {
-        return MenuItem::FolderMenuItem;
-    }
-
+    ItemType itemType() const override;
     void loadFromJson(QJsonObject &) override;
     void saveToJson(QJsonObject &) override;
-    static FeedFolder *createFromJson(QJsonObject &, QObject *parent = nullptr);
+    static FeedFolder *createFromJson(QJsonObject &, FeedFolder *parent = nullptr);
+    int indexOf(const QObject *) const override;
+    int childCount() const override;
+    MenuItem *childAt(int) const override;
 
 public Q_SLOTS:
     void addItem(QObject *);

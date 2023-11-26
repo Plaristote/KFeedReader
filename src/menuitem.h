@@ -1,6 +1,7 @@
 #ifndef MENUITEM_H
 #define MENUITEM_H
 
+#include <QUrl>
 #include <qobject.h>
 
 /**
@@ -24,6 +25,17 @@ public:
     MenuItem(QObject *parent = nullptr)
         : QObject(parent)
     {
+    }
+
+    MenuItem(MenuItem &parent)
+        : QObject(&parent)
+        , m_parentItem(&parent)
+    {
+    }
+
+    virtual QUrl faviconUrl() const
+    {
+        return QUrl();
     }
 
     const QString &name() const
@@ -57,6 +69,27 @@ public:
         return QString();
     }
 
+    virtual int indexOf(const QObject *) const
+    {
+        return -1;
+    }
+
+    virtual int childCount() const
+    {
+        return 0;
+    }
+
+    virtual MenuItem *childAt(int) const
+    {
+        return nullptr;
+    }
+
+    MenuItem *parentItem() const;
+
+    void setParentItem(MenuItem *);
+
+    int row() const;
+
 public Q_SLOTS:
     void setName(const QString &name);
     void setDescription(const QString &description);
@@ -69,11 +102,13 @@ Q_SIGNALS:
     void unreadCountChanged();
     void fetchingChanged();
     void progressChanged();
+    void parentChanged();
     void removed(QObject *);
 
 private:
     QString m_name;
     QString m_description;
+    MenuItem *m_parentItem = nullptr;
 };
 
 #endif // MENUITEM_H

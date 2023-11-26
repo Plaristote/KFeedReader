@@ -47,7 +47,7 @@ public:
         return QStringLiteral("qrc:/Feed.qml");
     }
     QString storagePath() const;
-    QUrl faviconUrl() const;
+    QUrl faviconUrl() const override;
     FeedArticle *findArticleByGuid(const QString &guid) const;
     FeedArticle *findArticleByLink(const QUrl &link) const;
     qint64 unreadCount() const override;

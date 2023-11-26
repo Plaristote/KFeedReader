@@ -4,6 +4,7 @@
 add_executable(kfeedreader
     main.cpp
     app.cpp
+    menuitemmodel.cpp
     menuitem.cpp
     feedfolder.cpp
     feed.cpp

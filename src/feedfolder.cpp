@@ -3,9 +3,40 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-FeedFolder *FeedFolder::createFromJson(QJsonObject &root, QObject *parent)
+FeedFolder::FeedFolder(QObject *parent)
+    : MenuItem(parent)
 {
-    FeedFolder *item = new FeedFolder(parent);
+}
+
+FeedFolder::FeedFolder(FeedFolder &parent)
+    : MenuItem(parent)
+{
+}
+
+FeedFolder::~FeedFolder()
+{
+    m_items.clear();
+    Q_EMIT itemsChanged();
+}
+
+QString FeedFolder::view() const
+{
+    return QStringLiteral("qrc:/FeedFolder.qml");
+}
+
+QUrl FeedFolder::faviconUrl() const
+{
+    return QUrl(QStringLiteral("qrc:/icons/folder.png"));
+}
+
+MenuItem::ItemType FeedFolder::itemType() const
+{
+    return MenuItem::FolderMenuItem;
+}
+
+FeedFolder *FeedFolder::createFromJson(QJsonObject &root, FeedFolder *parent)
+{
+    FeedFolder *item = new FeedFolder(*parent);
 
     item->loadFromJson(root);
     return item;
@@ -52,13 +83,15 @@ void FeedFolder::addItem(QObject *item)
 {
     MenuItem *menuItem = qobject_cast<MenuItem *>(item);
 
-    item->setParent(this);
+    menuItem->setParentItem(this);
     if (m_items.indexOf(item) < 0) {
         connect(menuItem, &MenuItem::unreadCountChanged, this, &FeedFolder::unreadCountChanged);
         connect(menuItem, &MenuItem::fetchingChanged, this, &FeedFolder::fetchingChanged);
         connect(menuItem, &MenuItem::progressChanged, this, &FeedFolder::progressChanged);
         connect(menuItem, &MenuItem::removed, this, &FeedFolder::removeItem);
+        // beginInsertRows(QModelIndex(), m_items.size(), m_items.size() + 1);
         m_items << item;
+        // endInsertRows();
         Q_EMIT itemsChanged();
         Q_EMIT unreadCountChanged();
     }
@@ -73,10 +106,27 @@ void FeedFolder::removeItem(QObject *item)
         disconnect(menuItem, &MenuItem::unreadCountChanged, this, &FeedFolder::unreadCountChanged);
         disconnect(menuItem, &MenuItem::fetchingChanged, this, &FeedFolder::fetchingChanged);
         disconnect(menuItem, &MenuItem::progressChanged, this, &FeedFolder::progressChanged);
+        // beginRemoveRows(QModelIndex(), index, index + 1);
         m_items.removeAt(index);
+        // endRemoveRows();
         Q_EMIT itemsChanged();
         Q_EMIT unreadCountChanged();
     }
+}
+
+int FeedFolder::indexOf(const QObject *item) const
+{
+    return m_items.indexOf(const_cast<QObject *>(item));
+}
+
+int FeedFolder::childCount() const
+{
+    return m_items.size();
+}
+
+MenuItem *FeedFolder::childAt(int index) const
+{
+    return reinterpret_cast<MenuItem *>(m_items.at(index));
 }
 
 qint64 FeedFolder::unreadCount() const

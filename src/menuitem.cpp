@@ -1,6 +1,25 @@
 #include "menuitem.h"
 #include <QJsonObject>
 
+MenuItem *MenuItem::parentItem() const
+{
+    return m_parentItem;
+}
+
+int MenuItem::row() const
+{
+    if (m_parentItem)
+        return m_parentItem->indexOf(this);
+    return 0;
+}
+
+void MenuItem::setParentItem(MenuItem *parentItem)
+{
+    setParent(parentItem);
+    m_parentItem = parentItem;
+    Q_EMIT parentChanged();
+}
+
 void MenuItem::remove()
 {
     Q_EMIT removed(this);
