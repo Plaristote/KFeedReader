@@ -14,7 +14,7 @@
 Feed::Feed(QObject *parent)
     : MenuItem(parent)
 {
-    m_uuid = QUuid::createUuid().toString();
+    m_uuid = QUuid::createUuid().toString(QUuid::WithoutBraces);
     m_network = new QNetworkAccessManager();
     m_network->setRedirectPolicy(QNetworkRequest::SameOriginRedirectPolicy);
     connect(this, &Feed::xmlUrlChanged, this, &Feed::fetch);
@@ -36,7 +36,7 @@ QString Feed::storagePath() const
 {
     QString folder = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 
-    return folder + QStringLiteral("/") + QUuid::fromString(m_uuid).toString(QUuid::WithoutBraces) + QStringLiteral(".json");
+    return folder + QStringLiteral("/") + m_uuid + QStringLiteral(".json");
 }
 
 void Feed::remove()

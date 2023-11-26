@@ -141,6 +141,11 @@ public:
         return m_webmaster;
     }
 
+    void setUuid(const QString &value)
+    {
+        m_uuid = value;
+    }
+
 public Q_SLOTS:
     void remove() override;
     void loadArticleFile();
