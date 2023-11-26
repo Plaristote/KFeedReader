@@ -7,6 +7,7 @@ import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 import org.kde.kfeedreader 1.0
 import "."
+import QtQuick.Dialogs 1.3
 
 Kirigami.ApplicationWindow {
     id: root
@@ -43,6 +44,15 @@ Kirigami.ApplicationWindow {
         isMenu: !root.isMobile
         actions: [
             Kirigami.Action {
+                text: i18n("Import feeds...")
+                icon.name: "document-import"
+                onTriggered: importFeedsDialog.open()
+            },
+            Kirigami.Action {
+                text: i18n("Export feeds...")
+                icon.name: "document-export"
+            },
+            Kirigami.Action {
                 text: i18n("About KFeedReader")
                 icon.name: "help-about"
                 //onTriggered: pageStack.layers.pushDialogLayer('qrc:About.qml')
@@ -60,10 +70,18 @@ Kirigami.ApplicationWindow {
         id: contextDrawer
     }
 
-    pageStack.initialPage: rootPage
+    pageStack.initialPage: App.rootFolder ? rootPage : null
 
     FeedFolder {
         id: rootPage
         model: App.rootFolder
+    }
+
+    FileDialog {
+        id: importFeedsDialog
+        title: i18n("Pick a feed source to import")
+        nameFilters: [i18n("OPML structures") + " (*.opml)"]
+        folder: shortcuts.home
+        onAccepted: App.importOpml(fileUrl)
     }
 }

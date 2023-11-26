@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QObject>
+#include <QUrl>
 
 class QQuickWindow;
 class FeedFolder;
@@ -26,11 +27,14 @@ public:
     {
         return m_rootFolder;
     }
+
     static QString storagePath();
 
 public Q_SLOTS:
     void load();
     void save();
+    void importOpml(const QUrl &filepath);
+    void exportOpml(const QUrl &filepath);
 
 private:
     FeedFolder *m_rootFolder;
