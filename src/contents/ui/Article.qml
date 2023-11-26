@@ -3,15 +3,28 @@ import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 import org.kde.kfeedreader 1.0
-import QtWebEngine 1.10
+import "."
 
 Kirigami.ScrollablePage {
   property QtObject model
+
   id: page
   title: model.title
+  actions.contextualActions: pageActions.contextualActions
+  actions.main: Kirigami.Action {
+    text: i18n("View")
+    icon.name: "quickview"
+    tooltip: i18n("Open the article link in the application")
+    onTriggered: {
+      pageStack.replace(Qt.resolvedUrl("BrowserView.qml"), { model: page.model });
+    }
+  }
 
-  Component.onCompleted: {
-    page.model.read = true;
+  Component.onCompleted: { page.model.read = true; }
+
+  ArticleActions {
+    id: pageActions
+    model: parent.model
   }
 
   ColumnLayout {
@@ -57,27 +70,6 @@ Kirigami.ScrollablePage {
         source: model.qmlView()
         Layout.fillWidth: true
       }
-    }
-  }
-
-  actions.contextualActions: [
-    Kirigami.Action {
-      text: i18n("Open")
-      icon.name: "internet-web-browser"
-      tooltip: i18n("Open the current article in a web browser")
-      onTriggered: Qt.openUrlExternally(page.model.link)
-    },
-    Kirigami.Action {
-      text: i18n("Mark as unread")
-      onTriggered: page.model.read = false
-    }
-  ]
-  actions.main: Kirigami.Action {
-    text: i18n("View")
-    icon.name: "quickview"
-    tooltip: i18n("Open the article link in the application")
-    onTriggered: {
-      pageStack.push(Qt.resolvedUrl("BrowserView.qml"), { url: page.model.link });
     }
   }
 }
