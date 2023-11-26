@@ -40,9 +40,13 @@ Kirigami.ScrollablePage {
         label: item.title
         bold: !item.read
         trailing: Text {
-          text: item.publicationDate.toString()
+          text: item.publicationDate.toLocaleDateString()
         }
-        onClicked: pageStack.push(Qt.resolvedUrl("./Article.qml"), { model: item })
+        action: Controls.Action {
+          checkable: true
+          checked: pageStack.lastItem.model == item
+          onTriggered: pageStack.push(Qt.resolvedUrl("./Article.qml"), { model: item })
+        }
       } // END delegate
     }
   }

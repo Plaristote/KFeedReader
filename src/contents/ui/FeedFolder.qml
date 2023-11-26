@@ -52,7 +52,11 @@ Kirigami.ScrollablePage {
             color: "white"
           }
         }
-        onClicked: pageStack.push(item.view, { model: item })
+        action: Controls.Action {
+          checkable: true
+          checked: pageStack.lastItem.model == item
+          onTriggered: pageStack.push(item.view, { model: item })
+        }
       } // END delegate
     }
   }
