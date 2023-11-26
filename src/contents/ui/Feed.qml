@@ -8,6 +8,7 @@ Kirigami.ScrollablePage {
   property QtObject model
   id: page
   title: model.name
+  Kirigami.ColumnView.pinned: true
 
   ColumnLayout {
     spacing: 0
