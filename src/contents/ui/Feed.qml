@@ -20,6 +20,18 @@ Kirigami.ScrollablePage {
       Layout.fillWidth: true
     }
 
+    Text {
+      text: model.description
+      wrapMode: Text.WordWrap
+      Layout.fillWidth: true
+      Layout.bottomMargin: Kirigami.Units.smallSpacing
+    }
+
+    Kirigami.Separator {
+      Layout.fillWidth: true
+      visible: model.description.length > 0
+    }
+
     Repeater {
       focus: true
       model: page.model.articles
