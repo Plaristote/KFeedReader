@@ -41,7 +41,7 @@ Kirigami.ScrollablePage {
         }
         Rectangle {
           anchors.verticalCenter: parent.verticalCenter
-          //visible: item.unreadCount > 0
+          visible: item.unreadCount > 0
           color: "orange"
           implicitHeight: 16
           implicitWidth: unreadText.width + 10
