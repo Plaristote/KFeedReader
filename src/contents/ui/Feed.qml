@@ -54,7 +54,9 @@ Kirigami.ScrollablePage {
         }
       } // END delegate
     }
+  }
 
+  footer: ColumnLayout {
     Kirigami.Separator {
       Layout.fillWidth: true
       visible: model.copyright.length > 0
@@ -63,6 +65,7 @@ Kirigami.ScrollablePage {
     Text {
       Layout.fillWidth: true
       text: model.copyright
+      wrapMode: Text.WordWrap
     }
   }
 
