@@ -1,6 +1,7 @@
 #ifndef FEED_H
 #define FEED_H
 
+#include "feedupdate.h"
 #include "menuitem.h"
 #include <QDateTime>
 #include <QQmlListProperty>
@@ -38,17 +39,24 @@ class Feed : public MenuItem
     Q_PROPERTY(QString webmaster READ webmaster WRITE setWebmaster NOTIFY webmasterChanged)
     Q_PROPERTY(int ttl READ ttl WRITE setTtl NOTIFY ttlChanged)
     Q_PROPERTY(int customTtl READ customTtl WRITE setCustomTtl NOTIFY customTtlChanged)
-    Q_PROPERTY(bool useCustomTtl READ useCustomTtl WRITE setCustomTtl NOTIFY customTtlChanged)
+    Q_PROPERTY(bool useCustomTtl READ useCustomTtl WRITE setUseCustomTtl NOTIFY customTtlChanged)
     Q_PROPERTY(QDateTime lastUpdate READ lastUpdate WRITE setLastUpdate NOTIFY lastUpdateChanged)
     Q_PROPERTY(QDateTime scheduledUpdate READ scheduledUpdate WRITE setScheduledUpdate NOTIFY scheduledUpdateChanged)
 public:
+    friend class AtomFeedReader;
+    friend class RssFeedReader;
+    friend class FeedUpdater;
+
     enum FeedType { RSSFeed, AtomFeed };
     Q_ENUM(FeedType)
-    enum TtlType { TtlInMinutes, TtlInHours };
-    Q_ENUM(TtlType)
 
     Feed(QObject *parent = nullptr);
     ~Feed();
+
+    Q_INVOKABLE int ttlInUnits(qint64 value, int type) const
+    {
+        return FeedUpdater::ttlInUnits(value, static_cast<FeedUpdater::TtlType>(type));
+    }
 
     QString view() const override
     {
@@ -74,21 +82,13 @@ public:
 
     QStringList persistentProperties() const;
     void loadFromJson(QJsonObject &) override;
-    void saveToJson(QJsonObject &) override;
+    void saveToJson(QJsonObject &) const override;
     static Feed *createFromJson(QJsonObject &, QObject *parent = nullptr);
 
     bool hasTextInput() const
     {
         return m_textInputName.length() > 0;
     }
-    void loadRSSDocument(const QDomNode &);
-    void loadRSSArticles(const QDomNode &);
-    void loadAtomDocument(const QDomNode &);
-    void loadAtomArticles(const QDomNode &);
-    void loadSkipDays(const QDomElement &);
-    void loadSkipHours(const QDomElement &);
-    void loadTextInput(const QDomElement &);
-
     const QString &uuid() const
     {
         return m_uuid;
@@ -178,7 +178,7 @@ public:
 public Q_SLOTS:
     void remove() override;
     void loadArticleFile();
-    void saveArticleFile();
+    void saveArticleFile() const;
     void fetch() override;
     void setXmlUrl(const QUrl &);
     void setPublicationDate(const QDateTime &);
@@ -201,8 +201,7 @@ public Q_SLOTS:
     void setLastUpdate(const QDateTime &);
     void loadImageFromUrl(const QUrl &);
     void loadFaviconFrom(const QUrl &, unsigned char redirectCount = 0);
-    void restartUpdateTimer();
-    void resetUpdateTimer();
+    void copy(const Feed *);
 
 Q_SIGNALS:
     void faviconUrlChanged();
@@ -269,7 +268,7 @@ private:
     double m_progress = 0;
     QDateTime m_lastUpdate;
     QDateTime m_scheduledUpdate;
-    QTimer m_updateTimer;
+    FeedUpdater m_feedUpdater;
     int m_ttl = 0;
     int m_customTtl = 0;
     bool m_useCustomTtl = false;

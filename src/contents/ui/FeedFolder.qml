@@ -73,13 +73,13 @@ Kirigami.ScrollablePage {
       text: i18n("Add feed")
       icon.name: "list-add"
       tooltip: i18n("Adds an RSS feed to the current folder")
-      onTriggered: pageStack.push(Qt.resolvedUrl("AddFeed.qml"), { model: page.model })
+      onTriggered: pageStack.push(Qt.resolvedUrl("AddFeed.qml"), { parentFolder: page.model })
     },
     Kirigami.Action {
       text: i18n("Add folder")
       icon.name: "list-add"
       tooltip: i18n("Adds a sub-folder in the current folder")
-      onTriggered: pageStack.push(Qt.resolvedUrl("AddFolder.qml"), { model: page.model })
+      onTriggered: pageStack.push(Qt.resolvedUrl("AddFolder.qml"), { parentFolder: page.model })
     },
     Kirigami.Action {
       text: i18n("Remove")

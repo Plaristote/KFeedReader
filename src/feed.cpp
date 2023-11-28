@@ -1,5 +1,7 @@
 #include "feed.h"
 #include "feedarticle.h"
+#include "reader-atom.h"
+#include "reader-rss.h"
 #include <QDomDocument>
 #include <QFile>
 #include <QJsonArray>
@@ -14,6 +16,7 @@
 
 Feed::Feed(QObject *parent)
     : MenuItem(parent)
+    , m_feedUpdater(*this)
 {
     m_uuid = QUuid::createUuid().toString(QUuid::WithoutBraces);
     m_network = new QNetworkAccessManager();
@@ -25,11 +28,6 @@ Feed::Feed(QObject *parent)
     connect(this, &Feed::textInputLinkChanged, this, &Feed::textInputChanged);
     connect(this, &Feed::articlesChanged, this, &Feed::unreadCountChanged);
     connect(this, &Feed::requestFaviconUpdate, this, &Feed::loadImageFromUrl, Qt::QueuedConnection);
-    connect(this, &Feed::ttlChanged, this, &Feed::resetUpdateTimer);
-    connect(this, &Feed::customTtlChanged, this, &Feed::resetUpdateTimer);
-    connect(this, &Feed::lastUpdateChanged, this, &Feed::resetUpdateTimer);
-    connect(this, &Feed::scheduledUpdateChanged, this, &Feed::restartUpdateTimer);
-    connect(&m_updateTimer, &QTimer::timeout, this, &Feed::fetch);
 }
 
 Feed::~Feed()
@@ -48,32 +46,6 @@ void Feed::remove()
 {
     QFile::remove(storagePath());
     MenuItem::remove();
-}
-
-void Feed::resetUpdateTimer()
-{
-    QSettings settings;
-    qint64 ttl = m_ttl > 0 ? m_ttl : settings.value(QStringLiteral("defaultTTL"), 60).toInt();
-
-    if (m_useCustomTtl && m_customTtl > 0)
-        ttl = m_customTtl;
-    if (m_lastUpdate.isNull())
-        m_lastUpdate = QDateTime::currentDateTime();
-    setScheduledUpdate(QDateTime(m_lastUpdate).addSecs(ttl * 60));
-}
-
-void Feed::restartUpdateTimer()
-{
-    QDateTime now = QDateTime::currentDateTime();
-    qint64 interval;
-
-    if (now < m_scheduledUpdate)
-        interval = now.msecsTo(m_scheduledUpdate);
-    else
-        interval = 500;
-    m_updateTimer.stop();
-    m_updateTimer.setInterval(interval);
-    m_updateTimer.start();
 }
 
 QStringList Feed::persistentProperties() const
@@ -104,7 +76,7 @@ void Feed::loadFromJson(QJsonObject &root)
             setProperty(key.toUtf8().constData(), root[key].toVariant());
     }
     loadArticleFile();
-    restartUpdateTimer();
+    m_feedUpdater.restartUpdateTimer();
 }
 
 void Feed::loadArticleFile()
@@ -114,19 +86,36 @@ void Feed::loadArticleFile()
     if (file.open(QIODevice::ReadOnly)) {
         QJsonArray articlesJson = QJsonDocument::fromJson(file.readAll()).array();
 
+        qDebug() << "Successfully loaded article JSON";
+        for (auto *article : m_articles)
+            article->deleteLater();
+        m_articles.clear();
         for (QJsonValue articleJson : articlesJson) {
             FeedArticle *article = newArticle();
             QJsonObject articleJsonObject = articleJson.toObject();
 
             article->loadFromJson(articleJsonObject);
-            m_articles << article;
+            if (!findArticleByGuid(article->guid()))
+                m_articles << article;
+            else
+                delete article;
         }
         Q_EMIT articlesChanged();
     } else
         qDebug() << "Failed to load JSON article file" << storagePath();
 }
 
-void Feed::saveToJson(QJsonObject &root)
+void Feed::copy(const Feed *source)
+{
+    if (source) {
+        QJsonObject json;
+
+        source->saveToJson(json);
+        loadFromJson(json);
+    }
+}
+
+void Feed::saveToJson(QJsonObject &root) const
 {
     root[uuidKey] = m_uuid;
     MenuItem::saveToJson(root);
@@ -135,7 +124,7 @@ void Feed::saveToJson(QJsonObject &root)
     saveArticleFile();
 }
 
-void Feed::saveArticleFile()
+void Feed::saveArticleFile() const
 {
     QFile file(storagePath());
 
@@ -195,10 +184,10 @@ void Feed::fetch()
             document.setContent(body);
             switch (inferFeedType(*reply, document)) {
             case RSSFeed:
-                loadRSSDocument(document);
+                RssFeedReader(*this).loadDocument(document);
                 break;
             case AtomFeed:
-                loadAtomDocument(document);
+                AtomFeedReader(*this).loadDocument(document);
                 break;
             }
         }
@@ -206,74 +195,6 @@ void Feed::fetch()
     });
     m_fetching = true;
     Q_EMIT fetchingChanged();
-}
-
-void Feed::loadAtomDocument(const QDomNode &document)
-{
-    QDomElement feed = document.firstChildElement(QStringLiteral("feed"));
-    QDomElement titleElement = feed.firstChildElement(QStringLiteral("title"));
-    QDomElement linkElement = feed.firstChildElement(QStringLiteral("link"));
-    QDomElement updatedElement = feed.firstChildElement(QStringLiteral("updated"));
-    QDomElement publishedElement = feed.firstChildElement(QStringLiteral("published"));
-    QDomElement imageElement = feed.firstChildElement(QStringLiteral("image"));
-    QDomElement logoElement = feed.firstChildElement(QStringLiteral("logo"));
-    QString linkAttribute;
-
-    qDebug() << "> Loading ATOM feed";
-    setName(titleElement.isNull() ? QString() : titleElement.text());
-    while (!linkElement.isNull() && linkElement.attribute(QStringLiteral("rel")) != QStringLiteral("alternate"))
-        linkElement = linkElement.nextSiblingElement(QStringLiteral("link"));
-    linkAttribute = linkElement.attribute(QStringLiteral("href"));
-    qDebug() << "Link element = " << linkElement.attribute(QStringLiteral("href"));
-    setLink(linkAttribute.isNull() ? QUrl() : QUrl(linkAttribute));
-    setLastBuildDate(updatedElement.isNull() ? QDateTime::currentDateTime() : QDateTime::fromString(updatedElement.text()));
-    setPublicationDate(publishedElement.isNull() ? QDateTime() : QDateTime::fromString(publishedElement.text(), Qt::ISODate));
-    loadAtomArticles(feed);
-    if (imageElement.isNull() && !logoElement.isNull())
-        Q_EMIT requestFaviconUpdate(QUrl(logoElement.text()));
-    else if (!imageElement.isNull())
-        Q_EMIT requestFaviconUpdate(QUrl(imageElement.text()));
-    else
-        Q_EMIT requestFaviconUpdate(QUrl());
-}
-
-void Feed::loadRSSDocument(const QDomNode &document)
-{
-    QDomElement rss = document.firstChildElement(QStringLiteral("rss"));
-    QDomElement channel = rss.firstChildElement(QStringLiteral("channel"));
-    QDomElement categoryElement = channel.firstChildElement(QStringLiteral("category"));
-    QDomElement copyrightElement = channel.firstChildElement(QStringLiteral("copyright"));
-    QDomElement descriptionElement = channel.firstChildElement(QStringLiteral("description"));
-    QDomElement imageElement = channel.firstChildElement(QStringLiteral("image"));
-    QDomElement languageElement = channel.firstChildElement(QStringLiteral("language"));
-    QDomElement lastBuildDateElement = channel.firstChildElement(QStringLiteral("lastBuildDate"));
-    QDomElement linkElement = channel.firstChildElement(QStringLiteral("link"));
-    QDomElement managingEditorElement = channel.firstChildElement(QStringLiteral("managingEditor"));
-    QDomElement pubDateElement = channel.firstChildElement(QStringLiteral("pubDate"));
-    QDomElement skipDaysElement = channel.firstChildElement(QStringLiteral("skipDays"));
-    QDomElement skipHoursElement = channel.firstChildElement(QStringLiteral("skipHours"));
-    QDomElement textInputElement = channel.firstChildElement(QStringLiteral("textinput"));
-    QDomElement titleElement = channel.firstChildElement(QStringLiteral("title"));
-    QDomElement webMasterElement = channel.firstChildElement(QStringLiteral("webMaster"));
-    QDomElement ttlElement = channel.firstChildElement(QStringLiteral("ttl"));
-
-    qDebug() << "> Loading RSS feed";
-    setCategory(categoryElement.isNull() ? QString() : categoryElement.text());
-    setCopyright(copyrightElement.isNull() ? QString() : copyrightElement.text());
-    setDescription(descriptionElement.isNull() ? QString() : descriptionElement.text());
-    setLanguage(languageElement.isNull() ? QString() : languageElement.text());
-    setLastBuildDate(lastBuildDateElement.isNull() ? QDateTime::currentDateTime() : QDateTime::fromString(lastBuildDateElement.text()));
-    setLink(linkElement.isNull() ? QUrl() : QUrl(linkElement.text()));
-    setManagingEditor(managingEditorElement.isNull() ? QString() : managingEditorElement.text());
-    setPublicationDate(pubDateElement.isNull() ? QDateTime() : QDateTime::fromString(pubDateElement.text(), Qt::RFC2822Date));
-    loadSkipDays(skipDaysElement);
-    loadSkipHours(skipHoursElement);
-    loadTextInput(textInputElement);
-    setName(titleElement.isNull() ? QString() : titleElement.text());
-    setWebmaster(webMasterElement.isNull() ? QString() : webMasterElement.text());
-    m_ttl = ttlElement.isNull() ? 0 : ttlElement.text().toInt();
-    loadRSSArticles(channel);
-    Q_EMIT requestFaviconUpdate(imageElement.isNull() ? QUrl() : QUrl(imageElement.text()));
 }
 
 QUrl Feed::faviconUrl() const
@@ -483,93 +404,6 @@ void Feed::loadImageFromUrl(const QUrl &remoteUrl)
     qDebug() << "/!\\ TODO: Ignoring feed icon" << remoteUrl;
 }
 
-void Feed::loadSkipDays(const QDomElement &element)
-{
-    m_skipDays.clear();
-    for (QDomElement child = element.firstChildElement(); !child.isNull(); child = child.nextSiblingElement()) {
-        static const QHash<QString, unsigned short> dayMap{{QStringLiteral("Monday"), 1},
-                                                           {QStringLiteral("Tuesday"), 2},
-                                                           {QStringLiteral("Wednesday"), 3},
-                                                           {QStringLiteral("Thursday"), 4},
-                                                           {QStringLiteral("Friday"), 5},
-                                                           {QStringLiteral("Saturday"), 6},
-                                                           {QStringLiteral("Sunday"), 7}};
-        auto it = dayMap.constFind(child.text());
-        unsigned short day = it != dayMap.end() ? it.value() : 0;
-
-        if (day != 0 && m_skipDays.indexOf(day) == -1)
-            m_skipDays << day;
-    }
-    Q_EMIT skipDaysChanged();
-}
-
-void Feed::loadSkipHours(const QDomElement &element)
-{
-    m_skipHours.clear();
-    for (QDomElement child = element.firstChildElement(); !child.isNull(); child = child.nextSiblingElement()) {
-        unsigned short hour = child.text().toUShort();
-
-        if (m_skipHours.indexOf(hour) == -1)
-            m_skipHours << hour;
-    }
-    Q_EMIT skipHoursChanged();
-}
-
-void Feed::loadTextInput(const QDomElement &element)
-{
-    QDomElement descriptionElement = element.firstChildElement(QStringLiteral("description"));
-    QDomElement nameElement = element.firstChildElement(QStringLiteral("name"));
-    QDomElement linkElement = element.firstChildElement(QStringLiteral("link"));
-    QDomElement titleElement = element.firstChildElement(QStringLiteral("title"));
-
-    setTextInputDescription(descriptionElement.isNull() ? QString() : descriptionElement.text());
-    setTextInputName(nameElement.isNull() ? QString() : nameElement.text());
-    setTextInputLink(linkElement.isNull() ? QUrl() : QUrl(linkElement.text()));
-    setTextInputTitle(titleElement.isNull() ? QString() : titleElement.text());
-}
-
-void Feed::loadAtomArticles(const QDomNode &root)
-{
-    for (QDomElement itemElement = root.firstChildElement(QStringLiteral("entry")); !itemElement.isNull();
-         itemElement = itemElement.nextSiblingElement(QStringLiteral("entry"))) {
-        QDomElement idElement = itemElement.firstChildElement(QStringLiteral("id"));
-        QDomElement linkElement = itemElement.firstChildElement(QStringLiteral("link"));
-        QString guid = idElement.isNull() ? QString() : idElement.text();
-        QUrl link = linkElement.isNull() ? QUrl() : QUrl(linkElement.attribute(QStringLiteral("href")));
-        FeedArticle *article = !guid.isEmpty() ? findArticleByGuid(guid) : findArticleByLink(link);
-
-        if (article)
-            article->loadFromAtom(itemElement);
-        else {
-            article = newArticle();
-            article->loadFromAtom(itemElement);
-            insertArticle(article);
-        }
-    }
-    Q_EMIT articlesChanged();
-}
-
-void Feed::loadRSSArticles(const QDomNode &root)
-{
-    for (QDomElement itemElement = root.firstChildElement(QStringLiteral("item")); !itemElement.isNull();
-         itemElement = itemElement.nextSiblingElement(QStringLiteral("item"))) {
-        QDomElement guidElement = itemElement.firstChildElement(QStringLiteral("guid"));
-        QDomElement linkElement = itemElement.firstChildElement(QStringLiteral("link"));
-        QString guid = guidElement.isNull() ? QString() : guidElement.text();
-        QUrl link = linkElement.isNull() ? QUrl() : QUrl(linkElement.text());
-        FeedArticle *article = !guid.isEmpty() ? findArticleByGuid(guid) : findArticleByLink(link);
-
-        if (article)
-            article->loadFromRSS(itemElement);
-        else {
-            article = newArticle();
-            article->loadFromRSS(itemElement);
-            insertArticle(article);
-        }
-    }
-    Q_EMIT articlesChanged();
-}
-
 void Feed::insertArticle(FeedArticle *article)
 {
     QDateTime publicationDate = article->publicationDate();
@@ -593,9 +427,11 @@ FeedArticle *Feed::newArticle()
 
 FeedArticle *Feed::findArticleByGuid(const QString &guid) const
 {
-    for (FeedArticle *feed : m_articles) {
-        if (feed->guid() == guid)
-            return feed;
+    if (!guid.isEmpty()) {
+        for (FeedArticle *feed : m_articles) {
+            if (feed->guid() == guid)
+                return feed;
+        }
     }
     return nullptr;
 }

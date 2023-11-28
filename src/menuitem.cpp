@@ -52,7 +52,7 @@ void MenuItem::loadFromJson(QJsonObject &root)
     setDescription(root.value(QStringLiteral("description")).toString());
 }
 
-void MenuItem::saveToJson(QJsonObject &root)
+void MenuItem::saveToJson(QJsonObject &root) const
 {
     root.insert(QStringLiteral("name"), m_name);
     root.insert(QStringLiteral("description"), m_description);

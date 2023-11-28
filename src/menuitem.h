@@ -59,7 +59,7 @@ public:
         return 0;
     }
     virtual void loadFromJson(QJsonObject &);
-    virtual void saveToJson(QJsonObject &);
+    virtual void saveToJson(QJsonObject &) const;
     virtual ItemType itemType() const
     {
         return NoItemType;

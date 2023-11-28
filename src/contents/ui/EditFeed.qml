@@ -3,14 +3,18 @@ import org.kde.kfeedreader 1.0 as KFeedReader
 import "."
 
 FeedForm {
-  required property QtObject parentFolder
+  property QtObject source
+
+  Component.onCompleted: {
+    feedModel.copy(source);
+    reset();
+  }
 
   feed: KFeedReader.Feed {
-    id: newFeed
+    id: feedModel
   }
   onConfirmed: {
     save();
-    parentFolder.addItem(newFeed);
-    pageStack.pop();
+    source.copy(feedModel);
   }
 }

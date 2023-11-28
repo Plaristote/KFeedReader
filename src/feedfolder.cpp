@@ -64,7 +64,7 @@ void FeedFolder::loadFromJson(QJsonObject &root)
     }
 }
 
-void FeedFolder::saveToJson(QJsonObject &root)
+void FeedFolder::saveToJson(QJsonObject &root) const
 {
     QJsonArray itemsJson;
 

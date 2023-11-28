@@ -22,7 +22,7 @@ public:
     double progress() const override;
     ItemType itemType() const override;
     void loadFromJson(QJsonObject &) override;
-    void saveToJson(QJsonObject &) override;
+    void saveToJson(QJsonObject &) const override;
     static FeedFolder *createFromJson(QJsonObject &, FeedFolder *parent = nullptr);
     int indexOf(const QObject *) const override;
     int childCount() const override;

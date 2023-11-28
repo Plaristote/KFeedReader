@@ -52,7 +52,7 @@ Kirigami.ScrollablePage {
     }
   }
 
-  actions.main:Kirigami.Action {
+  actions.main: Kirigami.Action {
     text: i18n("Update")
     icon.name: "cloud-download"
     tooltip: i18n("Download new articles from the remote server")
@@ -60,6 +60,12 @@ Kirigami.ScrollablePage {
   }
 
   actions.contextualActions: [
+    Kirigami.Action {
+      text: i18n("Edit")
+      icon.name: "edit-entry"
+      tooltip: i18n("Change the settings of a feed")
+      onTriggered: pageStack.push(Qt.resolvedUrl("./EditFeed.qml"), { source: page.model })
+    },
     Kirigami.Action {
       text: i18n("Remove")
       icon.name: "edit-delete-remove"

@@ -8,9 +8,12 @@ add_executable(kfeedreader
     menuitem.cpp
     feedfolder.cpp
     feed.cpp
+    feedupdate.cpp
     feedarticle.cpp
     feedarticlemedia.cpp
     feedarticleenclosure.cpp
+    reader-rss.cpp
+    reader-atom.cpp
     resources.qrc)
 
 target_link_libraries(kfeedreader
