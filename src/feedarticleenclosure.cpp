@@ -10,7 +10,7 @@ void FeedArticleEnclosure::loadFromXml(const QDomElement &element)
 {
     setSize(element.attribute(QStringLiteral("length")).toInt());
     setType(element.attribute(QStringLiteral("type")));
-    setUrl(QUrl(element.attribute(QStringLiteral("link"))));
+    setUrl(QUrl(element.attribute(QStringLiteral("url"))));
 }
 
 void FeedArticleEnclosure::setType(const QString &value)

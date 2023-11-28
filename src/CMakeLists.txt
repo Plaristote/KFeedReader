@@ -23,6 +23,7 @@ target_link_libraries(kfeedreader
     Qt5::Quick
     Qt5::QuickControls2
     Qt5::Svg
+    Qt5::Multimedia
     Qt5::Xml
     Qt5::WebEngine
     KF5::I18n
