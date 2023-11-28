@@ -17,6 +17,7 @@
         <file alias="ArticleMedia.qml">contents/ui/ArticleMedia.qml</file>
         <file alias="ArticleYoutube.qml">contents/ui/ArticleYoutube.qml</file>
         <file alias="BrowserView.qml">contents/ui/BrowserView.qml</file>
+        <file alias="RssTextInput.qml">contents/ui/RssTextInput.qml</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="feed.png">contents/icons/feed.png</file>

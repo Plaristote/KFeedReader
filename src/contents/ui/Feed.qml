@@ -33,6 +33,10 @@ Kirigami.ScrollablePage {
       visible: model.description.length > 0
     }
 
+    RssTextInput {
+      model: page.model
+    }
+
     Repeater {
       focus: true
       model: page.model.articles
