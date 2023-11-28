@@ -2,7 +2,7 @@ import QtQuick 2.15
 import org.kde.kirigami 2.19 as Kirigami
 
 QtObject {
-  property QtObject model
+  required property QtObject model
   property list<QtObject> contextualActions: [
     Kirigami.Action {
       text: i18n("Open")

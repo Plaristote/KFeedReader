@@ -24,37 +24,34 @@ Kirigami.ScrollablePage {
 
   ArticleActions {
     id: pageActions
-    model: parent.model
+    model: page.model
   }
 
   ColumnLayout {
     anchors.left: parent.left
     anchors.right: parent.right
 
-    Item {
-      implicitHeight: authorRow.height
-      implicitWidth: authorRow.width
-      RowLayout {
-        id: authorRow
-        visible: page.model.author.length > 0
-        spacing: 5
-        Controls.Label {
-          text: i18n("Author")
-        }
-        Text {
-          text: page.model.author
-        }
+    RowLayout {
+      id: authorRow
+      visible: page.model.author.length > 0
+      spacing: 5
+      Controls.Label {
+        text: i18n("Author")
+        Layout.fillWidth: true
       }
-      MouseArea {
-        anchors.fill: parent
-        enabled: page.model.authorUrl != null
-        cursorShape: Qt.PointingHandCursor
+      Text {
+        text: page.model.author
+      }
+      Controls.Button {
+        icon.name: "link"
+        visible: page.model.authorUrl.toString() != ""
         onClicked: Qt.openUrlExternally(page.model.authorUrl)
       }
     }
 
     Kirigami.Separator {
       Layout.fillWidth: true
+      visible: authorRow.visible
     }
 
     Text {
