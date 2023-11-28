@@ -29,15 +29,23 @@ class Feed : public MenuItem
     Q_PROPERTY(QString generator READ generator WRITE setGenerator NOTIFY generatorChanged)
     Q_PROPERTY(QString copyright READ copyright WRITE setCopyright NOTIFY copyrightChanged)
     Q_PROPERTY(QString category READ category WRITE setCategory NOTIFY categoryChanged)
+    Q_PROPERTY(bool hasTextInput READ hasTextInput NOTIFY textInputChanged)
     Q_PROPERTY(QString textInputDescription READ textInputDescription WRITE setTextInputDescription NOTIFY textInputDescriptionChanged)
     Q_PROPERTY(QString textInputTitle READ textInputTitle WRITE setTextInputTitle NOTIFY textInputTitleChanged)
     Q_PROPERTY(QString textInputName READ textInputName WRITE setTextInputName NOTIFY textInputNameChanged)
     Q_PROPERTY(QUrl textInputLink READ textInputLink WRITE setTextInputLink NOTIFY textInputLinkChanged)
     Q_PROPERTY(QDateTime lastBuildDate READ lastBuildDate WRITE setLastBuildDate NOTIFY lastBuildDateChanged)
     Q_PROPERTY(QString webmaster READ webmaster WRITE setWebmaster NOTIFY webmasterChanged)
+    Q_PROPERTY(int ttl READ ttl WRITE setTtl NOTIFY ttlChanged)
+    Q_PROPERTY(int customTtl READ customTtl WRITE setCustomTtl NOTIFY customTtlChanged)
+    Q_PROPERTY(bool useCustomTtl READ useCustomTtl WRITE setCustomTtl NOTIFY customTtlChanged)
+    Q_PROPERTY(QDateTime lastUpdate READ lastUpdate WRITE setLastUpdate NOTIFY lastUpdateChanged)
+    Q_PROPERTY(QDateTime scheduledUpdate READ scheduledUpdate WRITE setScheduledUpdate NOTIFY scheduledUpdateChanged)
 public:
     enum FeedType { RSSFeed, AtomFeed };
     Q_ENUM(FeedType)
+    enum TtlType { TtlInMinutes, TtlInHours };
+    Q_ENUM(TtlType)
 
     Feed(QObject *parent = nullptr);
     ~Feed();
@@ -64,6 +72,7 @@ public:
         return MenuItem::FeedMenuItem;
     }
 
+    QStringList persistentProperties() const;
     void loadFromJson(QJsonObject &) override;
     void saveToJson(QJsonObject &) override;
     static Feed *createFromJson(QJsonObject &, QObject *parent = nullptr);
@@ -140,6 +149,26 @@ public:
     {
         return m_webmaster;
     }
+    int ttl() const
+    {
+        return m_ttl;
+    }
+    int customTtl() const
+    {
+        return m_customTtl;
+    }
+    bool useCustomTtl() const
+    {
+        return m_useCustomTtl;
+    }
+    const QDateTime &scheduledUpdate() const
+    {
+        return m_scheduledUpdate;
+    }
+    const QDateTime &lastUpdate() const
+    {
+        return m_lastUpdate;
+    }
 
     void setUuid(const QString &value)
     {
@@ -165,6 +194,11 @@ public Q_SLOTS:
     void setTextInputLink(const QUrl &);
     void setLastBuildDate(const QDateTime &);
     void setWebmaster(const QString &);
+    void setTtl(int);
+    void setCustomTtl(int);
+    void setUseCustomTtl(bool);
+    void setScheduledUpdate(const QDateTime &);
+    void setLastUpdate(const QDateTime &);
     void loadImageFromUrl(const QUrl &);
     void loadFaviconFrom(const QUrl &, unsigned char redirectCount = 0);
     void restartUpdateTimer();
@@ -193,6 +227,10 @@ Q_SIGNALS:
     void webmasterChanged();
     void skipDaysChanged();
     void skipHoursChanged();
+    void ttlChanged();
+    void customTtlChanged();
+    void scheduledUpdateChanged();
+    void lastUpdateChanged();
 
     void articlesChanged();
     void requestFaviconUpdate(QUrl);
@@ -229,9 +267,12 @@ private:
     QNetworkAccessManager *m_network;
     bool m_fetching = false;
     double m_progress = 0;
+    QDateTime m_lastUpdate;
     QDateTime m_scheduledUpdate;
     QTimer m_updateTimer;
     int m_ttl = 0;
+    int m_customTtl = 0;
+    bool m_useCustomTtl = false;
 };
 
 #endif // FEED_H

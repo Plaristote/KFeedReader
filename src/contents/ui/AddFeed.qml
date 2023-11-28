@@ -16,6 +16,24 @@ Kirigami.ScrollablePage {
     id: newFeed
   }
 
+  function reset() {
+    xmlUrlField.text = newFeed.xmlUrl;
+    useCustomTtlInput.checked = newFeed.useCustomTtl;
+    customTtlInput.text = newFeed.customTtl;
+    customTtlTypeInput.currentIndex = customTtlTypeInput.indexOfValue(Feed.TtlInMinutes);
+  }
+
+  function updateFeedTtl() {
+    let ttl = parseInt(customTtlInput.text);
+    switch (customTtlTypeInput.currentValue) {
+      case Feed.TtlInHours:
+        ttl = ttl * 60;
+        break ;
+    }
+    newFeed.useCustomTtl = useCustomTtlInput.checked;
+    newFeed.customTtl = ttl;
+  }
+
   ColumnLayout {
     Kirigami.FormLayout {
       id: form
@@ -60,10 +78,53 @@ Kirigami.ScrollablePage {
         text: newFeed.link
       }
 
-      Controls.Label {
+      Text {
         Kirigami.FormData.label: i18n("Description")
         text: newFeed.description
         visible: newFeed.description.length > 0
+        wrapMode: Text.WordWrap
+        Layout.fillWidth: true
+      }
+
+      Kirigami.Separator {
+        Layout.fillWidth: true
+      }
+
+      Text {
+        Kirigami.FormData.label: i18n("Suggested update interval")
+        text: {
+          if (newFeed.ttl)
+            return `${newFeed.ttl} ${i18n("minutes")}`;
+          return i18n("No suggested update interval");
+        }
+      }
+
+      Controls.CheckBox {
+        id: useCustomTtlInput
+        text: i18n("Use a custom update interval")
+        checked: newFeed.useCustomTtl
+        onCheckedChanged: updateFeedTtl()
+      }
+
+      Row {
+        Kirigami.FormData.label: i18n("Suggested update interval")
+        visible: useCustomTtlInput.checked
+        Controls.TextField {
+          id: customTtlInput
+          validator: IntValidator { bottom: 0 }
+          text: newFeed.customTtl.toString()
+          onTextChanged: updateFeedTtl()
+        }
+        Controls.ComboBox {
+          id: customTtlTypeInput
+          textRole: "text"
+          valueRole: "value"
+          model: [
+            { value: Feed.TtlInMinutes, text: i18n("minutes") },
+            { value: Feed.TtlInHours, text: i18n("hours") }
+          ]
+          onCurrentValueChanged: updateFeedTtl()
+        }
       }
     }
 
@@ -75,7 +136,10 @@ Kirigami.ScrollablePage {
   Timer {
     id: urlUpdateTimer
     interval: 1500
-    onTriggered: newFeed.xmlUrl = xmlUrlField.text
+    onTriggered: {
+      newFeed.xmlUrl = xmlUrlField.text
+      newFeed.fetch()
+    }
   }
 
   actions {

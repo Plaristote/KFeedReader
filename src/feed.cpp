@@ -8,6 +8,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QRegularExpression>
+#include <QSettings>
 #include <QStandardPaths>
 #include <QUuid>
 
@@ -17,13 +18,17 @@ Feed::Feed(QObject *parent)
     m_uuid = QUuid::createUuid().toString(QUuid::WithoutBraces);
     m_network = new QNetworkAccessManager();
     m_network->setRedirectPolicy(QNetworkRequest::SameOriginRedirectPolicy);
-    connect(this, &Feed::xmlUrlChanged, this, &Feed::fetch);
+    // connect(this, &Feed::xmlUrlChanged, this, &Feed::fetch);
     connect(this, &Feed::textInputDescriptionChanged, this, &Feed::textInputChanged);
     connect(this, &Feed::textInputTitleChanged, this, &Feed::textInputChanged);
     connect(this, &Feed::textInputNameChanged, this, &Feed::textInputChanged);
     connect(this, &Feed::textInputLinkChanged, this, &Feed::textInputChanged);
     connect(this, &Feed::articlesChanged, this, &Feed::unreadCountChanged);
     connect(this, &Feed::requestFaviconUpdate, this, &Feed::loadImageFromUrl, Qt::QueuedConnection);
+    connect(this, &Feed::ttlChanged, this, &Feed::resetUpdateTimer);
+    connect(this, &Feed::customTtlChanged, this, &Feed::resetUpdateTimer);
+    connect(this, &Feed::lastUpdateChanged, this, &Feed::resetUpdateTimer);
+    connect(this, &Feed::scheduledUpdateChanged, this, &Feed::restartUpdateTimer);
     connect(&m_updateTimer, &QTimer::timeout, this, &Feed::fetch);
 }
 
@@ -47,10 +52,14 @@ void Feed::remove()
 
 void Feed::resetUpdateTimer()
 {
-    qint64 ttl = m_ttl > 0 ? m_ttl : 60; // TODO set default ttl using QSettings
+    QSettings settings;
+    qint64 ttl = m_ttl > 0 ? m_ttl : settings.value(QStringLiteral("defaultTTL"), 60).toInt();
 
-    m_scheduledUpdate = QDateTime::currentDateTime().addSecs(ttl * 60);
-    restartUpdateTimer();
+    if (m_useCustomTtl && m_customTtl > 0)
+        ttl = m_customTtl;
+    if (m_lastUpdate.isNull())
+        m_lastUpdate = QDateTime::currentDateTime();
+    setScheduledUpdate(QDateTime(m_lastUpdate).addSecs(ttl * 60));
 }
 
 void Feed::restartUpdateTimer()
@@ -67,12 +76,33 @@ void Feed::restartUpdateTimer()
     m_updateTimer.start();
 }
 
+QStringList Feed::persistentProperties() const
+{
+    return {QStringLiteral("xmlUrl"),
+            QStringLiteral("lastUpdate"),
+            QStringLiteral("ttl"),
+            QStringLiteral("customTtl"),
+            QStringLiteral("useCustomTtl"),
+            QStringLiteral("faviconUrl"),
+            QStringLiteral("link"),
+            QStringLiteral("lastBuildDate"),
+            QStringLiteral("publicationDate"),
+            QStringLiteral("category"),
+            QStringLiteral("webmaster")};
+}
+
+static const QString uuidKey = QStringLiteral("uuid");
+
 void Feed::loadFromJson(QJsonObject &root)
 {
+    m_uuid = root[uuidKey].toString();
     MenuItem::loadFromJson(root);
-    m_uuid = root.value(QStringLiteral("uuid")).toString();
-    m_xmlUrl = (QUrl(root.value(QStringLiteral("xmlUrl")).toString()));
-    m_scheduledUpdate = QDateTime::fromString(root.value(QStringLiteral("scheduledUpdate")).toString(), Qt::ISODate);
+    for (const auto &key : persistentProperties()) {
+        QJsonValue value = root[key];
+
+        if (!value.isNull())
+            setProperty(key.toUtf8().constData(), root[key].toVariant());
+    }
     loadArticleFile();
     restartUpdateTimer();
 }
@@ -92,15 +122,16 @@ void Feed::loadArticleFile()
             m_articles << article;
         }
         Q_EMIT articlesChanged();
-    }
+    } else
+        qDebug() << "Failed to load JSON article file" << storagePath();
 }
 
 void Feed::saveToJson(QJsonObject &root)
 {
+    root[uuidKey] = m_uuid;
     MenuItem::saveToJson(root);
-    root.insert(QStringLiteral("uuid"), m_uuid);
-    root.insert(QStringLiteral("xmlUrl"), m_xmlUrl.toString());
-    root.insert(QStringLiteral("scheduledUpdate"), m_scheduledUpdate.toString(Qt::ISODate));
+    for (const auto &key : persistentProperties())
+        root.insert(key, QJsonValue::fromVariant(property(key.toUtf8().constData())));
     saveArticleFile();
 }
 
@@ -154,6 +185,7 @@ void Feed::fetch()
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         unsigned int status = reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toUInt();
 
+        setLastUpdate(QDateTime::currentDateTime());
         m_progress = 1;
         m_fetching = false;
         if (status >= 200 && status < 300) {
@@ -170,7 +202,6 @@ void Feed::fetch()
                 break;
             }
         }
-        resetUpdateTimer();
         Q_EMIT fetchingChanged();
     });
     m_fetching = true;
@@ -362,6 +393,46 @@ void Feed::setWebmaster(const QString &value)
     if (value != m_webmaster) {
         m_webmaster = value;
         Q_EMIT webmasterChanged();
+    }
+}
+
+void Feed::setTtl(int value)
+{
+    if (value != m_ttl) {
+        m_ttl = value;
+        Q_EMIT ttlChanged();
+    }
+}
+
+void Feed::setCustomTtl(int value)
+{
+    if (value != m_customTtl) {
+        m_customTtl = value;
+        Q_EMIT customTtlChanged();
+    }
+}
+
+void Feed::setUseCustomTtl(bool value)
+{
+    if (value != m_useCustomTtl) {
+        m_useCustomTtl = value;
+        Q_EMIT customTtlChanged();
+    }
+}
+
+void Feed::setLastUpdate(const QDateTime &value)
+{
+    if (value != m_lastUpdate) {
+        m_lastUpdate = value;
+        Q_EMIT lastUpdateChanged();
+    }
+}
+
+void Feed::setScheduledUpdate(const QDateTime &value)
+{
+    if (value != m_scheduledUpdate) {
+        m_scheduledUpdate = value;
+        Q_EMIT scheduledUpdateChanged();
     }
 }
 
