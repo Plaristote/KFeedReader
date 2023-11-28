@@ -54,6 +54,16 @@ Kirigami.ScrollablePage {
         }
       } // END delegate
     }
+
+    Kirigami.Separator {
+      Layout.fillWidth: true
+      visible: model.copyright.length > 0
+    }
+
+    Text {
+      Layout.fillWidth: true
+      text: model.copyright
+    }
   }
 
   actions.main: Kirigami.Action {
