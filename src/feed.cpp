@@ -1,6 +1,7 @@
 #include "feed.h"
 #include "feedarticle.h"
 #include "reader-atom.h"
+#include "reader-json.h"
 #include "reader-rss.h"
 #include <QDomDocument>
 #include <QFile>
@@ -149,7 +150,7 @@ Feed *Feed::createFromJson(QJsonObject &root, QObject *parent)
     return item;
 }
 
-static Feed::FeedType inferFeedType(QNetworkReply &reply, const QDomDocument &document)
+static Feed::FeedType inferFeedType(QNetworkReply &reply, const QByteArray &body)
 {
     QString contentType = reply.header(QNetworkRequest::ContentTypeHeader).toString();
 
@@ -158,7 +159,9 @@ static Feed::FeedType inferFeedType(QNetworkReply &reply, const QDomDocument &do
         return Feed::AtomFeed;
     else if (contentType.contains(QStringLiteral("rss+xml")))
         return Feed::RSSFeed;
-    else if (!document.firstChildElement(QStringLiteral("feed")).isNull())
+    else if (contentType.contains(QStringLiteral("application/json")))
+        return Feed::JSONFeed;
+    else if (body.indexOf(QStringLiteral("<feed").toUtf8()) >= 0)
         return Feed::AtomFeed;
     return Feed::RSSFeed;
 }
@@ -178,16 +181,17 @@ void Feed::fetch()
         m_progress = 1;
         m_fetching = false;
         if (status >= 200 && status < 300) {
-            QDomDocument document;
             auto body = reply->readAll();
 
-            document.setContent(body);
-            switch (inferFeedType(*reply, document)) {
+            switch (inferFeedType(*reply, body)) {
             case RSSFeed:
-                RssFeedReader(*this).loadDocument(document);
+                RssFeedReader(*this).loadBytes(body);
                 break;
             case AtomFeed:
-                AtomFeedReader(*this).loadDocument(document);
+                AtomFeedReader(*this).loadBytes(body);
+                break;
+            case JSONFeed:
+                JsonFeedReader(*this).loadBytes(body);
                 break;
             }
         }

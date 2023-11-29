@@ -4,6 +4,8 @@
 #include "feedformatreader.h"
 
 class FeedArticle;
+class QDomNode;
+class QDomElement;
 
 class AtomFeedReader : public FeedFormatReader
 {
@@ -13,7 +15,8 @@ public:
     {
     }
 
-    void loadDocument(const QDomNode &) override;
+    void loadBytes(const QByteArray &) override;
+    void loadDocument(const QDomNode &);
     void loadArticles(const QDomNode &);
     void loadArticle(const QDomElement &, FeedArticle &);
 };

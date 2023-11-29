@@ -23,6 +23,12 @@ ColumnLayout {
     Layout.fillWidth: true
   }
 
+  Kirigami.Heading {
+    text: model.title
+    level: 3
+    visible: model.title.length > 0
+  }
+
   MediaPlayer {
     id: mediaPlayer
     source: model.url

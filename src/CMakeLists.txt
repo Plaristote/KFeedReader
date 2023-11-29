@@ -14,6 +14,7 @@ add_executable(kfeedreader
     feedarticleenclosure.cpp
     reader-rss.cpp
     reader-atom.cpp
+    reader-json.cpp
     resources.qrc)
 
 target_link_libraries(kfeedreader

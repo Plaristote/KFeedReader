@@ -10,6 +10,8 @@ FeedArticleEnclosure::FeedArticleEnclosure(QObject *parent)
 void FeedArticleEnclosure::saveToJson(QJsonObject &out) const
 {
     out.insert(QStringLiteral("_type"), static_cast<int>(EnclosureAttachment));
+    if (!m_title.isEmpty())
+        out.insert(QStringLiteral("title"), title());
     out.insert(QStringLiteral("type"), type());
     out.insert(QStringLiteral("size"), size());
     out.insert(QStringLiteral("url"), url().toString());
@@ -17,6 +19,7 @@ void FeedArticleEnclosure::saveToJson(QJsonObject &out) const
 
 void FeedArticleEnclosure::loadFromJson(const QJsonObject &in)
 {
+    setTitle(in.value(QStringLiteral("title")).toString());
     setType(in.value(QStringLiteral("type")).toString());
     setSize(in.value(QStringLiteral("size")).toInt());
     setUrl(QUrl(in.value(QStringLiteral("url")).toString()));
@@ -27,6 +30,14 @@ void FeedArticleEnclosure::loadFromXml(const QDomElement &element)
     setSize(element.attribute(QStringLiteral("length")).toInt());
     setType(element.attribute(QStringLiteral("type")));
     setUrl(QUrl(element.attribute(QStringLiteral("url"))));
+}
+
+void FeedArticleEnclosure::setTitle(const QString &value)
+{
+    if (value != m_title) {
+        m_title = value;
+        Q_EMIT titleChanged(value);
+    }
 }
 
 void FeedArticleEnclosure::setType(const QString &value)

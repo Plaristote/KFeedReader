@@ -45,9 +45,10 @@ class Feed : public MenuItem
 public:
     friend class AtomFeedReader;
     friend class RssFeedReader;
+    friend class JsonFeedReader;
     friend class FeedUpdater;
 
-    enum FeedType { RSSFeed, AtomFeed };
+    enum FeedType { RSSFeed, AtomFeed, JSONFeed };
     Q_ENUM(FeedType)
 
     Feed(QObject *parent = nullptr);

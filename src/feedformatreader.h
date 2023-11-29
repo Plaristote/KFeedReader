@@ -1,9 +1,9 @@
 #ifndef FEEDFORMATREADER_H
 #define FEEDFORMATREADER_H
 
+#include <QByteArray>
+
 class Feed;
-class QDomNode;
-class QDomElement;
 
 class FeedFormatReader
 {
@@ -17,7 +17,7 @@ public:
     {
     }
 
-    virtual void loadDocument(const QDomNode &) = 0;
+    virtual void loadBytes(const QByteArray &) = 0;
 
 protected:
     Feed &feed;

@@ -27,6 +27,7 @@ class FeedArticle : public QObject
 public:
     friend class RssFeedReader;
     friend class AtomFeedReader;
+    friend class JsonFeedReader;
 
     FeedArticle(QObject *parent = nullptr);
     ~FeedArticle();
@@ -48,8 +49,6 @@ public:
     QDateTime publicationDate() const;
     QUrl source() const;
     QString title() const;
-
-    void loadFromAtom(const QDomElement &);
 
 public Q_SLOTS:
     void setRead(bool read);

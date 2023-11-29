@@ -10,6 +10,7 @@ class QDomElement;
 class FeedArticleEnclosure : public FeedAttachment
 {
     Q_OBJECT
+    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(qint64 size READ size WRITE setSize NOTIFY sizeChanged)
     Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
@@ -26,6 +27,11 @@ public:
         return QUrl(QStringLiteral("qrc:/ArticleEnclosure.qml"));
     }
 
+    const QString &title() const
+    {
+        return m_title;
+    }
+
     const QString &type() const
     {
         return m_type;
@@ -40,16 +46,19 @@ public:
     }
 
 public Q_SLOTS:
+    void setTitle(const QString &);
     void setType(const QString &);
     void setSize(qint64);
     void setUrl(const QUrl &);
 
 Q_SIGNALS:
+    void titleChanged(const QString &title);
     void typeChanged(const QString &type);
     void sizeChanged(qint64 size);
     void urlChanged(const QUrl &url);
 
 private:
+    QString m_title;
     QString m_type;
     qint64 m_size;
     QUrl m_url;

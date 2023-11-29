@@ -5,6 +5,14 @@
 #include <QDebug>
 #include <QDomDocument>
 
+void RssFeedReader::loadBytes(const QByteArray &bytes)
+{
+    QDomDocument document;
+
+    document.setContent(bytes);
+    loadDocument(document);
+}
+
 void RssFeedReader::loadDocument(const QDomNode &document)
 {
     QDomElement rss = document.firstChildElement(QStringLiteral("rss"));

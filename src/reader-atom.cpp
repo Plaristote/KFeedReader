@@ -5,6 +5,14 @@
 #include <QDebug>
 #include <QDomDocument>
 
+void AtomFeedReader::loadBytes(const QByteArray &bytes)
+{
+    QDomDocument document;
+
+    document.setContent(bytes);
+    loadDocument(document);
+}
+
 void AtomFeedReader::loadDocument(const QDomNode &document)
 {
     QDomElement feed = document.firstChildElement(QStringLiteral("feed"));
