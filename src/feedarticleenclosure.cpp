@@ -1,9 +1,25 @@
 #include "feedarticleenclosure.h"
 #include <QDomElement>
+#include <QJsonObject>
 
 FeedArticleEnclosure::FeedArticleEnclosure(QObject *parent)
-    : QObject(parent)
+    : FeedAttachment(parent)
 {
+}
+
+void FeedArticleEnclosure::saveToJson(QJsonObject &out) const
+{
+    out.insert(QStringLiteral("_type"), static_cast<int>(EnclosureAttachment));
+    out.insert(QStringLiteral("type"), type());
+    out.insert(QStringLiteral("size"), size());
+    out.insert(QStringLiteral("url"), url().toString());
+}
+
+void FeedArticleEnclosure::loadFromJson(const QJsonObject &in)
+{
+    setType(in.value(QStringLiteral("type")).toString());
+    setSize(in.value(QStringLiteral("size")).toInt());
+    setUrl(QUrl(in.value(QStringLiteral("url")).toString()));
 }
 
 void FeedArticleEnclosure::loadFromXml(const QDomElement &element)

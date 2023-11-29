@@ -1,13 +1,14 @@
 #ifndef FEEDARTICLEMEDIA_H
 #define FEEDARTICLEMEDIA_H
 
+#include "feedattachment.h"
 #include <QSize>
 #include <QUrl>
 #include <qobject.h>
 
 class QDomElement;
 
-class FeedArticleMedia : public QObject
+class FeedArticleMedia : public FeedAttachment
 {
     Q_OBJECT
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
@@ -21,6 +22,9 @@ class FeedArticleMedia : public QObject
     Q_PROPERTY(qint64 viewCount READ viewCount WRITE setViewCount NOTIFY viewCountChanged)
 public:
     FeedArticleMedia(QObject *parent = nullptr);
+
+    void saveToJson(QJsonObject &) const override;
+    void loadFromJson(const QJsonObject &) override;
 
     void loadFromXml(const QDomElement &);
     Q_INVOKABLE QUrl qmlView() const;

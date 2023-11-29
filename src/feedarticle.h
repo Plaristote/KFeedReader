@@ -25,6 +25,9 @@ class FeedArticle : public QObject
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QQmlListProperty<QObject> medias READ qmlMedias NOTIFY mediasChanged)
 public:
+    friend class RssFeedReader;
+    friend class AtomFeedReader;
+
     FeedArticle(QObject *parent = nullptr);
     ~FeedArticle();
 
@@ -47,7 +50,6 @@ public:
     QString title() const;
 
     void loadFromAtom(const QDomElement &);
-    void loadFromRSS(const QDomElement &);
 
 public Q_SLOTS:
     void setRead(bool read);

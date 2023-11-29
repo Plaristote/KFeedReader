@@ -1,6 +1,7 @@
 #include "feedarticle.h"
 #include "feedarticleenclosure.h"
 #include "feedarticlemedia.h"
+#include "feedattachment.h"
 #include <QDomElement>
 #include <QJsonArray>
 #include <QJsonObject>
@@ -24,6 +25,8 @@ void FeedArticle::clearMedias()
 
 void FeedArticle::loadFromJson(QJsonObject &root)
 {
+    QJsonValue attachments = root.value(QStringLiteral("attachments"));
+
     setRead(root.value(QStringLiteral("read")).toBool());
     setAuthor(root.value(QStringLiteral("author")).toString());
     setAuthorUrl(QUrl(root.value(QStringLiteral("authorUrl")).toString()));
@@ -35,10 +38,31 @@ void FeedArticle::loadFromJson(QJsonObject &root)
     setPublicationDate(QDateTime::fromString(root.value(QStringLiteral("pubDate")).toString(), Qt::ISODate));
     setSource(QUrl(root.value(QStringLiteral("source")).toString()));
     setTitle(root.value(QStringLiteral("title")).toString());
+    if (attachments.isArray()) {
+        for (QJsonValue attachmentJson : attachments.toArray()) {
+            int type = attachmentJson[QStringLiteral("_type")].toInt();
+            FeedAttachment *attachment = nullptr;
+
+            switch (type) {
+            case FeedAttachment::EnclosureAttachment:
+                attachment = new FeedArticleEnclosure(this);
+                break;
+            case FeedAttachment::MediaAttachment:
+                attachment = new FeedArticleMedia(this);
+                break;
+            }
+            if (attachment) {
+                attachment->loadFromJson(attachmentJson.toObject());
+                m_medias.append(attachment);
+            }
+        }
+    }
 }
 
 void FeedArticle::saveToJson(QJsonObject &root)
 {
+    QJsonArray attachments;
+
     root.insert(QStringLiteral("read"), isRead());
     root.insert(QStringLiteral("author"), author());
     root.insert(QStringLiteral("authorUrl"), authorUrl().toString());
@@ -50,67 +74,16 @@ void FeedArticle::saveToJson(QJsonObject &root)
     root.insert(QStringLiteral("pubDate"), publicationDate().toString(Qt::ISODate));
     root.insert(QStringLiteral("source"), source().toString());
     root.insert(QStringLiteral("title"), title());
-}
+    if (m_medias.size() > 0) {
+        for (QObject *abstractMedia : m_medias) {
+            QJsonObject attachment;
 
-void FeedArticle::loadFromAtom(const QDomElement &node)
-{
-    QDomElement guidElement = node.firstChildElement(QStringLiteral("id"));
-    QDomElement titleElement = node.firstChildElement(QStringLiteral("title"));
-    QDomElement updatedElement = node.firstChildElement(QStringLiteral("updated"));
-    QDomElement publishedElement = node.firstChildElement(QStringLiteral("published"));
-    QDomElement linkElement = node.firstChildElement(QStringLiteral("link"));
-    QDomElement authorElement = node.firstChildElement(QStringLiteral("author"));
-    QDomElement authorNameElement = authorElement.firstChildElement(QStringLiteral("name"));
-    QDomElement authorUrlElement = authorElement.firstChildElement(QStringLiteral("uri"));
-    QDomElement summaryElement = node.firstChildElement(QStringLiteral("summary"));
-    QDomElement mediaGroupElement = node.firstChildElement(QStringLiteral("media:group"));
-
-    setAuthor(authorNameElement.isNull() ? QString() : authorNameElement.text());
-    setAuthorUrl(authorUrlElement.isNull() ? QUrl() : QUrl(authorUrlElement.text()));
-    setDescription(summaryElement.isNull() ? QString() : summaryElement.text());
-    setGuid(guidElement.isNull() ? QString() : guidElement.text());
-    setLink(linkElement.isNull() ? QUrl() : QUrl(linkElement.attribute(QStringLiteral("href"))));
-    setPublicationDate(publishedElement.isNull() ? QDateTime() : QDateTime::fromString(publishedElement.text(), Qt::ISODate));
-    setTitle(titleElement.isNull() ? QString() : titleElement.text());
-    clearMedias();
-    for (QDomElement mediaGroup = node.firstChildElement(QStringLiteral("media:group")); !mediaGroup.isNull();
-         mediaGroup = mediaGroup.nextSiblingElement(QStringLiteral("media:group"))) {
-        auto *media = new FeedArticleMedia(this);
-
-        media->loadFromXml(mediaGroup);
-        m_medias << media;
+            FeedAttachment *media = reinterpret_cast<FeedAttachment *>(abstractMedia);
+            media->saveToJson(attachment);
+            attachments << attachment;
+        }
+        root.insert(QStringLiteral("attachments"), attachments);
     }
-    Q_EMIT mediasChanged();
-}
-
-void FeedArticle::loadFromRSS(const QDomElement &node)
-{
-    QDomElement authorElement = node.firstChildElement(QStringLiteral("author"));
-    QDomElement categoryElement = node.firstChildElement(QStringLiteral("category"));
-    QDomElement commentsElement = node.firstChildElement(QStringLiteral("comments"));
-    QDomElement descriptionElement = node.firstChildElement(QStringLiteral("description"));
-    QDomElement enclosureElement = node.firstChildElement(QStringLiteral("enclosure"));
-    QDomElement guidElement = node.firstChildElement(QStringLiteral("guid"));
-    QDomElement linkElement = node.firstChildElement(QStringLiteral("link"));
-    QDomElement pubDateElement = node.firstChildElement(QStringLiteral("pubDate"));
-    QDomElement titleElement = node.firstChildElement(QStringLiteral("title"));
-
-    setAuthor(authorElement.isNull() ? QString() : authorElement.text());
-    setCategory(categoryElement.isNull() ? QString() : categoryElement.text());
-    setComments(commentsElement.isNull() ? QUrl() : QUrl(commentsElement.text()));
-    setDescription(descriptionElement.isNull() ? QString() : descriptionElement.text());
-    setGuid(guidElement.isNull() ? QString() : guidElement.text());
-    setLink(linkElement.isNull() ? QUrl() : QUrl(linkElement.text()));
-    setPublicationDate(pubDateElement.isNull() ? QDateTime() : QDateTime::fromString(pubDateElement.text(), Qt::RFC2822Date));
-    setTitle(titleElement.isNull() ? QString() : titleElement.text());
-    clearMedias();
-    if (!enclosureElement.isNull()) {
-        auto *enclosure = new FeedArticleEnclosure(this);
-
-        enclosure->loadFromXml(enclosureElement);
-        m_medias << enclosure;
-    }
-    Q_EMIT mediasChanged();
 }
 
 void FeedArticle::setRead(bool value)

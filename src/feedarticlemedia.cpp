@@ -1,9 +1,39 @@
 #include "feedarticlemedia.h"
 #include <QDomElement>
+#include <QJsonObject>
 
 FeedArticleMedia::FeedArticleMedia(QObject *parent)
-    : QObject(parent)
+    : FeedAttachment(parent)
 {
+}
+
+void FeedArticleMedia::saveToJson(QJsonObject &out) const
+{
+    out.insert(QStringLiteral("_type"), static_cast<int>(MediaAttachment));
+    out.insert(QStringLiteral("title"), title());
+    out.insert(QStringLiteral("contentUrl"), contentUrl().toString());
+    out.insert(QStringLiteral("contentSizeH"), contentSize().height());
+    out.insert(QStringLiteral("contentSizeW"), contentSize().width());
+    out.insert(QStringLiteral("embedUrl"), embedUrl().toString());
+    out.insert(QStringLiteral("thumbnailUrl"), thumbnailUrl().toString());
+    out.insert(QStringLiteral("thumbnailH"), thumbnailSize().height());
+    out.insert(QStringLiteral("thumbnailW"), thumbnailSize().width());
+    out.insert(QStringLiteral("description"), description());
+    out.insert(QStringLiteral("starRating"), starRating());
+    out.insert(QStringLiteral("viewCount"), viewCount());
+}
+
+void FeedArticleMedia::loadFromJson(const QJsonObject &in)
+{
+    setTitle(in.value(QStringLiteral("title")).toString());
+    setContentUrl(QUrl(in.value(QStringLiteral("contentUrl")).toString()));
+    setContentSize(QSize(in.value(QStringLiteral("contentSizeW")).toInt(), in.value(QStringLiteral("contentSizeH")).toInt()));
+    setEmbedUrl(QUrl(in.value(QStringLiteral("embedUrl")).toString()));
+    setThumbnailUrl(QUrl(in.value(QStringLiteral("thumbnailUrl")).toString()));
+    setThumbnailSize(QSize(in.value(QStringLiteral("thumbnailW")).toInt(), in.value(QStringLiteral("thumbnailH")).toInt()));
+    setDescription(in.value(QStringLiteral("description")).toString());
+    setStarRating(in.value(QStringLiteral("starRating")).toInt());
+    setViewCount(in.value(QStringLiteral("viewCount")).toInt());
 }
 
 static QDomElement pickContentNodeFrom(const QDomElement &element)

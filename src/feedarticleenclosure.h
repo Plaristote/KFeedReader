@@ -1,12 +1,13 @@
 #ifndef FEEDARTICLEENCLOSURE_H
 #define FEEDARTICLEENCLOSURE_H
 
+#include "feedattachment.h"
 #include <QUrl>
 #include <qobject.h>
 
 class QDomElement;
 
-class FeedArticleEnclosure : public QObject
+class FeedArticleEnclosure : public FeedAttachment
 {
     Q_OBJECT
     Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged)
@@ -14,6 +15,9 @@ class FeedArticleEnclosure : public QObject
     Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
 public:
     FeedArticleEnclosure(QObject *parent = nullptr);
+
+    void saveToJson(QJsonObject &) const override;
+    void loadFromJson(const QJsonObject &) override;
 
     void loadFromXml(const QDomElement &);
 

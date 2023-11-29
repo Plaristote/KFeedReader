@@ -1,6 +1,7 @@
 #include "reader-atom.h"
 #include "feed.h"
 #include "feedarticle.h"
+#include "feedarticlemedia.h"
 #include <QDebug>
 #include <QDomDocument>
 
@@ -44,12 +45,43 @@ void AtomFeedReader::loadArticles(const QDomNode &root)
         FeedArticle *article = !guid.isEmpty() ? feed.findArticleByGuid(guid) : feed.findArticleByLink(link);
 
         if (article)
-            article->loadFromAtom(itemElement);
+            loadArticle(itemElement, *article);
         else {
             article = feed.newArticle();
-            article->loadFromAtom(itemElement);
+            loadArticle(itemElement, *article);
             feed.insertArticle(article);
         }
     }
     Q_EMIT feed.articlesChanged();
+}
+
+void AtomFeedReader::loadArticle(const QDomElement &node, FeedArticle &article)
+{
+    QDomElement guidElement = node.firstChildElement(QStringLiteral("id"));
+    QDomElement titleElement = node.firstChildElement(QStringLiteral("title"));
+    QDomElement updatedElement = node.firstChildElement(QStringLiteral("updated"));
+    QDomElement publishedElement = node.firstChildElement(QStringLiteral("published"));
+    QDomElement linkElement = node.firstChildElement(QStringLiteral("link"));
+    QDomElement authorElement = node.firstChildElement(QStringLiteral("author"));
+    QDomElement authorNameElement = authorElement.firstChildElement(QStringLiteral("name"));
+    QDomElement authorUrlElement = authorElement.firstChildElement(QStringLiteral("uri"));
+    QDomElement summaryElement = node.firstChildElement(QStringLiteral("summary"));
+    QDomElement mediaGroupElement = node.firstChildElement(QStringLiteral("media:group"));
+
+    article.setAuthor(authorNameElement.isNull() ? QString() : authorNameElement.text());
+    article.setAuthorUrl(authorUrlElement.isNull() ? QUrl() : QUrl(authorUrlElement.text()));
+    article.setDescription(summaryElement.isNull() ? QString() : summaryElement.text());
+    article.setGuid(guidElement.isNull() ? QString() : guidElement.text());
+    article.setLink(linkElement.isNull() ? QUrl() : QUrl(linkElement.attribute(QStringLiteral("href"))));
+    article.setPublicationDate(publishedElement.isNull() ? QDateTime() : QDateTime::fromString(publishedElement.text(), Qt::ISODate));
+    article.setTitle(titleElement.isNull() ? QString() : titleElement.text());
+    article.clearMedias();
+    for (QDomElement mediaGroup = node.firstChildElement(QStringLiteral("media:group")); !mediaGroup.isNull();
+         mediaGroup = mediaGroup.nextSiblingElement(QStringLiteral("media:group"))) {
+        auto *media = new FeedArticleMedia(&article);
+
+        media->loadFromXml(mediaGroup);
+        article.m_medias << media;
+    }
+    Q_EMIT article.mediasChanged();
 }

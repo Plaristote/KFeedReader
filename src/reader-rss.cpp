@@ -1,6 +1,7 @@
 #include "reader-rss.h"
 #include "feed.h"
 #include "feedarticle.h"
+#include "feedarticleenclosure.h"
 #include <QDebug>
 #include <QDomDocument>
 
@@ -54,14 +55,44 @@ void RssFeedReader::loadArticles(const QDomNode &root)
         FeedArticle *article = !guid.isEmpty() ? feed.findArticleByGuid(guid) : feed.findArticleByLink(link);
 
         if (article)
-            article->loadFromRSS(itemElement);
+            loadArticle(itemElement, *article);
         else {
             article = feed.newArticle();
-            article->loadFromRSS(itemElement);
+            loadArticle(itemElement, *article);
             feed.insertArticle(article);
         }
     }
     Q_EMIT feed.articlesChanged();
+}
+
+void RssFeedReader::loadArticle(const QDomElement &node, FeedArticle &article)
+{
+    QDomElement authorElement = node.firstChildElement(QStringLiteral("author"));
+    QDomElement categoryElement = node.firstChildElement(QStringLiteral("category"));
+    QDomElement commentsElement = node.firstChildElement(QStringLiteral("comments"));
+    QDomElement descriptionElement = node.firstChildElement(QStringLiteral("description"));
+    QDomElement enclosureElement = node.firstChildElement(QStringLiteral("enclosure"));
+    QDomElement guidElement = node.firstChildElement(QStringLiteral("guid"));
+    QDomElement linkElement = node.firstChildElement(QStringLiteral("link"));
+    QDomElement pubDateElement = node.firstChildElement(QStringLiteral("pubDate"));
+    QDomElement titleElement = node.firstChildElement(QStringLiteral("title"));
+
+    article.setAuthor(authorElement.isNull() ? QString() : authorElement.text());
+    article.setCategory(categoryElement.isNull() ? QString() : categoryElement.text());
+    article.setComments(commentsElement.isNull() ? QUrl() : QUrl(commentsElement.text()));
+    article.setDescription(descriptionElement.isNull() ? QString() : descriptionElement.text());
+    article.setGuid(guidElement.isNull() ? QString() : guidElement.text());
+    article.setLink(linkElement.isNull() ? QUrl() : QUrl(linkElement.text()));
+    article.setPublicationDate(pubDateElement.isNull() ? QDateTime() : QDateTime::fromString(pubDateElement.text(), Qt::RFC2822Date));
+    article.setTitle(titleElement.isNull() ? QString() : titleElement.text());
+    article.clearMedias();
+    if (!enclosureElement.isNull()) {
+        auto *enclosure = new FeedArticleEnclosure(&article);
+
+        enclosure->loadFromXml(enclosureElement);
+        article.m_medias << enclosure;
+    }
+    Q_EMIT article.mediasChanged();
 }
 
 void RssFeedReader::loadSkipDays(const QDomElement &element)
