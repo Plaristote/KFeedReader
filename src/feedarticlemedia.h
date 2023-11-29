@@ -13,6 +13,7 @@ class FeedArticleMedia : public QObject
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QUrl contentUrl READ contentUrl WRITE setContentUrl NOTIFY contentUrlChanged)
     Q_PROPERTY(QSize contentSize READ contentSize WRITE setContentSize NOTIFY contentSizeChanged)
+    Q_PROPERTY(QUrl embedUrl READ embedUrl WRITE setEmbedUrl NOTIFY embedUrlChanged)
     Q_PROPERTY(QUrl thumbnailUrl READ thumbnailUrl WRITE setThumbnailUrl NOTIFY thumbnailUrlChanged)
     Q_PROPERTY(QSize thumbnailSize READ thumbnailSize WRITE setThumbnailSize NOTIFY thumbnailSizeChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
@@ -36,6 +37,10 @@ public:
     QSize contentSize() const
     {
         return m_contentSize;
+    }
+    const QUrl &embedUrl() const
+    {
+        return m_embedUrl;
     }
     const QUrl &thumbnailUrl() const
     {
@@ -62,6 +67,7 @@ public Q_SLOTS:
     void setTitle(const QString &);
     void setContentUrl(const QUrl &);
     void setContentSize(QSize);
+    void setEmbedUrl(const QUrl &);
     void setThumbnailUrl(const QUrl &);
     void setThumbnailSize(QSize);
     void setDescription(const QString &);
@@ -72,6 +78,7 @@ Q_SIGNALS:
     void titleChanged(const QString &title);
     void contentUrlChanged(const QUrl &contentUrl);
     void contentSizeChanged(QSize contentSize);
+    void embedUrlChanged(const QUrl &embedUrl);
     void thumbnailUrlChanged(const QUrl &thumbnailUrl);
     void thumbnailSizeChanged(QSize thumbnailSize);
     void descriptionChanged(const QString &description);
@@ -82,6 +89,7 @@ private:
     QString m_title;
     QUrl m_contentUrl;
     QSize m_contentSize;
+    QUrl m_embedUrl;
     QUrl m_thumbnailUrl;
     QSize m_thumbnailSize;
     QString m_description;
