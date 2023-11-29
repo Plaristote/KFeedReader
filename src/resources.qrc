@@ -12,6 +12,7 @@
         <file alias="FeedForm.qml">contents/ui/FeedForm.qml</file>
         <file alias="FeedFolder.qml">contents/ui/FeedFolder.qml</file>
         <file alias="Feed.qml">contents/ui/Feed.qml</file>
+        <file alias="AggregatedFeed.qml">contents/ui/AggregatedFeed.qml</file>
         <file alias="Article.qml">contents/ui/Article.qml</file>
         <file alias="ArticleActions.qml">contents/ui/ArticleActions.qml</file>
         <file alias="ArticleEnclosure.qml">contents/ui/ArticleEnclosure.qml</file>

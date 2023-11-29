@@ -21,7 +21,6 @@ class Feed : public MenuItem
     Q_PROPERTY(int maxArticleAge MEMBER m_maxArticleAge NOTIFY maxArticleAgeChanged)
     Q_PROPERTY(int maxArticleNumber MEMBER m_maxArticleNumber NOTIFY maxArticleNumberChanged)
     Q_PROPERTY(QQmlListProperty<QObject> articles READ qmlArticles NOTIFY articlesChanged)
-    Q_PROPERTY(bool fetching MEMBER m_fetching NOTIFY fetchingChanged)
 
     Q_PROPERTY(QDateTime publicationDate READ publicationDate WRITE setPublicationDate NOTIFY publicationDateChanged)
     Q_PROPERTY(QString managingEditor READ managingEditor WRITE setManagingEditor NOTIFY managingEditorChanged)
@@ -169,6 +168,10 @@ public:
     const QDateTime &lastUpdate() const
     {
         return m_lastUpdate;
+    }
+    const QList<FeedArticle *> &articles() const
+    {
+        return m_articles;
     }
 
     void setUuid(const QString &value)

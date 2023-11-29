@@ -18,6 +18,7 @@
 #include <KLocalizedContext>
 #include <KLocalizedString>
 
+#include "aggregatedfeed.h"
 #include "feed.h"
 #include "feedarticle.h"
 #include "feedfolder.h"
@@ -100,6 +101,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<FeedArticle>("org.kde.kfeedreader", 1, 0, "FeedArticle");
     qmlRegisterType<Feed>("org.kde.kfeedreader", 1, 0, "Feed");
     qmlRegisterUncreatableType<FeedUpdater>("org.kde.kfeedreader", 1, 0, "FeedUpdater", QStringLiteral("access to enums and static methods only"));
+    qmlRegisterType<AggregatedFeed>("org.kde.kfeedreader", 1, 0, "AggregatedFeed");
     qRegisterMetaType<Feed *>("const Feed*");
 
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));

@@ -20,6 +20,16 @@ Kirigami.ScrollablePage {
       Layout.fillWidth: true
     }
 
+    Kirigami.BasicListItem {
+      bold: true
+      label: i18n("All")
+      action: Controls.Action {
+        checkable: true
+        checked: pageStack.lastItem.folder == page.model
+        onTriggered: pageStack.push(Qt.resolvedUrl("./AggregatedFeed.qml"), { folder: page.model })
+      }
+    }
+
     Repeater {
       focus: true
       model: page.model.items
