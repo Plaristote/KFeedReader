@@ -1,9 +1,75 @@
 #include "menuitem.h"
 #include <QJsonObject>
 
+MenuItem::MenuItem(QObject *parent)
+    : QObject(parent)
+{
+}
+
+MenuItem::MenuItem(MenuItem &parent)
+    : QObject(&parent)
+    , m_parentItem(&parent)
+{
+}
+
 MenuItem *MenuItem::parentItem() const
 {
     return m_parentItem;
+}
+
+QUrl MenuItem::faviconUrl() const
+{
+    return QUrl();
+}
+
+const QString &MenuItem::name() const
+{
+    return m_name;
+}
+
+const QString &MenuItem::description() const
+{
+    return m_description;
+}
+
+qint64 MenuItem::unreadCount() const
+{
+    return 0;
+}
+
+bool MenuItem::fetching() const
+{
+    return false;
+}
+
+double MenuItem::progress() const
+{
+    return 0;
+}
+
+MenuItem::ItemType MenuItem::itemType() const
+{
+    return NoItemType;
+}
+
+QString MenuItem::view() const
+{
+    return QString();
+}
+
+int MenuItem::indexOf(const QObject *) const
+{
+    return -1;
+}
+
+int MenuItem::childCount() const
+{
+    return 0;
+}
+
+MenuItem *MenuItem::childAt(int) const
+{
+    return nullptr;
 }
 
 int MenuItem::row() const

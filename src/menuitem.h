@@ -4,9 +4,6 @@
 #include <QUrl>
 #include <qobject.h>
 
-/**
- * @todo write docs
- */
 class MenuItem : public QObject
 {
     Q_OBJECT
@@ -22,77 +19,29 @@ public:
     enum ItemType { NoItemType = 0, FolderMenuItem, FeedMenuItem };
     Q_ENUM(ItemType)
 
-    MenuItem(QObject *parent = nullptr)
-        : QObject(parent)
-    {
-    }
+    MenuItem(QObject *parent = nullptr);
+    MenuItem(MenuItem &parent);
 
-    MenuItem(MenuItem &parent)
-        : QObject(&parent)
-        , m_parentItem(&parent)
-    {
-    }
-
-    virtual QUrl faviconUrl() const
-    {
-        return QUrl();
-    }
-
-    const QString &name() const
-    {
-        return m_name;
-    }
-    const QString &description() const
-    {
-        return m_description;
-    }
-    virtual qint64 unreadCount() const
-    {
-        return 0;
-    }
-    virtual bool fetching() const
-    {
-        return false;
-    }
-    virtual double progress() const
-    {
-        return 0;
-    }
+    virtual QUrl faviconUrl() const;
+    const QString &name() const;
+    const QString &description() const;
+    virtual qint64 unreadCount() const;
+    virtual bool fetching() const;
+    virtual double progress() const;
     virtual void loadFromJson(QJsonObject &);
     virtual void saveToJson(QJsonObject &) const;
-    virtual ItemType itemType() const
-    {
-        return NoItemType;
-    }
-    virtual QString view() const
-    {
-        return QString();
-    }
-
-    virtual int indexOf(const QObject *) const
-    {
-        return -1;
-    }
-
-    virtual int childCount() const
-    {
-        return 0;
-    }
-
-    virtual MenuItem *childAt(int) const
-    {
-        return nullptr;
-    }
-
+    virtual ItemType itemType() const;
+    virtual QString view() const;
+    virtual int indexOf(const QObject *) const;
+    virtual int childCount() const;
+    virtual MenuItem *childAt(int) const;
     MenuItem *parentItem() const;
-
-    void setParentItem(MenuItem *);
-
     int row() const;
 
 public Q_SLOTS:
     void setName(const QString &name);
     void setDescription(const QString &description);
+    void setParentItem(MenuItem *);
     virtual void fetch(){};
     virtual void remove();
 
