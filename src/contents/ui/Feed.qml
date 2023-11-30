@@ -47,6 +47,7 @@ Kirigami.ScrollablePage {
         trailing: Text {
           text: item.publicationDate.toLocaleDateString()
         }
+        visible: !searchField.visible || searchField.matches(item.title)
         action: Controls.Action {
           checkable: true
           checked: pageStack.lastItem.model == item
@@ -59,13 +60,25 @@ Kirigami.ScrollablePage {
   footer: ColumnLayout {
     Kirigami.Separator {
       Layout.fillWidth: true
-      visible: model.copyright.length > 0
+      visible: (model.copyright || "").length > 0
     }
 
     Text {
       Layout.fillWidth: true
-      text: model.copyright
+      text: model.copyright || ""
       wrapMode: Text.WordWrap
+      visible: text.length > 0
+    }
+
+    Kirigami.Separator {
+      Layout.fillWidth: true
+      visible: page.searchActivated
+    }
+
+    FeedSearchField {
+      Layout.fillWidth: true
+      id: searchField
+      visible: false
     }
   }
 
@@ -77,6 +90,17 @@ Kirigami.ScrollablePage {
   }
 
   actions.contextualActions: [
+    Kirigami.Action {
+      id: searchAction
+      text: i18n("Search")
+      icon.name: "search"
+      tooltip: i18n("Filter through the titles of feed articles")
+      onTriggered: searchField.visible = !searchField.visible
+      shortcut: Shortcut {
+        sequence: "Ctrl+F"
+        onActivated: searchAction.trigger()
+      }
+    },
     Kirigami.Action {
       text: i18n("Edit")
       icon.name: "edit-entry"
