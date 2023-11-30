@@ -17,12 +17,13 @@
 App::App(QObject *parent)
     : QObject(parent)
 {
-    m_rootFolder = new FeedFolder(this);
+    m_rootFolder = new FeedFolder();
 }
 
 App::~App()
 {
     save();
+    m_rootFolder->deleteLater();
 }
 
 void App::restoreWindowGeometry(QQuickWindow *window, const QString &group) const
