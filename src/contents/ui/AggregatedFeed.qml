@@ -8,6 +8,7 @@ import "."
 Feed {
   property QtObject folder
   id: page
+  readOnly: true
 
   model: KFeedReader.AggregatedFeed {
     id: aggregatedFeed

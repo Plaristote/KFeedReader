@@ -23,6 +23,8 @@
         <file alias="BrowserView.qml">contents/ui/BrowserView.qml</file>
         <file alias="RssTextInput.qml">contents/ui/RssTextInput.qml</file>
         <file alias="UnreadCountBox.qml">contents/ui/UnreadCountBox.qml</file>
+        <file alias="FeedSearchField.qml">contents/ui/FeedSearchField.qml</file>
+        <file alias="FeedActions.qml">contents/ui/FeedActions.qml</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="feed.png">contents/icons/feed.png</file>

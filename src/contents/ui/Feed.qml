@@ -6,6 +6,7 @@ import org.kde.kfeedreader 1.0
 
 Kirigami.ScrollablePage {
   property QtObject model
+  property bool readOnly: false
   id: page
   title: model.name
   Kirigami.ColumnView.pinned: true
@@ -72,7 +73,7 @@ Kirigami.ScrollablePage {
 
     Kirigami.Separator {
       Layout.fillWidth: true
-      visible: page.searchActivated
+      visible: searchField.visible
     }
 
     FeedSearchField {
@@ -82,38 +83,16 @@ Kirigami.ScrollablePage {
     }
   }
 
-  actions.main: Kirigami.Action {
-    text: i18n("Update")
-    icon.name: "cloud-download"
-    tooltip: i18n("Download new articles from the remote server")
-    onTriggered: page.model.fetch()
+  FeedActions {
+    id: feedActions
+    model: page.model
+    readOnly: page.readOnly
+    onRequireDestroy: destroyConfirmDialog.open()
+    onToggleSearch: searchField.visible = !searchField.visible
   }
 
-  actions.contextualActions: [
-    Kirigami.Action {
-      id: searchAction
-      text: i18n("Search")
-      icon.name: "search"
-      tooltip: i18n("Filter through the titles of feed articles")
-      onTriggered: searchField.visible = !searchField.visible
-      shortcut: Shortcut {
-        sequence: "Ctrl+F"
-        onActivated: searchAction.trigger()
-      }
-    },
-    Kirigami.Action {
-      text: i18n("Edit")
-      icon.name: "edit-entry"
-      tooltip: i18n("Change the settings of a feed")
-      onTriggered: pageStack.push(Qt.resolvedUrl("./EditFeed.qml"), { source: page.model })
-    },
-    Kirigami.Action {
-      text: i18n("Remove")
-      icon.name: "edit-delete-remove"
-      tooltip: i18n("Permanently remove the feed from the application")
-      onTriggered: destroyConfirmDialog.open()
-    }
-  ]
+  actions.main: feedActions.mainAction
+  actions.contextualActions: feedActions.contextualActions
 
   Kirigami.PromptDialog {
     id: destroyConfirmDialog
