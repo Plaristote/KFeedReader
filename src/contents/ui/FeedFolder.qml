@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 import org.kde.kfeedreader 1.0
+import "."
 
 Kirigami.ScrollablePage {
   property QtObject model
@@ -28,6 +29,10 @@ Kirigami.ScrollablePage {
         checked: pageStack.lastItem.folder == page.model
         onTriggered: pageStack.push(Qt.resolvedUrl("./AggregatedFeed.qml"), { folder: page.model })
       }
+      UnreadCountBox {
+        model: page.model
+        Layout.alignment: Qt.VerticalCenter
+      }
     }
 
     Repeater {
@@ -49,18 +54,8 @@ Kirigami.ScrollablePage {
             anchors.centerIn: parent
           }
         }
-        Rectangle {
-          anchors.verticalCenter: parent.verticalCenter
-          visible: item.unreadCount > 0
-          color: "orange"
-          implicitHeight: 16
-          implicitWidth: unreadText.width + 10
-          Text {
-            id: unreadText
-            anchors.centerIn: parent
-            text: item.unreadCount
-            color: "white"
-          }
+        UnreadCountBox {
+          model: page.model.items[index]
         }
         action: Controls.Action {
           checkable: true

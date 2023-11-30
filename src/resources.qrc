@@ -22,6 +22,7 @@
         <file alias="ArticleMediaEmbed.qml">contents/ui/ArticleMediaEmbed.qml</file>
         <file alias="BrowserView.qml">contents/ui/BrowserView.qml</file>
         <file alias="RssTextInput.qml">contents/ui/RssTextInput.qml</file>
+        <file alias="UnreadCountBox.qml">contents/ui/UnreadCountBox.qml</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="feed.png">contents/icons/feed.png</file>
