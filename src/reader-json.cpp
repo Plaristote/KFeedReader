@@ -48,9 +48,13 @@ static const QMap<FeedAttribute, QString> attributes{{TitleAttribute, QStringLit
 
 static QDateTime parseJsonDate(const QJsonValue &value, const QDateTime &defaultValue)
 {
-    if (value.isString())
-        return QDateTime::fromString(value.toString(), QStringLiteral("yyyy-MM-ddTHH:mm:ss"));
-    return defaultValue;
+    QDateTime result = defaultValue;
+
+    if (value.isString()) {
+        static const QString dateFormatRFC3999 = QStringLiteral("yyyy-MM-ddTHH:mm:ss.zttt");
+        result = QDateTime::fromString(value.toString(), dateFormatRFC3999);
+    }
+    return result;
 }
 
 void JsonFeedReader::loadBytes(const QByteArray &bytes)
