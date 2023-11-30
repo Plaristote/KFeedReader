@@ -12,7 +12,7 @@ AggregatedFeed::AggregatedFeed(QObject *parent)
 
 QString AggregatedFeed::view() const
 {
-    return QStringLiteral("qrc:/Feed.qml");
+    return QStringLiteral("qrc:/AggregatedFeed.qml");
 }
 
 MenuItem::ItemType AggregatedFeed::itemType() const
@@ -174,4 +174,9 @@ double AggregatedFeed::progress() const
 QQmlListProperty<QObject> AggregatedFeed::qmlArticles()
 {
     return QQmlListProperty<QObject>(this, reinterpret_cast<QList<QObject *> *>(&m_articles));
+}
+
+bool AggregatedFeed::hasTextInput() const
+{
+    return false;
 }

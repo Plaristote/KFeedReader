@@ -12,6 +12,7 @@ class AggregatedFeed : public MenuItem
 {
     Q_OBJECT
     Q_PROPERTY(QQmlListProperty<QObject> articles READ qmlArticles NOTIFY articlesChanged)
+    Q_PROPERTY(bool hasTextInput READ hasTextInput CONSTANT)
 public:
     AggregatedFeed(QObject *parent = nullptr);
 
@@ -24,6 +25,7 @@ public:
     int childCount() const override;
     void fetch() override;
     const QList<FeedArticle *> &articles() const;
+    bool hasTextInput() const;
 
 public Q_SLOTS:
     void addFolder(FeedFolder *);
