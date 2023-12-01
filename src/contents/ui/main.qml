@@ -10,21 +10,21 @@ import "."
 import QtQuick.Dialogs 1.3
 
 Kirigami.ApplicationWindow {
-    id: root
+    id: window
 
     title: i18n("KFeedReader")
 
     minimumWidth: Kirigami.Units.gridUnit * 20
     minimumHeight: Kirigami.Units.gridUnit * 20
 
-    onClosing: App.saveWindowGeometry(root)
+    onClosing: App.saveWindowGeometry(window)
 
     onWidthChanged: saveWindowGeometryTimer.restart()
     onHeightChanged: saveWindowGeometryTimer.restart()
     onXChanged: saveWindowGeometryTimer.restart()
     onYChanged: saveWindowGeometryTimer.restart()
 
-    Component.onCompleted: App.restoreWindowGeometry(root)
+    Component.onCompleted: App.restoreWindowGeometry(window)
 
     // This timer allows to batch update the window size change to reduce
     // the io load and also work around the fact that x/y/width/height are
@@ -33,7 +33,7 @@ Kirigami.ApplicationWindow {
     Timer {
         id: saveWindowGeometryTimer
         interval: 1000
-        onTriggered: App.saveWindowGeometry(root)
+        onTriggered: App.saveWindowGeometry(window)
     }
 
     property int counter: 0
@@ -41,7 +41,7 @@ Kirigami.ApplicationWindow {
     globalDrawer: Kirigami.GlobalDrawer {
         title: i18n("KFeedReader")
         titleIcon: "applications-graphics"
-        isMenu: !root.isMobile
+        isMenu: !window.isMobile
         actions: [
             Kirigami.Action {
                 text: i18n("Import feeds...")
