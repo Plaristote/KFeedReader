@@ -76,6 +76,8 @@ void AtomFeedReader::loadArticle(const QDomElement &node, FeedArticle &article)
     QDomElement summaryElement = node.firstChildElement(QStringLiteral("summary"));
     QDomElement mediaGroupElement = node.firstChildElement(QStringLiteral("media:group"));
 
+    if (publishedElement.isNull())
+        publishedElement = updatedElement;
     article.setAuthor(authorNameElement.isNull() ? QString() : authorNameElement.text());
     article.setAuthorUrl(authorUrlElement.isNull() ? QUrl() : QUrl(authorUrlElement.text()));
     article.setDescription(summaryElement.isNull() ? QString() : summaryElement.text());
