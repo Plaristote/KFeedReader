@@ -70,12 +70,15 @@ Kirigami.ScrollablePage {
         text: page.feed.name
       }
 
-      Image {
+      Item {
         Kirigami.FormData.label: i18n("Favicon")
-        source: page.feed.faviconUrl
+        implicitWidth: 32
+        implicitHeight: 32
         visible: page.feed.faviconUrl != null
-        width: 16
-        height: 16
+        Image {
+          source: page.feed.faviconUrl
+          anchors.fill: parent
+        }
       }
 
       Controls.Label {
@@ -84,9 +87,11 @@ Kirigami.ScrollablePage {
         visible: page.feed.language.length > 0
       }
 
-      Controls.Label {
+      Text {
         Kirigami.FormData.label: i18n("Link")
-        text: page.feed.link
+        text: `<a href="${page.feed.link}">${page.feed.link}</a>`
+        onLinkActivated: Qt.openUrlExternally(link)
+        visible: page.feed.link.toString().length > 0
       }
 
       Text {
