@@ -10,6 +10,7 @@ import "."
 import QtQuick.Dialogs 1.3
 
 Kirigami.ApplicationWindow {
+    property alias fullScreenContainer: fullScreenContainer
     id: window
 
     title: i18n("KFeedReader")
@@ -75,6 +76,12 @@ Kirigami.ApplicationWindow {
     FeedFolder {
         id: rootPage
         model: App.rootFolder
+    }
+
+    Rectangle {
+        id: fullScreenContainer
+        color: "transparent"
+        anchors.fill: parent
     }
 
     FileDialog {

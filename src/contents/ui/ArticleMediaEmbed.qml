@@ -9,7 +9,9 @@ ArticleMedia {
 
   Component {
     id: embedComponent
-    WebEngineView {
+    AppWebView {
+      id: webView
+      onFullScreenChanged: mediaRoot.fullScreen = webView.fullScreen
       function setupHtml() {
         const iframe = `<iframe width="${contentSize.width}" height="${contentSize.height}" src="${mediaRoot.embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" style="padding:0;margin:0" allowfullscreen></iframe>`;
         const html = `<html><body style="margin:0;padding:0;">${iframe}</body></html>`;

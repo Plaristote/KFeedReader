@@ -7,7 +7,21 @@ import org.kde.kfeedreader 1.0
 ColumnLayout {
   property alias contentComponent: content.sourceComponent
   property size contentSize: model.thumbnailSize
+  property bool fullScreen: false
   id: layout
+
+  states: [
+    State {
+      name: "fullscreen"
+      when: layout.fullScreen
+      ParentChange { target: content; parent: window.fullScreenContainer }
+    },
+    State {
+      name: "default"
+      when: !layout.fullScreen
+      ParentChange { target: content; parent: contentContainer }
+    }
+  ]
 
   Kirigami.Separator {
     Layout.fillWidth: true
@@ -26,11 +40,15 @@ ColumnLayout {
     }
   }
 
-  Loader {
-    id: content
-    sourceComponent: thumbnailComponent
+  Item {
+    id: contentContainer
     Layout.preferredWidth: contentSize.width
     Layout.preferredHeight: contentSize.height
+    Loader {
+      id: content
+      sourceComponent: thumbnailComponent
+      anchors.fill: parent
+    }
   }
 
   GridLayout {
