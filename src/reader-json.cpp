@@ -25,7 +25,8 @@ enum FeedAttribute {
     ExternalLinkAttribute,
     AttachmentsAttribute,
     SizeAttribute,
-    MimetypeAttribute
+    MimetypeAttribute,
+    FaviconAttribute
 };
 
 static const QMap<FeedAttribute, QString> attributes{{TitleAttribute, QStringLiteral("title")},
@@ -44,7 +45,8 @@ static const QMap<FeedAttribute, QString> attributes{{TitleAttribute, QStringLit
                                                      {UrlAttribute, QStringLiteral("url")},
                                                      {AttachmentsAttribute, QStringLiteral("attachments")},
                                                      {SizeAttribute, QStringLiteral("size_in_bytes")},
-                                                     {MimetypeAttribute, QStringLiteral("mime_type")}};
+                                                     {MimetypeAttribute, QStringLiteral("mime_type")},
+                                                     {FaviconAttribute, QStringLiteral("favicon")}};
 
 static QDateTime parseJsonDate(const QJsonValue &value, const QDateTime &defaultValue)
 {
@@ -67,11 +69,16 @@ void JsonFeedReader::loadBytes(const QByteArray &bytes)
 void JsonFeedReader::loadDocument(const QJsonObject &document)
 {
     QJsonArray articles = document[attributes[ArticlesAttribute]].toArray();
+    QJsonValue favicon = document[attributes[FaviconAttribute]];
 
     feed.setName(document[attributes[TitleAttribute]].toString());
     feed.setLink(QUrl(document[attributes[LinkAttribute]].toString()));
     feed.setDescription(document[attributes[DescriptionAttribute]].toString());
     loadArticles(articles);
+    if (favicon.isString())
+        feed.setFaviconUrl(QUrl(favicon.toString()));
+    else
+        Q_EMIT feed.requestFaviconUpdate(feed.link());
 }
 
 void JsonFeedReader::loadArticles(const QJsonArray &items)
