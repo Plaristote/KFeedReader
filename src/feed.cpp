@@ -51,6 +51,7 @@ QString Feed::storagePath() const
 void Feed::remove()
 {
     QFile::remove(storagePath());
+    QFile::remove(FeedFavicon(*this).storagePath());
     MenuItem::remove();
 }
 
