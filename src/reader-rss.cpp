@@ -2,8 +2,14 @@
 #include "feed.h"
 #include "feedarticle.h"
 #include "feedarticleenclosure.h"
+#include "feedfavicon.h"
 #include <QDebug>
 #include <QDomDocument>
+
+static QUrl baseUrlForLink(const QUrl &link)
+{
+    return QUrl(link.scheme() + QStringLiteral("://") + link.host());
+}
 
 void RssFeedReader::loadBytes(const QByteArray &bytes)
 {
@@ -39,7 +45,7 @@ void RssFeedReader::loadDocument(const QDomNode &document)
     feed.setDescription(descriptionElement.isNull() ? QString() : descriptionElement.text());
     feed.setLanguage(languageElement.isNull() ? QString() : languageElement.text());
     feed.setLastBuildDate(lastBuildDateElement.isNull() ? QDateTime::currentDateTime() : QDateTime::fromString(lastBuildDateElement.text()));
-    feed.setLink(linkElement.isNull() ? QUrl() : QUrl(linkElement.text()));
+    feed.setLink(baseUrlForLink(linkElement.isNull() ? feed.xmlUrl() : QUrl(linkElement.text())));
     feed.setManagingEditor(managingEditorElement.isNull() ? QString() : managingEditorElement.text());
     feed.setPublicationDate(pubDateElement.isNull() ? QDateTime() : QDateTime::fromString(pubDateElement.text(), Qt::RFC2822Date));
     loadSkipDays(skipDaysElement);
@@ -49,7 +55,10 @@ void RssFeedReader::loadDocument(const QDomNode &document)
     feed.setWebmaster(webMasterElement.isNull() ? QString() : webMasterElement.text());
     feed.m_ttl = ttlElement.isNull() ? 0 : ttlElement.text().toInt();
     loadArticles(channel);
-    Q_EMIT feed.requestFaviconUpdate(imageElement.isNull() ? QUrl() : QUrl(imageElement.text()));
+    if (imageElement.isNull())
+        (new FeedFavicon(feed))->fetchFromHtmlPage(feed.link());
+    else
+        Q_EMIT feed.requestFaviconUpdate(QUrl(imageElement.text()));
 }
 
 void RssFeedReader::loadArticles(const QDomNode &root)

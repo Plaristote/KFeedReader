@@ -10,6 +10,7 @@ add_executable(kfeedreader
     feed.cpp
     feedfetch.cpp
     feedupdate.cpp
+    feedfavicon.cpp
     feedarticle.cpp
     feedarticlemedia.cpp
     feedarticleenclosure.cpp

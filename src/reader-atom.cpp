@@ -2,6 +2,7 @@
 #include "feed.h"
 #include "feedarticle.h"
 #include "feedarticlemedia.h"
+#include "feedfavicon.h"
 #include <QDebug>
 #include <QDomDocument>
 
@@ -35,11 +36,11 @@ void AtomFeedReader::loadDocument(const QDomNode &document)
     this->feed.setPublicationDate(publishedElement.isNull() ? QDateTime() : QDateTime::fromString(publishedElement.text(), Qt::ISODate));
     loadArticles(feed);
     if (imageElement.isNull() && !logoElement.isNull())
-        Q_EMIT this->feed.requestFaviconUpdate(QUrl(logoElement.text()));
+        (new FeedFavicon(this->feed))->fetch(QUrl(logoElement.text()));
     else if (!imageElement.isNull())
-        Q_EMIT this->feed.requestFaviconUpdate(QUrl(imageElement.text()));
+        (new FeedFavicon(this->feed))->fetch(QUrl(imageElement.text()));
     else
-        Q_EMIT this->feed.requestFaviconUpdate(QUrl());
+        (new FeedFavicon(this->feed))->fetchFromHtmlPage(this->feed.link());
 }
 
 void AtomFeedReader::loadArticles(const QDomNode &root)

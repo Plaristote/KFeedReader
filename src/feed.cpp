@@ -1,23 +1,20 @@
 #include "feed.h"
 #include "feedarticle.h"
+#include "feedfavicon.h"
 #include "feedfetch.h"
 #include "reader-atom.h"
 #include "reader-json.h"
 #include "reader-rss.h"
 #include <QDomDocument>
 #include <QFile>
-#include <QImage>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QRegularExpression>
-#include <QSettings>
 #include <QStandardPaths>
 #include <QUuid>
-
-void probeHtmlForFavicon(const QByteArray &body, Feed &feed);
 
 Feed::Feed(QObject *parent)
     : MenuItem(parent)
@@ -26,13 +23,12 @@ Feed::Feed(QObject *parent)
     m_uuid = QUuid::createUuid().toString(QUuid::WithoutBraces);
     m_network = new QNetworkAccessManager();
     m_network->setRedirectPolicy(QNetworkRequest::SameOriginRedirectPolicy);
-    // connect(this, &Feed::xmlUrlChanged, this, &Feed::fetch);
     connect(this, &Feed::textInputDescriptionChanged, this, &Feed::textInputChanged);
     connect(this, &Feed::textInputTitleChanged, this, &Feed::textInputChanged);
     connect(this, &Feed::textInputNameChanged, this, &Feed::textInputChanged);
     connect(this, &Feed::textInputLinkChanged, this, &Feed::textInputChanged);
     connect(this, &Feed::articlesChanged, this, &Feed::unreadCountChanged);
-    connect(this, &Feed::requestFaviconUpdate, this, &Feed::loadImageFromUrl, Qt::QueuedConnection);
+    connect(this, &Feed::requestFaviconUpdate, this, &Feed::loadFaviconFrom, Qt::QueuedConnection);
 }
 
 Feed::~Feed()
@@ -166,39 +162,23 @@ void Feed::fetch()
     fetcher->fetch();
 }
 
-void Feed::setFaviconUrl(const QUrl &value)
+void Feed::loadFaviconFrom(const QUrl &remoteUrl)
 {
-    QNetworkRequest request(value);
-    QNetworkReply *reply = m_network->get(request);
+    FeedFavicon *favicon = new FeedFavicon(*this);
 
-    qDebug() << "Fetching favicon" << value;
-    connect(reply, &QNetworkReply::finished, this, [this, reply]() {
-        unsigned int status = reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toUInt();
-
-        qDebug() << "Received favicon" << status;
-        if (status >= 200 && status < 300) {
-            QImage image;
-
-            if (image.loadFromData(reply->readAll())) {
-                image.save(faviconStoragePath(), "png");
-                Q_EMIT faviconUrlChanged();
-            }
-        }
-    });
+    favicon->fetchFromHtmlPage(remoteUrl == QUrl() ? m_link : remoteUrl);
 }
 
-QString Feed::faviconStoragePath() const
+void Feed::setFaviconUrl(const QUrl &value)
 {
-    return storagePrefix() + QStringLiteral(".png");
+    FeedFavicon *favicon = new FeedFavicon(*this);
+
+    favicon->fetch(value);
 }
 
 QUrl Feed::faviconUrl() const
 {
-    QString path = faviconStoragePath();
-
-    if (QFile::exists(path))
-        return QUrl(QStringLiteral("file:") + path);
-    return QUrl(QStringLiteral("qrc:/icons/feed.png"));
+    return FeedFavicon(*const_cast<Feed *>(this)).url();
 }
 
 void Feed::setXmlUrl(const QUrl &value)
@@ -351,36 +331,6 @@ void Feed::setScheduledUpdate(const QDateTime &value)
         m_scheduledUpdate = value;
         Q_EMIT scheduledUpdateChanged();
     }
-}
-
-void Feed::loadFaviconFrom(const QUrl &remoteUrl, unsigned char redirectCount)
-{
-    static const unsigned char maxRedirectCount = 10;
-    QNetworkReply *reply = m_network->get(QNetworkRequest(remoteUrl));
-
-    qDebug() << "Feed::loadFavicon: Fetching favicon from HTML" << remoteUrl;
-    reply->ignoreSslErrors();
-    connect(reply, &QNetworkReply::finished, this, [this, reply, redirectCount, remoteUrl]() {
-        unsigned int status = reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toUInt();
-
-        qDebug() << "Feed::loadFavicon: Received response" << status;
-        if (status == 302 && redirectCount < maxRedirectCount)
-            loadFaviconFrom(QUrl(reply->header(QNetworkRequest::LocationHeader).toString()), redirectCount + 1);
-        else if (status >= 200 && status < 300) {
-            probeHtmlForFavicon(reply->readAll(), *this);
-        }
-        reply->deleteLater();
-    });
-}
-
-void Feed::loadImageFromUrl(const QUrl &remoteUrl)
-{
-    qDebug() << "loadImageFromUrl";
-    if (remoteUrl.toString().length() == 0)
-        loadFaviconFrom(m_link);
-    else
-        m_faviconUrl = remoteUrl;
-    qDebug() << "/!\\ TODO: Ignoring feed icon" << remoteUrl;
 }
 
 void Feed::insertArticle(FeedArticle *article)

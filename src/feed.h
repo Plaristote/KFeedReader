@@ -48,6 +48,7 @@ public:
     friend class JsonFeedReader;
     friend class FeedUpdater;
     friend class FeedFetcher;
+    friend class FeedFavicon;
 
     enum FeedType { HTMLView, RSSFeed, AtomFeed, JSONFeed };
     Q_ENUM(FeedType)
@@ -213,8 +214,7 @@ public Q_SLOTS:
     void setUseCustomTtl(bool);
     void setScheduledUpdate(const QDateTime &);
     void setLastUpdate(const QDateTime &);
-    void loadImageFromUrl(const QUrl &);
-    void loadFaviconFrom(const QUrl &, unsigned char redirectCount = 0);
+    void loadFaviconFrom(const QUrl &);
     void copy(const Feed *);
 
 Q_SIGNALS:
