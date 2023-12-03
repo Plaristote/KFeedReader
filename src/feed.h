@@ -10,6 +10,7 @@
 
 class FeedArticle;
 class QNetworkAccessManager;
+class QNetworkReply;
 class QDomNode;
 class QDomElement;
 
@@ -46,8 +47,9 @@ public:
     friend class RssFeedReader;
     friend class JsonFeedReader;
     friend class FeedUpdater;
+    friend class FeedFetcher;
 
-    enum FeedType { RSSFeed, AtomFeed, JSONFeed };
+    enum FeedType { HTMLView, RSSFeed, AtomFeed, JSONFeed };
     Q_ENUM(FeedType)
 
     Feed(QObject *parent = nullptr);
@@ -63,6 +65,8 @@ public:
         return QStringLiteral("qrc:/Feed.qml");
     }
     QString storagePath() const;
+    QString storagePrefix() const;
+    QString faviconStoragePath() const;
     QUrl faviconUrl() const override;
     FeedArticle *findArticleByGuid(const QString &guid) const;
     FeedArticle *findArticleByLink(const QUrl &link) const;
@@ -88,6 +92,10 @@ public:
     bool hasTextInput() const
     {
         return m_textInputName.length() > 0;
+    }
+    const QUrl &xmlUrl() const
+    {
+        return m_xmlUrl;
     }
     const QString &uuid() const
     {
@@ -178,6 +186,8 @@ public:
     {
         m_uuid = value;
     }
+
+    void setFaviconUrl(const QUrl &value);
 
 public Q_SLOTS:
     void remove() override;

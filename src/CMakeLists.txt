@@ -8,6 +8,7 @@ add_executable(kfeedreader
     menuitem.cpp
     feedfolder.cpp
     feed.cpp
+    feedfetch.cpp
     feedupdate.cpp
     feedarticle.cpp
     feedarticlemedia.cpp
@@ -16,6 +17,7 @@ add_executable(kfeedreader
     reader-rss.cpp
     reader-atom.cpp
     reader-json.cpp
+    htmlprobe.cpp
     resources.qrc)
 
 target_link_libraries(kfeedreader

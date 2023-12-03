@@ -1,10 +1,12 @@
 #include "feed.h"
 #include "feedarticle.h"
+#include "feedfetch.h"
 #include "reader-atom.h"
 #include "reader-json.h"
 #include "reader-rss.h"
 #include <QDomDocument>
 #include <QFile>
+#include <QImage>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -14,6 +16,8 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QUuid>
+
+void probeHtmlForFavicon(const QByteArray &body, Feed &feed);
 
 Feed::Feed(QObject *parent)
     : MenuItem(parent)
@@ -36,11 +40,16 @@ Feed::~Feed()
     m_network->deleteLater();
 }
 
-QString Feed::storagePath() const
+QString Feed::storagePrefix() const
 {
     QString folder = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 
-    return folder + QStringLiteral("/") + m_uuid + QStringLiteral(".json");
+    return folder + QStringLiteral("/") + m_uuid;
+}
+
+QString Feed::storagePath() const
+{
+    return storagePrefix() + QStringLiteral(".json");
 }
 
 void Feed::remove()
@@ -150,63 +159,46 @@ Feed *Feed::createFromJson(QJsonObject &root, QObject *parent)
     return item;
 }
 
-static Feed::FeedType inferFeedType(QNetworkReply &reply, const QByteArray &body)
-{
-    QString contentType = reply.header(QNetworkRequest::ContentTypeHeader).toString();
-
-    qDebug() << "> Loading feed with content type" << contentType;
-    if (contentType.contains(QStringLiteral("atom+xml")))
-        return Feed::AtomFeed;
-    else if (contentType.contains(QStringLiteral("rss+xml")))
-        return Feed::RSSFeed;
-    else if (contentType.contains(QStringLiteral("application/json")))
-        return Feed::JSONFeed;
-    else if (body.indexOf(QStringLiteral("<feed").toUtf8()) >= 0)
-        return Feed::AtomFeed;
-    return Feed::RSSFeed;
-}
-
 void Feed::fetch()
 {
-    QNetworkReply *reply = m_network->get(QNetworkRequest(m_xmlUrl));
+    FeedFetcher *fetcher = new FeedFetcher(*this);
 
-    connect(reply, &QNetworkReply::downloadProgress, this, [this](qint64 bytesRead, qint64 totalBytes) {
-        m_progress = static_cast<double>(bytesRead) / totalBytes;
-        Q_EMIT progressChanged();
-    });
+    fetcher->fetch();
+}
+
+void Feed::setFaviconUrl(const QUrl &value)
+{
+    QNetworkRequest request(value);
+    QNetworkReply *reply = m_network->get(request);
+
+    qDebug() << "Fetching favicon" << value;
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         unsigned int status = reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toUInt();
 
-        setLastUpdate(QDateTime::currentDateTime());
-        m_progress = 1;
-        m_fetching = false;
+        qDebug() << "Received favicon" << status;
         if (status >= 200 && status < 300) {
-            auto body = reply->readAll();
+            QImage image;
 
-            switch (inferFeedType(*reply, body)) {
-            case RSSFeed:
-                RssFeedReader(*this).loadBytes(body);
-                break;
-            case AtomFeed:
-                AtomFeedReader(*this).loadBytes(body);
-                break;
-            case JSONFeed:
-                JsonFeedReader(*this).loadBytes(body);
-                break;
+            if (image.loadFromData(reply->readAll())) {
+                image.save(faviconStoragePath(), "png");
+                Q_EMIT faviconUrlChanged();
             }
         }
-        Q_EMIT fetchingChanged();
     });
-    m_fetching = true;
-    Q_EMIT fetchingChanged();
+}
+
+QString Feed::faviconStoragePath() const
+{
+    return storagePrefix() + QStringLiteral(".png");
 }
 
 QUrl Feed::faviconUrl() const
 {
-    qDebug() << "Favicon URL:" << m_faviconUrl.toString() << m_faviconUrl.isEmpty(); // << m_faviconUrl.toString().length() == 0
-    if (m_faviconUrl.toString().length() == 0)
-        return QUrl(QStringLiteral("qrc:/icons/feed.png"));
-    return m_faviconUrl;
+    QString path = faviconStoragePath();
+
+    if (QFile::exists(path))
+        return QUrl(QStringLiteral("file:") + path);
+    return QUrl(QStringLiteral("qrc:/icons/feed.png"));
 }
 
 void Feed::setXmlUrl(const QUrl &value)
@@ -375,24 +367,7 @@ void Feed::loadFaviconFrom(const QUrl &remoteUrl, unsigned char redirectCount)
         if (status == 302 && redirectCount < maxRedirectCount)
             loadFaviconFrom(QUrl(reply->header(QNetworkRequest::LocationHeader).toString()), redirectCount + 1);
         else if (status >= 200 && status < 300) {
-            auto body = reply->readAll();
-            QRegularExpression pattern(
-                // Source: <\s*link\s+(rel="[^"]*icon[^"]*"\s+)?href="(?<url>[^"]+)"(\s*rel="[^"]*icon[^"]*"\s+)?
-                QStringLiteral("<\\s*link\\s+(rel=\"[^\"]*icon[^\"]*\"\\s+)?href=\"(?<url>[^\"]+)\"(\\s*rel=\"[^\"]*icon[^\"]*\"\\s+)?"),
-                QRegularExpression::CaseInsensitiveOption);
-            auto match = pattern.match(QString::fromUtf8(body));
-
-            if (match.hasMatch()) {
-                QUrl faviconUrl(match.captured(QStringLiteral("url")));
-
-                if (!faviconUrl.scheme().length())
-                    faviconUrl.setScheme(remoteUrl.scheme());
-                if (!faviconUrl.host().length())
-                    faviconUrl.setHost(remoteUrl.host());
-                m_faviconUrl = faviconUrl;
-                Q_EMIT faviconUrlChanged();
-            } else
-                qDebug() << "Feed::loadFavicon: No favicon match";
+            probeHtmlForFavicon(reply->readAll(), *this);
         }
         reply->deleteLater();
     });
