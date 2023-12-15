@@ -86,7 +86,6 @@ static void importOpmlOutlineIn(FeedFolder *folder, QDomElement root)
     for (QDomElement outline = root.firstChildElement(itemTag); !outline.isNull(); outline = outline.nextSiblingElement(itemTag)) {
         MenuItem *item = nullptr;
 
-        qDebug() << "Adding an tem frir";
         if (outline.hasAttribute(xmlUrlAttribute)) {
             Feed *feed = new Feed(folder);
 

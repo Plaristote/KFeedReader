@@ -14,4 +14,14 @@ WebEngineView {
     webView.fullScreen = request.toggleOn;
     request.accept();
   }
+
+  Shortcut {
+    sequence: "Esc"
+    enabled: webView.fullScreen
+    onActivated: {
+      webView.fullScreen = false;
+      webView.fullScreenCancelled();
+      window.showNormal();
+    }
+  }
 }
