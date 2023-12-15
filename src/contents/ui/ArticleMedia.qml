@@ -75,8 +75,12 @@ ColumnLayout {
     Layout.fillWidth: true
   }
 
-  Text {
-    text: model.description
+  TextEdit {
+    text: model.descriptionAsRichText
+    readOnly: true
     wrapMode: Text.WordWrap
+    selectByMouse: true
+    textFormat: TextEdit.RichText
+    onLinkActivated: Qt.openUrlExternally(link)
   }
 }

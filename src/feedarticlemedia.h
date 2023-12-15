@@ -18,6 +18,7 @@ class FeedArticleMedia : public FeedAttachment
     Q_PROPERTY(QUrl thumbnailUrl READ thumbnailUrl WRITE setThumbnailUrl NOTIFY thumbnailUrlChanged)
     Q_PROPERTY(QSize thumbnailSize READ thumbnailSize WRITE setThumbnailSize NOTIFY thumbnailSizeChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
+    Q_PROPERTY(QString descriptionAsRichText READ descriptionAsRichText NOTIFY descriptionChanged)
     Q_PROPERTY(double starRating READ starRating WRITE setStarRating NOTIFY starRatingChanged)
     Q_PROPERTY(qint64 viewCount READ viewCount WRITE setViewCount NOTIFY viewCountChanged)
 public:
@@ -29,6 +30,7 @@ public:
     void loadFromXml(const QDomElement &);
     Q_INVOKABLE QUrl qmlView() const;
     Q_INVOKABLE QString youtubeVideoTag() const;
+    QString descriptionAsRichText() const;
 
     const QString &title() const
     {

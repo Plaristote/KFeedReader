@@ -196,3 +196,23 @@ QUrl FeedArticleMedia::qmlView() const
         return QUrl(QStringLiteral("qrc:/ArticleMediaEmbed.qml"));
     return QUrl(QStringLiteral("qrc:/ArticleMedia.qml"));
 }
+
+QString FeedArticleMedia::descriptionAsRichText() const
+{
+    QString result;
+    QString pattern = QStringLiteral("(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])");
+    QRegularExpression regexp(pattern);
+    QRegularExpressionMatch match;
+    int lastIndex = 0;
+
+    while ((match = regexp.match(m_description, lastIndex)).hasMatch()) {
+        QString href = m_description.mid(match.capturedStart(), match.capturedLength());
+
+        result += m_description.mid(lastIndex, match.capturedStart() - lastIndex);
+        result += QStringLiteral("<a href=\"") + href + QStringLiteral("\">") + href + QStringLiteral("</a>");
+        lastIndex = match.capturedEnd();
+    }
+    result += m_description.mid(lastIndex);
+    result.replace(QStringLiteral("\n"), QStringLiteral("<br/>"));
+    return result;
+}
