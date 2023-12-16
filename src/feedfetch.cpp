@@ -78,7 +78,7 @@ void FeedFetcher::readResponse(QNetworkReply *reply)
             probeHtmlForFeedAndRefetch(body, *this);
             break;
         }
-    } else if (status == 302) {
+    } else if (status > 300 && status < 304) {
         redirectTo(QUrl(reply->header(QNetworkRequest::LocationHeader).toString()));
         return;
     }
