@@ -9,6 +9,7 @@
         <file alias="AddFeed.qml">contents/ui/AddFeed.qml</file>
         <file alias="AddFolder.qml">contents/ui/AddFolder.qml</file>
         <file alias="EditFeed.qml">contents/ui/EditFeed.qml</file>
+        <file alias="EditFolder.qml">contents/ui/EditFolder.qml</file>
         <file alias="FeedForm.qml">contents/ui/FeedForm.qml</file>
         <file alias="FeedFolder.qml">contents/ui/FeedFolder.qml</file>
         <file alias="Feed.qml">contents/ui/Feed.qml</file>
@@ -26,6 +27,7 @@
         <file alias="FeedSearchField.qml">contents/ui/FeedSearchField.qml</file>
         <file alias="FeedActions.qml">contents/ui/FeedActions.qml</file>
         <file alias="AppWebView.qml">contents/ui/AppWebView.qml</file>
+        <file alias="FolderTreeView.qml">contents/ui/FolderTreeView.qml</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="feed.png">contents/icons/feed.png</file>

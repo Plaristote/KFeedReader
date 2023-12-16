@@ -1,4 +1,5 @@
 #include "menuitemmodel.h"
+#include "feedfolder.h"
 
 static MenuItem *fromIndex(const QModelIndex &index)
 {
@@ -52,7 +53,7 @@ QModelIndex MenuItemModel::parent(const QModelIndex &index) const
 
     if (item) {
         parent = item->parentItem();
-        if (parent)
+        if (parent && parent != m_root)
             return createIndex(parent->row(), 0, parent);
     }
     return QModelIndex();
@@ -60,7 +61,7 @@ QModelIndex MenuItemModel::parent(const QModelIndex &index) const
 
 int MenuItemModel::rowCount(const QModelIndex &index) const
 {
-    MenuItem *item = fromIndex(index);
+    const MenuItem *item = fromIndex(index);
 
     if (item)
         return item->childCount();
@@ -75,4 +76,38 @@ int MenuItemModel::columnCount(const QModelIndex &) const
 QHash<int, QByteArray> MenuItemModel::roleNames() const
 {
     return {{DisplayNameRole, "displayName"}, {DescriptionRole, "description"}, {IconUrlRole, "iconUrl"}, {MenuItemRole, "menuItem"}};
+}
+
+void MenuItemModel::reparent(MenuItem *target, MenuItem *subject)
+{
+    if (target && subject) {
+        switch (target->itemType()) {
+        case MenuItem::FolderMenuItem:
+            appendToFolder(subject, reinterpret_cast<FeedFolder *>(target));
+            break;
+        case MenuItem::FeedMenuItem:
+            appendNextToSibling(subject, target);
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void MenuItemModel::appendToFolder(MenuItem *item, FeedFolder *folder)
+{
+    beginResetModel();
+    folder->addItem(item);
+    endResetModel();
+}
+
+void MenuItemModel::appendNextToSibling(MenuItem *item, MenuItem *sibling)
+{
+    FeedFolder *folder = reinterpret_cast<FeedFolder *>(sibling->parentItem());
+
+    if (folder) {
+        beginResetModel();
+        folder->addItemAfter(item, sibling);
+        endResetModel();
+    }
 }

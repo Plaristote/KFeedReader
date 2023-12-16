@@ -30,6 +30,8 @@ public:
 
 public Q_SLOTS:
     void addItem(QObject *);
+    void addItemAfter(QObject *, QObject *);
+    void addItemBefore(QObject *, QObject *);
     void removeItem(QObject *);
     void fetch() override;
     void remove() override;
@@ -38,6 +40,10 @@ Q_SIGNALS:
     void itemsChanged();
 
 private:
+    void connectItem(MenuItem *);
+    void disconnectItem(MenuItem *);
+    void insertItemAt(QList<QObject *>::iterator, MenuItem *);
+
     QQmlListProperty<QObject> items()
     {
         return QQmlListProperty<QObject>(this, &m_items);

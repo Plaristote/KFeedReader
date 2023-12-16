@@ -79,22 +79,74 @@ void FeedFolder::saveToJson(QJsonObject &root) const
     root.insert(QStringLiteral("items"), itemsJson);
 }
 
+void FeedFolder::connectItem(MenuItem *menuItem)
+{
+    connect(menuItem, &MenuItem::unreadCountChanged, this, &FeedFolder::unreadCountChanged);
+    connect(menuItem, &MenuItem::fetchingChanged, this, &FeedFolder::fetchingChanged);
+    connect(menuItem, &MenuItem::progressChanged, this, &FeedFolder::progressChanged);
+    connect(menuItem, &MenuItem::removed, this, &FeedFolder::removeItem);
+}
+
+void FeedFolder::disconnectItem(MenuItem *menuItem)
+{
+    disconnect(menuItem, &MenuItem::unreadCountChanged, this, &FeedFolder::unreadCountChanged);
+    disconnect(menuItem, &MenuItem::fetchingChanged, this, &FeedFolder::fetchingChanged);
+    disconnect(menuItem, &MenuItem::progressChanged, this, &FeedFolder::progressChanged);
+    disconnect(menuItem, &MenuItem::removed, this, &FeedFolder::removeItem);
+}
+
 void FeedFolder::addItem(QObject *item)
 {
-    MenuItem *menuItem = qobject_cast<MenuItem *>(item);
-
-    menuItem->setParentItem(this);
     if (m_items.indexOf(item) < 0) {
-        connect(menuItem, &MenuItem::unreadCountChanged, this, &FeedFolder::unreadCountChanged);
-        connect(menuItem, &MenuItem::fetchingChanged, this, &FeedFolder::fetchingChanged);
-        connect(menuItem, &MenuItem::progressChanged, this, &FeedFolder::progressChanged);
-        connect(menuItem, &MenuItem::removed, this, &FeedFolder::removeItem);
-        // beginInsertRows(QModelIndex(), m_items.size(), m_items.size() + 1);
+        MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+
+        Q_EMIT menuItem->removed(menuItem);
+        menuItem->setParentItem(this);
+        connectItem(menuItem);
         m_items << item;
-        // endInsertRows();
         Q_EMIT itemsChanged();
         Q_EMIT unreadCountChanged();
     }
+}
+
+void FeedFolder::addItemAfter(QObject *item, QObject *previousItem)
+{
+    if (m_items.indexOf(previousItem) >= 0) {
+        MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+
+        Q_EMIT menuItem->removed(menuItem);
+        m_items.removeAll(item);
+        for (auto it = m_items.begin(); it != m_items.end(); ++it) {
+            if (*it == previousItem) {
+                insertItemAt(++it, menuItem);
+                break;
+            }
+        }
+    }
+}
+
+void FeedFolder::addItemBefore(QObject *item, QObject *previousItem)
+{
+    if (m_items.indexOf(previousItem) >= 0) {
+        MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+
+        Q_EMIT menuItem->removed(menuItem);
+        m_items.removeAll(item);
+        for (auto it = m_items.begin(); it != m_items.end(); ++it) {
+            if (*it == previousItem) {
+                insertItemAt(it, menuItem);
+                break;
+            }
+        }
+    }
+}
+
+void FeedFolder::insertItemAt(QList<QObject *>::iterator it, MenuItem *item)
+{
+    m_items.insert(it, item);
+    connectItem(item);
+    Q_EMIT itemsChanged();
+    Q_EMIT unreadCountChanged();
 }
 
 void FeedFolder::removeItem(QObject *item)
@@ -103,12 +155,8 @@ void FeedFolder::removeItem(QObject *item)
     auto index = m_items.indexOf(item);
 
     if (index >= 0) {
-        disconnect(menuItem, &MenuItem::unreadCountChanged, this, &FeedFolder::unreadCountChanged);
-        disconnect(menuItem, &MenuItem::fetchingChanged, this, &FeedFolder::fetchingChanged);
-        disconnect(menuItem, &MenuItem::progressChanged, this, &FeedFolder::progressChanged);
-        // beginRemoveRows(QModelIndex(), index, index + 1);
+        disconnectItem(menuItem);
         m_items.removeAt(index);
-        // endRemoveRows();
         Q_EMIT itemsChanged();
         Q_EMIT unreadCountChanged();
     }

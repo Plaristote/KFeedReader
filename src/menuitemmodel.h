@@ -4,6 +4,8 @@
 #include "menuitem.h"
 #include <QAbstractItemModel>
 
+class FeedFolder;
+
 class MenuItemModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -23,7 +25,13 @@ public:
 Q_SIGNALS:
     void rootChanged();
 
+public Q_SLOTS:
+    void reparent(MenuItem *target, MenuItem *subject);
+
 private:
+    void appendToFolder(MenuItem *item, FeedFolder *folder);
+    void appendNextToSibling(MenuItem *item, MenuItem *sibling);
+
     MenuItem *m_root = nullptr;
 };
 
