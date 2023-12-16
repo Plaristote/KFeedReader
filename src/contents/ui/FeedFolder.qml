@@ -9,6 +9,13 @@ Kirigami.ScrollablePage {
   property QtObject model
   id: page
   title: model.name
+  actions.main: folderActions.mainAction
+  actions.contextualActions: folderActions.contextualActions
+
+  FolderActions {
+    id: folderActions
+    model: page.model
+  }
 
   ColumnLayout {
     spacing: 0
@@ -63,47 +70,6 @@ Kirigami.ScrollablePage {
           onTriggered: pageStack.push(item.view, { model: item })
         }
       } // END delegate
-    }
-  }
-
-  actions.main: Kirigami.Action {
-    text: i18n("Update")
-    icon.name: "cloud-download"
-    tooltip: i18n("Refreshes all the feed contained in this folder")
-    onTriggered: page.model.fetch()
-  }
-
-  actions.contextualActions: [
-    Kirigami.Action {
-      text: i18n("Add feed")
-      icon.name: "list-add"
-      tooltip: i18n("Adds an RSS feed to the current folder")
-      onTriggered: pageStack.push(Qt.resolvedUrl("AddFeed.qml"), { parentFolder: page.model })
-    },
-    Kirigami.Action {
-      text: i18n("Add folder")
-      icon.name: "list-add"
-      tooltip: i18n("Adds a sub-folder in the current folder")
-      onTriggered: pageStack.push(Qt.resolvedUrl("AddFolder.qml"), { parentFolder: page.model })
-    },
-    Kirigami.Action {
-      text: i18n("Remove")
-      visible: page.model != App.rootFolder
-      enabled: visible
-      icon.name: "edit-delete-remove"
-      tooltip: i18n("Permanently remove the folder and all its feeds from the application")
-      onTriggered: destroyConfirmDialog.open()
-    }
-  ]
-
-  Kirigami.PromptDialog {
-    id: destroyConfirmDialog
-    title: i18n("Removing folder")
-    subtitle: i18n("Are you sure you want to permanently remove this folder ?")
-    standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
-    onAccepted: {
-      page.model.remove();
-      pageStack.pop();
     }
   }
 }

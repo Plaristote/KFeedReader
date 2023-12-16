@@ -1,0 +1,61 @@
+import QtQuick 2.15
+import QtQuick.Controls 2.15 as Controls
+import QtQuick.Layouts 1.15
+import org.kde.kirigami 2.19 as Kirigami
+import org.kde.kfeedreader 1.0
+import "."
+
+Item {
+  required property QtObject model
+  property alias mainAction: updateAction
+  property list<QtObject> contextualActions
+  id: root
+  
+  Kirigami.Action {
+    id: updateAction
+    text: i18n("Update")
+    icon.name: "cloud-download"
+    tooltip: i18n("Refreshes all the feed contained in this folder")
+    onTriggered: root.model.fetch()
+  }
+  
+  contextualActions: [
+    Kirigami.Action {
+      text: i18n("Add feed")
+      icon.name: "list-add"
+      tooltip: i18n("Adds an RSS feed to the current folder")
+      onTriggered: pageStack.push(Qt.resolvedUrl("AddFeed.qml"), { parentFolder: root.model })
+    },
+    Kirigami.Action {
+      text: i18n("Add folder")
+      icon.name: "list-add"
+      tooltip: i18n("Adds a sub-folder in the current folder")
+      onTriggered: pageStack.push(Qt.resolvedUrl("AddFolder.qml"), { parentFolder: root.model })
+    },
+    Kirigami.Action {
+      text: i18n("Configure")
+      icon.name: "configure"
+      tooltip: i18n("Change a folder's identity and re-arrange its contents")
+      onTriggered: pageStack.push(Qt.resolvedUrl("EditFolder.qml"), { model: root.model })
+    },
+    Kirigami.Action {
+      text: i18n("Remove")
+      visible: root.model != App.rootFolder
+      enabled: visible
+      icon.name: "edit-delete-remove"
+      tooltip: i18n("Permanently remove the folder and all its feeds from the application")
+      onTriggered: destroyConfirmDialog.open()
+    }
+  ]
+
+  Kirigami.PromptDialog {
+    id: destroyConfirmDialog
+    title: i18n("Removing folder")
+    subtitle: i18n("Are you sure you want to permanently remove this folder ?")
+    standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+    onAccepted: {
+      root.model.remove();
+      pageStack.pop();
+    }
+  }
+}

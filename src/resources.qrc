@@ -26,6 +26,7 @@
         <file alias="UnreadCountBox.qml">contents/ui/UnreadCountBox.qml</file>
         <file alias="FeedSearchField.qml">contents/ui/FeedSearchField.qml</file>
         <file alias="FeedActions.qml">contents/ui/FeedActions.qml</file>
+        <file alias="FolderActions.qml">contents/ui/FolderActions.qml</file>
         <file alias="AppWebView.qml">contents/ui/AppWebView.qml</file>
         <file alias="FolderTreeView.qml">contents/ui/FolderTreeView.qml</file>
     </qresource>
