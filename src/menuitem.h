@@ -12,7 +12,7 @@ class MenuItem : public QObject
     Q_PROPERTY(qint64 unreadCount READ unreadCount NOTIFY unreadCountChanged)
     Q_PROPERTY(bool fetching READ fetching NOTIFY fetchingChanged)
     Q_PROPERTY(double progress READ progress NOTIFY progressChanged)
-    Q_PROPERTY(QString view READ view CONSTANT)
+    Q_PROPERTY(QString view READ view NOTIFY viewChanged)
     Q_PROPERTY(ItemType type READ itemType CONSTANT)
 
 public:
@@ -44,14 +44,17 @@ public Q_SLOTS:
     void setParentItem(MenuItem *);
     virtual void fetch(){};
     virtual void remove();
+    virtual void triggerBeforeSave(){};
 
 Q_SIGNALS:
     void nameChanged(const QString &name);
     void descriptionChanged(const QString &description);
+    void viewChanged();
     void unreadCountChanged();
     void fetchingChanged();
     void progressChanged();
     void parentChanged();
+    void beforeSave();
     void removed(QObject *);
 
 private:

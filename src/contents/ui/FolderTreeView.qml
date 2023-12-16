@@ -5,19 +5,52 @@ import org.kde.kirigami 2.19 as Kirigami
 import org.kde.kirigamiaddons.treeview 1.0 as TreeView
 import org.kde.kfeedreader 1.0
 
-
 TreeView.TreeListView {
-  property QtObject model
   id: treeView
+  property QtObject model
+  property bool withDragHandles: true
+
+  signal activated(QtObject item)
+
+  Timer {
+    id: delayFirstActivation
+    running: true
+    interval: 100
+  }
+
   sourceModel: MenuItemModel {
     id: itemModel
     root: page.model
   }
+
   delegate: TreeView.AbstractTreeItem {
     id: listItem
     property string displayName: model.displayName
     property url iconUrl: model.iconUrl
     property QtObject menuItem: model.menuItem
+
+    ListView.onIsCurrentItemChanged: {
+      if (ListView.isCurrentItem) {
+        if (delayFirstActivation.running)
+          ListView.view.currentIndex = -1;
+        else
+          treeView.activated(menuItem);
+      }
+    }
+
+    Component.onCompleted: {
+      if (menuItem.expanded)
+        decoration.model.expandChildren(index);
+    }
+
+    Component.onDestruction: {
+      menuItem.expanded = kDescendantExpanded;
+    }
+
+    Connections {
+      target: menuItem
+      function onBeforeSave() { menuItem.expanded = kDescendantExpanded; }
+    }
 
     contentItem: Rectangle {
       Layout.fillWidth: true
@@ -28,10 +61,10 @@ TreeView.TreeListView {
         id: dragTarget
         property QtObject targetItem: menuItem
         anchors.fill: parent
-        enabled: !dragMouseArea.dragActive
+        enabled: !dragMouseArea.dragActive && treeView.withDragHandles
       }
 
-      Row {
+      RowLayout {
         id: row
         spacing: 5
         width: parent.width
@@ -44,6 +77,7 @@ TreeView.TreeListView {
 
         MouseArea {
           id: dragMouseArea
+          visible: treeView.withDragHandles
           drag.target: parent
           height: parent.height
           width: height
@@ -75,8 +109,14 @@ TreeView.TreeListView {
         }
 
         Controls.Label {
+          Layout.fillWidth: true
           id: labelItem
           text: displayName
+          clip: true
+        }
+
+        UnreadCountBox {
+          model: menuItem 
         }
       }
     }

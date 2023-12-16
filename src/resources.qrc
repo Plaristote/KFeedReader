@@ -11,7 +11,8 @@
         <file alias="EditFeed.qml">contents/ui/EditFeed.qml</file>
         <file alias="EditFolder.qml">contents/ui/EditFolder.qml</file>
         <file alias="FeedForm.qml">contents/ui/FeedForm.qml</file>
-        <file alias="FeedFolder.qml">contents/ui/FeedFolder.qml</file>
+        <file alias="FolderListPage.qml">contents/ui/FolderListPage.qml</file>
+        <file alias="FolderTreePage.qml">contents/ui/FolderTreePage.qml</file>
         <file alias="Feed.qml">contents/ui/Feed.qml</file>
         <file alias="AggregatedFeed.qml">contents/ui/AggregatedFeed.qml</file>
         <file alias="Article.qml">contents/ui/Article.qml</file>

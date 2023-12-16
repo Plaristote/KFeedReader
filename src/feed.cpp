@@ -124,8 +124,8 @@ void Feed::copy(const Feed *source)
 
 void Feed::saveToJson(QJsonObject &root) const
 {
-    root[uuidKey] = m_uuid;
     MenuItem::saveToJson(root);
+    root[uuidKey] = m_uuid;
     for (const auto &key : persistentProperties())
         root.insert(key, QJsonValue::fromVariant(property(key.toUtf8().constData())));
     saveArticleFile();

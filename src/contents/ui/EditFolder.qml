@@ -15,18 +15,30 @@ Kirigami.Page {
     anchors.fill: parent
 
     Kirigami.FormLayout {
-      visible: model != App.rootFolder
-
       Controls.TextField {
         Kirigami.FormData.label: i18n("Name")
+        visible: model != App.rootFolder
         text: model.name
         onEditingFinished: model.name = text
       }
 
       Controls.TextField {
         Kirigami.FormData.label: i18n("Description")
+        visible: model != App.rootFolder
         text: model.description
         onEditingFinished: model.description = text
+      }
+
+      Controls.ComboBox {
+        Kirigami.FormData.label: i18n("Display")
+        model: [
+          { name: i18n("Tree"), value: FeedFolder.TreeDisplay },
+          { name: i18n("List"), value: FeedFolder.ListDisplay }
+        ]
+        textRole: "name"
+        valueRole: "value"
+        onActivated: page.model.displayType = currentValue
+        Component.onCompleted: currentIndex = indexOfValue(page.model.displayType)
       }
     }
 

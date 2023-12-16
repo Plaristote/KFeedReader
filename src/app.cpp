@@ -68,6 +68,7 @@ void App::save()
     if (file.open(QIODevice::WriteOnly)) {
         QJsonObject root;
 
+        m_rootFolder->triggerBeforeSave();
         m_rootFolder->saveToJson(root);
         file.write(QJsonDocument(root).toJson());
     } else
@@ -82,6 +83,7 @@ static void importOpmlOutlineIn(FeedFolder *folder, QDomElement root)
     const QString nameAttribute = QStringLiteral("text");
     const QString descriptionAttribute = QStringLiteral("comment");
     const QString idAttribute = QStringLiteral("id");
+    const QString isOpen = QStringLiteral("isOpen");
 
     for (QDomElement outline = root.firstChildElement(itemTag); !outline.isNull(); outline = outline.nextSiblingElement(itemTag)) {
         MenuItem *item = nullptr;
@@ -97,6 +99,7 @@ static void importOpmlOutlineIn(FeedFolder *folder, QDomElement root)
         } else {
             FeedFolder *subfolder = new FeedFolder(folder);
 
+            subfolder->setExpanded(outline.attribute(isOpen) == QStringLiteral("true"));
             item = subfolder;
             importOpmlOutlineIn(subfolder, outline);
         }

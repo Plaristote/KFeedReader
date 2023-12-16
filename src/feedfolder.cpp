@@ -21,7 +21,40 @@ FeedFolder::~FeedFolder()
 
 QString FeedFolder::view() const
 {
-    return QStringLiteral("qrc:/FeedFolder.qml");
+    switch (m_displayType) {
+    case TreeDisplay:
+        return QStringLiteral("qrc:/FolderTreePage.qml");
+    case ListDisplay:
+        return QStringLiteral("qrc:/FolderListPage.qml");
+    }
+    Q_ASSERT(false);
+    return QString();
+}
+
+FeedFolder::DisplayType FeedFolder::displayType() const
+{
+    return m_displayType;
+}
+
+bool FeedFolder::expanded() const
+{
+    return m_expanded;
+}
+
+void FeedFolder::setDisplayType(DisplayType value)
+{
+    if (m_displayType != value) {
+        m_displayType = value;
+        Q_EMIT viewChanged();
+    }
+}
+
+void FeedFolder::setExpanded(bool value)
+{
+    if (m_expanded != value) {
+        m_expanded = value;
+        Q_EMIT expandedChanged();
+    }
 }
 
 QUrl FeedFolder::faviconUrl() const
@@ -46,6 +79,8 @@ void FeedFolder::loadFromJson(QJsonObject &root)
 {
     QJsonArray jsonItems = root.value(QStringLiteral("items")).toArray();
 
+    m_displayType = static_cast<DisplayType>(root.value(QStringLiteral("display")).toInt(1));
+    m_expanded = root.value(QStringLiteral("expanded")).toBool(false);
     MenuItem::loadFromJson(root);
     for (QJsonValue value : jsonItems) {
         QJsonObject jsonItem = value.toObject();
@@ -68,6 +103,9 @@ void FeedFolder::saveToJson(QJsonObject &root) const
 {
     QJsonArray itemsJson;
 
+    MenuItem::saveToJson(root);
+    root.insert(QStringLiteral("display"), static_cast<int>(m_displayType));
+    root.insert(QStringLiteral("expaned"), m_expanded);
     for (QObject *item : m_items) {
         MenuItem *menuItem = qobject_cast<MenuItem *>(item);
         QJsonObject itemJson;
@@ -75,7 +113,6 @@ void FeedFolder::saveToJson(QJsonObject &root) const
         menuItem->saveToJson(itemJson);
         itemsJson << itemJson;
     }
-    MenuItem::saveToJson(root);
     root.insert(QStringLiteral("items"), itemsJson);
 }
 
@@ -233,4 +270,15 @@ double FeedFolder::progress() const
         }
     }
     return totalProgress / fetchingCount;
+}
+
+void FeedFolder::triggerBeforeSave()
+{
+    for (QObject *item : m_items) {
+        MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+
+        menuItem->triggerBeforeSave();
+        Q_EMIT menuItem->beforeSave();
+    }
+    Q_EMIT beforeSave();
 }
