@@ -5,7 +5,7 @@ import org.kde.kirigami 2.19 as Kirigami
 import org.kde.kfeedreader 1.0
 
 Kirigami.ScrollablePage {
-  property QtObject model
+  required property QtObject parentFolder
   id: page
 
   Component.onCompleted: {
@@ -45,7 +45,7 @@ Kirigami.ScrollablePage {
       onTriggered: {
         newFolder.name = nameField.text;
         newFolder.description = descriptionField.text;
-        page.model.addItem(newFolder);
+        page.parentFolder.addItem(newFolder);
         pageStack.pop();
       }
     }
