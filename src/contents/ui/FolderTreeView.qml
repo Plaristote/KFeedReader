@@ -28,6 +28,7 @@ TreeView.TreeListView {
     property string displayName: model.displayName
     property url iconUrl: model.iconUrl
     property QtObject menuItem: model.menuItem
+    property bool dropEnabled: treeView.withDragHandles && !dragMouseArea.dragActive
 
     ListView.onIsCurrentItemChanged: {
       if (ListView.isCurrentItem) {
@@ -55,14 +56,51 @@ TreeView.TreeListView {
     contentItem: Rectangle {
       Layout.fillWidth: true
       implicitHeight: Kirigami.Units.gridUnit * 1.5
-      color: dragTarget.containsDrag ? Kirigami.Theme.activeBackgroundColor : "transparent"
+      color: dragOnTarget.containsDrag ? Kirigami.Theme.activeBackgroundColor : "transparent"
+
+      // Drop zone management
+      DropArea {
+        id: dragPreviousTarget
+        property QtObject targetItem: menuItem
+        property string dropPosition: "previous"
+        anchors { top: parent.top; left: parent.left; right: parent.right; }
+        height: parent.height / 5
+        enabled: dropEnabled
+
+        Rectangle {
+          visible: parent.containsDrag
+          anchors.fill: parent
+          color: Kirigami.Theme.activeBackgroundColor
+        }
+      }
 
       DropArea {
-        id: dragTarget
+        id: dragOnTarget
         property QtObject targetItem: menuItem
-        anchors.fill: parent
-        enabled: !dragMouseArea.dragActive && treeView.withDragHandles
+        property string dropPosition: "inside"
+        anchors {
+          top: parent.top; left: parent.left; right: parent.right; bottom: parent.bottom;
+          topMargin: dragPreviousTarget.height
+          bottomMargin: dragNextTarget.height
+        }
+        enabled: dropEnabled
       }
+
+      DropArea {
+        id: dragNextTarget
+        property QtObject targetItem: menuItem
+        property string dropPosition: "next"
+        anchors { bottom: parent.bottom; left: parent.left; right: parent.right; }
+        height: parent.height / 5;
+        enabled: dropEnabled
+
+        Rectangle {
+          visible: parent.containsDrag
+          anchors.fill: parent
+          color: Kirigami.Theme.activeBackgroundColor
+        }
+      }
+      // END Drop zone management
 
       RowLayout {
         id: row
@@ -84,9 +122,18 @@ TreeView.TreeListView {
           cursorShape: Qt.DragMoveCursor
           onReleased: {
             const targetItem = row.Drag.target ? row.Drag.target.targetItem : null;
+            const targetPosition = row.Drag.target ? row.Drag.target.dropPosition : "inside"
 
-            if (targetItem)
-              itemModel.reparent(targetItem, menuItem);
+            if (targetItem) {
+              switch (targetPosition) {
+              case "inside":
+                return itemModel.reparent(targetItem, menuItem);
+              case "previous":
+                return itemModel.appendBeforeSibling(menuItem, targetItem);
+              case "next":
+                return itemModel.appendNextToSibling(menuItem, targetItem);
+              }
+            }
             else
               row.x = row.y = 0;
           }
