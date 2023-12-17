@@ -105,7 +105,7 @@ void FeedFolder::saveToJson(QJsonObject &root) const
 
     MenuItem::saveToJson(root);
     root.insert(QStringLiteral("display"), static_cast<int>(m_displayType));
-    root.insert(QStringLiteral("expaned"), m_expanded);
+    root.insert(QStringLiteral("expanded"), m_expanded);
     for (QObject *item : m_items) {
         MenuItem *menuItem = qobject_cast<MenuItem *>(item);
         QJsonObject itemJson;
