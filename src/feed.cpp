@@ -16,6 +16,9 @@
 #include <QStandardPaths>
 #include <QUuid>
 
+FeedArticle *findPreviousArticle(const QList<FeedArticle *> &articles, const FeedArticle *article);
+FeedArticle *findNextArticle(const QList<FeedArticle *> &articles, const FeedArticle *article);
+
 Feed::Feed(QObject *parent)
     : MenuItem(parent)
     , m_feedUpdater(*this)
@@ -373,6 +376,16 @@ FeedArticle *Feed::findArticleByLink(const QUrl &link) const
             return feed;
     }
     return nullptr;
+}
+
+FeedArticle *Feed::findPreviousArticle(const FeedArticle *article) const
+{
+    return ::findPreviousArticle(m_articles, article);
+}
+
+FeedArticle *Feed::findNextArticle(const FeedArticle *article) const
+{
+    return ::findNextArticle(m_articles, article);
 }
 
 qint64 Feed::unreadCount() const

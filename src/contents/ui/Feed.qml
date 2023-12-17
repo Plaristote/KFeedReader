@@ -52,7 +52,7 @@ Kirigami.ScrollablePage {
         action: Controls.Action {
           checkable: true
           checked: pageStack.lastItem.model == item
-          onTriggered: pageStack.push(Qt.resolvedUrl("./Article.qml"), { model: item })
+          onTriggered: pageStack.push(Qt.resolvedUrl("./Article.qml"), { model: item, feed: page.model })
         }
       } // END delegate
     }

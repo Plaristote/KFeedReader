@@ -103,6 +103,7 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<FeedUpdater>("org.kde.kfeedreader", 1, 0, "FeedUpdater", QStringLiteral("access to enums and static methods only"));
     qmlRegisterType<AggregatedFeed>("org.kde.kfeedreader", 1, 0, "AggregatedFeed");
     qRegisterMetaType<Feed *>("const Feed*");
+    qRegisterMetaType<FeedArticle *>("const FeedArticle*");
 
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

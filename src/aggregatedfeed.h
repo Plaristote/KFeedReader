@@ -27,6 +27,9 @@ public:
     const QList<FeedArticle *> &articles() const;
     bool hasTextInput() const;
 
+    Q_INVOKABLE FeedArticle *findNextArticle(const FeedArticle *) const;
+    Q_INVOKABLE FeedArticle *findPreviousArticle(const FeedArticle *) const;
+
 public Q_SLOTS:
     void addFolder(FeedFolder *);
     void addFeeds(const QList<Feed *> &);

@@ -71,6 +71,8 @@ public:
     QUrl faviconUrl() const override;
     FeedArticle *findArticleByGuid(const QString &guid) const;
     FeedArticle *findArticleByLink(const QUrl &link) const;
+    Q_INVOKABLE FeedArticle *findNextArticle(const FeedArticle *) const;
+    Q_INVOKABLE FeedArticle *findPreviousArticle(const FeedArticle *) const;
     qint64 unreadCount() const override;
     bool fetching() const override
     {

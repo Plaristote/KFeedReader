@@ -4,9 +4,12 @@ import QtWebEngine 1.10
 import "."
 
 Kirigami.Page {
-  property QtObject model
+  required property QtObject model
+  required property QtObject feed
 
+  id: page
   title: webview.title
+  onModelChanged: model.read = true
   actions.contextualActions: pageActions.contextualActions
   states: [
     State {
@@ -23,7 +26,9 @@ Kirigami.Page {
 
   ArticleActions {
     id: pageActions
-    model: parent.model
+    model: page.model
+    feed: page.feed
+    onRequestArticleChange: page.model = article
   }
 
   Item {

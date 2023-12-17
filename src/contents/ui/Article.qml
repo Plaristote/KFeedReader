@@ -6,17 +6,19 @@ import org.kde.kfeedreader 1.0
 import "."
 
 Kirigami.ScrollablePage {
-  property QtObject model
+  required property QtObject model
+  required property QtObject feed
 
   id: page
   title: model.title
+  onModelChanged: model.read = true
   actions.contextualActions: pageActions.contextualActions
   actions.main: Kirigami.Action {
     text: i18n("View")
     icon.name: "quickview"
     tooltip: i18n("Open the article link in the application")
     onTriggered: {
-      pageStack.replace(Qt.resolvedUrl("BrowserView.qml"), { model: page.model });
+      pageStack.replace(Qt.resolvedUrl("BrowserView.qml"), { model: page.model, feed: page.feed });
     }
   }
 
@@ -25,6 +27,8 @@ Kirigami.ScrollablePage {
   ArticleActions {
     id: pageActions
     model: page.model
+    feed: page.feed
+    onRequestArticleChange: page.model = article
   }
 
   ColumnLayout {

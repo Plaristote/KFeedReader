@@ -3,6 +3,10 @@
 #include "feedarticle.h"
 #include "feedfolder.h"
 #include <algorithm>
+#define MAX_AGGREGATED_ARTICLE_COUNT 100
+
+FeedArticle *findPreviousArticle(const QList<FeedArticle *> &articles, const FeedArticle *article);
+FeedArticle *findNextArticle(const QList<FeedArticle *> &articles, const FeedArticle *article);
 
 AggregatedFeed::AggregatedFeed(QObject *parent)
     : MenuItem(parent)
@@ -23,6 +27,16 @@ MenuItem::ItemType AggregatedFeed::itemType() const
 const QList<FeedArticle *> &AggregatedFeed::articles() const
 {
     return m_articles;
+}
+
+FeedArticle *AggregatedFeed::findPreviousArticle(const FeedArticle *article) const
+{
+    return ::findPreviousArticle(m_articles, article);
+}
+
+FeedArticle *AggregatedFeed::findNextArticle(const FeedArticle *article) const
+{
+    return ::findNextArticle(m_articles, article);
 }
 
 void AggregatedFeed::addFeeds(const QList<Feed *> &feeds)
@@ -171,9 +185,25 @@ double AggregatedFeed::progress() const
     return fetchingCount ? (total / fetchingCount) : 0;
 }
 
+int aggregatedFeedCount(QQmlListProperty<QObject> *property)
+{
+    auto *list = static_cast<QList<FeedArticle *> *>(property->data);
+
+    return list->size() < MAX_AGGREGATED_ARTICLE_COUNT ? list->size() : MAX_AGGREGATED_ARTICLE_COUNT;
+}
+
+QObject *aggregatedFeedAt(QQmlListProperty<QObject> *property, int index)
+{
+    auto *list = static_cast<QList<FeedArticle *> *>(property->data);
+
+    if (index >= 0 && index < list->size())
+        return list->at(index);
+    return nullptr;
+}
+
 QQmlListProperty<QObject> AggregatedFeed::qmlArticles()
 {
-    return QQmlListProperty<QObject>(this, reinterpret_cast<QList<QObject *> *>(&m_articles));
+    return QQmlListProperty<QObject>(this, &m_articles, &aggregatedFeedCount, &aggregatedFeedAt);
 }
 
 bool AggregatedFeed::hasTextInput() const

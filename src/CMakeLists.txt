@@ -14,6 +14,7 @@ add_executable(kfeedreader
     feedarticle.cpp
     feedarticlemedia.cpp
     feedarticleenclosure.cpp
+    feednavigation.cpp
     aggregatedfeed.cpp
     reader-rss.cpp
     reader-atom.cpp
