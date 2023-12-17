@@ -36,13 +36,8 @@ static QUrl makeUrlFromHref(const QUrl &oldUrl, QString href)
 void probeHtmlForFeedAndRefetch(const QByteArray &body, FeedFetcher &feedFetcher)
 {
     static const QStringList formatPatterns = QStringList()
-        << QStringLiteral("application/rss+xml")
-        << QStringLiteral("application/atom+xml")
-        << QStringLiteral("application/feed+json")
-        << QStringLiteral("text/rss+xml")
-        << QStringLiteral("text/atom+xml")
-        << QStringLiteral("application/xml");
-    //static const QString pattern = QStringLiteral("<link[^>]*type=\"(") + formatPatterns.join(QStringLiteral("|")) + QStringLiteral(")\"[^>]*>");
+        << QStringLiteral("application/rss+xml") << QStringLiteral("application/atom+xml") << QStringLiteral("application/feed+json")
+        << QStringLiteral("text/rss+xml") << QStringLiteral("text/atom+xml") << QStringLiteral("application/xml");
     static const QString pattern = QStringLiteral("<link[^>]*type=\"([a-z/+]+)\"[^>]*>");
     QString subject = QString::fromUtf8(body);
     QRegularExpression regex(pattern, QRegularExpression::CaseInsensitiveOption);
