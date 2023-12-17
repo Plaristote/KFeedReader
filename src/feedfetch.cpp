@@ -12,7 +12,6 @@ static Feed::FeedType inferFeedType(QNetworkReply &reply, const QByteArray &body
 {
     QString contentType = reply.header(QNetworkRequest::ContentTypeHeader).toString();
 
-    qDebug() << "> Loading feed with content type" << contentType;
     if (contentType.contains(QStringLiteral("atom+xml")))
         return Feed::AtomFeed;
     else if (contentType.contains(QStringLiteral("rss+xml")))
@@ -60,7 +59,6 @@ void FeedFetcher::readResponse(QNetworkReply *reply)
 {
     unsigned int status = reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toUInt();
 
-    qDebug() << "fetched stuff. Status = " << status;
     if (status >= 200 && status < 300) {
         auto body = reply->readAll();
 
@@ -81,13 +79,14 @@ void FeedFetcher::readResponse(QNetworkReply *reply)
     } else if (status > 300 && status < 304) {
         redirectTo(QUrl(reply->header(QNetworkRequest::LocationHeader).toString()));
         return;
+    } else {
+        qDebug() << "/!\\ Fetch status" << status << m_feed.xmlUrl();
     }
     onFinished();
 }
 
 void FeedFetcher::redirectTo(const QUrl &url)
 {
-    qDebug() << "Redirected to:" << url;
     m_feed.setXmlUrl(url);
     m_requestCounter++;
     fetch();
