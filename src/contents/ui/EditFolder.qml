@@ -46,6 +46,7 @@ Kirigami.Page {
       Layout.fillWidth: true
       Layout.fillHeight: true
       model: page.model 
+      clip: true
     }
   }
 }
