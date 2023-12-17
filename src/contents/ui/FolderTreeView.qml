@@ -105,8 +105,11 @@ TreeView.TreeListView {
       RowLayout {
         id: row
         spacing: 5
-        width: parent.width
-        height: parent.height
+        anchors {
+          fill: parent
+          leftMargin: Kirigami.Units.largeSpacing
+          rightMargin: Kirigami.Units.largeSpacing
+        }
 
         Drag.active: dragMouseArea.drag.active
         Drag.hotSpot.x: width / 2
