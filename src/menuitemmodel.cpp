@@ -94,13 +94,6 @@ void MenuItemModel::reparent(MenuItem *target, MenuItem *subject)
     }
 }
 
-void MenuItemModel::appendToFolder(MenuItem *item, FeedFolder *folder)
-{
-    beginResetModel();
-    folder->addItem(item);
-    endResetModel();
-}
-
 void MenuItemModel::appendNextToSibling(MenuItem *item, MenuItem *sibling)
 {
     FeedFolder *folder = reinterpret_cast<FeedFolder *>(sibling->parentItem());
@@ -110,4 +103,22 @@ void MenuItemModel::appendNextToSibling(MenuItem *item, MenuItem *sibling)
         folder->addItemAfter(item, sibling);
         endResetModel();
     }
+}
+
+void MenuItemModel::appendBeforeSibling(MenuItem *item, MenuItem *sibling)
+{
+    FeedFolder *folder = reinterpret_cast<FeedFolder *>(sibling->parentItem());
+
+    if (folder) {
+        beginResetModel();
+        folder->addItemBefore(item, sibling);
+        endResetModel();
+    }
+}
+
+void MenuItemModel::appendToFolder(MenuItem *item, FeedFolder *folder)
+{
+    beginResetModel();
+    folder->addItem(item);
+    endResetModel();
 }

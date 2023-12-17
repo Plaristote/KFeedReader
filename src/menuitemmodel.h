@@ -27,10 +27,11 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void reparent(MenuItem *target, MenuItem *subject);
+    void appendNextToSibling(MenuItem *item, MenuItem *sibling);
+    void appendBeforeSibling(MenuItem *item, MenuItem *sibling);
 
 private:
     void appendToFolder(MenuItem *item, FeedFolder *folder);
-    void appendNextToSibling(MenuItem *item, MenuItem *sibling);
 
     MenuItem *m_root = nullptr;
 };
