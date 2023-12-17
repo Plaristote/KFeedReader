@@ -1,6 +1,7 @@
 #include "feedarticlemedia.h"
 #include <QDomElement>
 #include <QJsonObject>
+#include <QRegularExpression>
 
 FeedArticleMedia::FeedArticleMedia(QObject *parent)
     : FeedAttachment(parent)
