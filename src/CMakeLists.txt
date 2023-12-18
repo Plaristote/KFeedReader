@@ -17,6 +17,7 @@ add_executable(kfeedreader
     feednavigation.cpp
     aggregatedfeed.cpp
     reader-rss.cpp
+    reader-rdf.cpp
     reader-atom.cpp
     reader-json.cpp
     htmlprobe.cpp

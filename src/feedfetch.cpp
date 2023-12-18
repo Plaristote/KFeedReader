@@ -2,6 +2,7 @@
 #include "feed.h"
 #include "reader-atom.h"
 #include "reader-json.h"
+#include "reader-rdf.h"
 #include "reader-rss.h"
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -16,12 +17,17 @@ static Feed::FeedType inferFeedType(QNetworkReply &reply, const QByteArray &body
         return Feed::AtomFeed;
     else if (contentType.contains(QStringLiteral("rss+xml")))
         return Feed::RSSFeed;
+    else if (contentType.contains(QStringLiteral("application/rdf+xml")))
+        return Feed::RDFFeed;
     else if (contentType.contains(QStringLiteral("application/feed+json")) || contentType.contains(QStringLiteral("application/json")))
         return Feed::JSONFeed;
     else if (contentType.contains(QStringLiteral("text/html")) || contentType.contains(QStringLiteral("application/xhtml+xml")))
         return Feed::HTMLView;
+    // Starting from there, we guesstimate:
     else if (body.indexOf(QStringLiteral("<feed").toUtf8()) >= 0)
         return Feed::AtomFeed;
+    else if (body.indexOf(QStringLiteral("<rdf:RDF").toUtf8()) >= 0)
+        return Feed::RDFFeed;
     return Feed::RSSFeed;
 }
 
@@ -63,6 +69,9 @@ void FeedFetcher::readResponse(QNetworkReply *reply)
         auto body = reply->readAll();
 
         switch (inferFeedType(*reply, body)) {
+        case Feed::RDFFeed:
+            RdfFeedReader(m_feed).loadBytes(body);
+            break;
         case Feed::RSSFeed:
             RssFeedReader(m_feed).loadBytes(body);
             break;

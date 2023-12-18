@@ -6,7 +6,7 @@
 #include <QDebug>
 #include <QDomDocument>
 
-static QUrl baseUrlForLink(const QUrl &link)
+QUrl baseUrlForLink(const QUrl &link)
 {
     return QUrl(link.scheme() + QStringLiteral("://") + link.host());
 }
