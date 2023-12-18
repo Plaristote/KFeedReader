@@ -35,6 +35,8 @@ void AtomFeedReader::loadDocument(const QDomNode &document)
     this->feed.setLastBuildDate(updatedElement.isNull() ? QDateTime::currentDateTime() : QDateTime::fromString(updatedElement.text()));
     this->feed.setPublicationDate(publishedElement.isNull() ? QDateTime() : QDateTime::fromString(publishedElement.text(), Qt::ISODate));
     loadArticles(feed);
+    if (!logoElement.isNull())
+        this->feed.setLogoUrl(QUrl(logoElement.text()));
     if (imageElement.isNull() && !logoElement.isNull())
         this->feed.setFaviconUrl(QUrl(logoElement.text()));
     else if (!imageElement.isNull())

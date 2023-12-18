@@ -58,9 +58,10 @@ void RssFeedReader::loadDocument(const QDomNode &document)
     if (imageElement.isNull())
         feed.loadFaviconFrom(feed.link());
     else {
-        QString iconUrl = imageElement.firstChildElement(QStringLiteral("url")).text();
+        QString imageUrl = imageElement.firstChildElement(QStringLiteral("url")).text();
 
-        feed.setFaviconUrl(QUrl(iconUrl));
+        feed.setFaviconUrl(QUrl(imageUrl));
+        feed.setLogoUrl(QUrl(imageUrl));
     }
 }
 

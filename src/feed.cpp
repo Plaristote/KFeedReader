@@ -66,6 +66,7 @@ QStringList Feed::persistentProperties() const
             QStringLiteral("customTtl"),
             QStringLiteral("useCustomTtl"),
             QStringLiteral("faviconUrl"),
+            QStringLiteral("logoUrl"),
             QStringLiteral("link"),
             QStringLiteral("lastBuildDate"),
             QStringLiteral("publicationDate"),
@@ -183,6 +184,14 @@ void Feed::setFaviconUrl(const QUrl &value)
 QUrl Feed::faviconUrl() const
 {
     return FeedFavicon(*const_cast<Feed *>(this)).url();
+}
+
+void Feed::setLogoUrl(const QUrl &value)
+{
+    if (value != m_logoUrl) {
+        m_logoUrl = value;
+        Q_EMIT logoUrlChanged();
+    }
 }
 
 void Feed::setXmlUrl(const QUrl &value)

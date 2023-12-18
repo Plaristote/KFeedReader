@@ -27,7 +27,9 @@ enum FeedAttribute {
     AttachmentsAttribute,
     SizeAttribute,
     MimetypeAttribute,
-    FaviconAttribute
+    FaviconAttribute,
+    LogoAttribute,
+    BannerAttribute
 };
 
 static const QMap<FeedAttribute, QString> attributes{{TitleAttribute, QStringLiteral("title")},
@@ -47,7 +49,9 @@ static const QMap<FeedAttribute, QString> attributes{{TitleAttribute, QStringLit
                                                      {AttachmentsAttribute, QStringLiteral("attachments")},
                                                      {SizeAttribute, QStringLiteral("size_in_bytes")},
                                                      {MimetypeAttribute, QStringLiteral("mime_type")},
-                                                     {FaviconAttribute, QStringLiteral("favicon")}};
+                                                     {FaviconAttribute, QStringLiteral("favicon")},
+                                                     {LogoAttribute, QStringLiteral("image")},
+                                                     {BannerAttribute, QStringLiteral("banner_image")}};
 
 static QDateTime parseJsonDate(const QJsonValue &value, const QDateTime &defaultValue)
 {
@@ -71,6 +75,8 @@ void JsonFeedReader::loadDocument(const QJsonObject &document)
 {
     QJsonArray articles = document[attributes[ArticlesAttribute]].toArray();
     QJsonValue favicon = document[attributes[FaviconAttribute]];
+    QJsonValue logo = document[attributes[LogoAttribute]];
+    QJsonValue banner = document[attributes[BannerAttribute]];
 
     feed.setName(document[attributes[TitleAttribute]].toString());
     feed.setLink(QUrl(document[attributes[LinkAttribute]].toString()));
@@ -80,6 +86,10 @@ void JsonFeedReader::loadDocument(const QJsonObject &document)
         feed.setFaviconUrl(QUrl(favicon.toString()));
     else
         feed.loadFaviconFrom(feed.link());
+    if (!banner.isNull())
+        feed.setLogoUrl(QUrl(banner.toString()));
+    else if (!logo.isNull())
+        feed.setLogoUrl(QUrl(logo.toString()));
 }
 
 void JsonFeedReader::loadArticles(const QJsonArray &items)

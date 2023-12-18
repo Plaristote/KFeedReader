@@ -26,6 +26,7 @@ class Feed : public MenuItem
     Q_PROPERTY(QDateTime publicationDate READ publicationDate WRITE setPublicationDate NOTIFY publicationDateChanged)
     Q_PROPERTY(QString managingEditor READ managingEditor WRITE setManagingEditor NOTIFY managingEditorChanged)
     Q_PROPERTY(QUrl link READ link WRITE setLink NOTIFY linkChanged)
+    Q_PROPERTY(QUrl logoUrl READ logoUrl WRITE setLogoUrl NOTIFY logoUrlChanged)
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY languageChanged)
     Q_PROPERTY(QString generator READ generator WRITE setGenerator NOTIFY generatorChanged)
     Q_PROPERTY(QString copyright READ copyright WRITE setCopyright NOTIFY copyrightChanged)
@@ -116,6 +117,10 @@ public:
     {
         return m_link;
     }
+    const QUrl &logoUrl() const
+    {
+        return m_logoUrl;
+    }
     const QString &language() const
     {
         return m_language;
@@ -201,6 +206,7 @@ public Q_SLOTS:
     void setPublicationDate(const QDateTime &);
     void setManagingEditor(const QString &);
     void setLink(const QUrl &);
+    void setLogoUrl(const QUrl &);
     void setLanguage(const QString &);
     void setGenerator(const QString &);
     void setCopyright(const QString &);
@@ -229,6 +235,7 @@ Q_SIGNALS:
     void publicationDateChanged();
     void managingEditorChanged();
     void linkChanged();
+    void logoUrlChanged();
     void languageChanged();
     void generatorChanged();
     void copyrightChanged();
@@ -270,6 +277,7 @@ private:
     QDateTime m_publicationDate;
     QString m_managingEditor;
     QUrl m_link;
+    QUrl m_logoUrl;
     QString m_language;
     QString m_generator;
     QString m_copyright;
