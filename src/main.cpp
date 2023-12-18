@@ -76,8 +76,12 @@ int main(int argc, char *argv[])
         i18n("(c) %{CURRENT_YEAR}"));
     aboutData.addAuthor(i18nc("@info:credit", "Michael Martin Moro"),
                         i18nc("@info:credit", "Developer"),
-                        QStringLiteral("michael@planed.es"),
+                        QStringLiteral("michael@unetresgrossebite.com"),
                         QStringLiteral("https://github.com/Plaristote"));
+    aboutData.addCredit(i18nc("@info:credit", "Louis Schul"),
+                        i18nc("@info:credit", "Developer"),
+                        QString(),
+                        QStringLiteral("https://invent.kde.org/louis-schul"));
     // aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"), i18nc("EMAIL OF TRANSLATORS", "Your emails"));
     KAboutData::setApplicationData(aboutData);
     QGuiApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("akregator")));
