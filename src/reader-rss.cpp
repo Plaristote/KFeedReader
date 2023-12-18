@@ -56,9 +56,12 @@ void RssFeedReader::loadDocument(const QDomNode &document)
     feed.m_ttl = ttlElement.isNull() ? 0 : ttlElement.text().toInt();
     loadArticles(channel);
     if (imageElement.isNull())
-        (new FeedFavicon(feed))->fetchFromHtmlPage(feed.link());
-    else
-        Q_EMIT feed.requestFaviconUpdate(QUrl(imageElement.text()));
+        feed.loadFaviconFrom(feed.link());
+    else {
+        QString iconUrl = imageElement.firstChildElement(QStringLiteral("url")).text();
+
+        feed.setFaviconUrl(QUrl(iconUrl));
+    }
 }
 
 void RssFeedReader::loadArticles(const QDomNode &root)

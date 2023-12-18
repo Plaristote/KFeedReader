@@ -2,6 +2,7 @@
 #include "feed.h"
 #include "feedarticle.h"
 #include "feedarticleenclosure.h"
+#include "feedfavicon.h"
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -78,7 +79,7 @@ void JsonFeedReader::loadDocument(const QJsonObject &document)
     if (favicon.isString())
         feed.setFaviconUrl(QUrl(favicon.toString()));
     else
-        Q_EMIT feed.requestFaviconUpdate(feed.link());
+        feed.loadFaviconFrom(feed.link());
 }
 
 void JsonFeedReader::loadArticles(const QJsonArray &items)

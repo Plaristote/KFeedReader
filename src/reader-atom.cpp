@@ -36,11 +36,11 @@ void AtomFeedReader::loadDocument(const QDomNode &document)
     this->feed.setPublicationDate(publishedElement.isNull() ? QDateTime() : QDateTime::fromString(publishedElement.text(), Qt::ISODate));
     loadArticles(feed);
     if (imageElement.isNull() && !logoElement.isNull())
-        (new FeedFavicon(this->feed))->fetch(QUrl(logoElement.text()));
+        this->feed.setFaviconUrl(QUrl(logoElement.text()));
     else if (!imageElement.isNull())
-        (new FeedFavicon(this->feed))->fetch(QUrl(imageElement.text()));
+        this->feed.setFaviconUrl(QUrl(imageElement.text()));
     else
-        (new FeedFavicon(this->feed))->fetchFromHtmlPage(this->feed.link());
+        this->feed.loadFaviconFrom(this->feed.link());
 }
 
 void AtomFeedReader::loadArticles(const QDomNode &root)

@@ -70,19 +70,43 @@ void probeHtmlForFeedAndRefetch(const QByteArray &body, FeedFetcher &feedFetcher
     }
 }
 
+static bool findFaviconUrl(const QByteArray &body, Feed &feed, QRegularExpression pattern, QRegularExpression relPattern)
+{
+    auto it = pattern.globalMatch(QString::fromUtf8(body));
+
+    while (it.hasNext()) {
+        auto match = it.next();
+
+        if (match.hasMatch()) {
+            QString text = match.captured();
+
+            if (relPattern.match(text).hasMatch()) {
+                QString href = match.captured(QStringLiteral("url"));
+                QUrl faviconUrl = makeUrlFromHref(feed.xmlUrl(), href);
+
+                qDebug() << "Favicon found at" << faviconUrl;
+                feed.setFaviconUrl(faviconUrl);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void probeHtmlForFavicon(const QByteArray &body, Feed &feed)
 {
-    QRegularExpression pattern(
-        // Source: <\s*link\s+(rel="[^"]*icon[^"]*"\s+)?href="(?<url>[^"]+)"(\s*rel="[^"]*icon[^"]*"\s+)?
-        QStringLiteral("<\\s*link\\s+(rel=\"[^\"]*icon[^\"]*\"\\s+)?href=\"(?<url>[^\"]+)\"(\\s*rel=\"[^\"]*icon[^\"]*\"\\s+)?"),
+    QRegularExpression patternDoubleQuotes(
+        // Source: <\s*link\s+[^>]*href="(?<url>[^']+)"[^>]*>
+        QStringLiteral("<\\s*link\\s+[^>]*href=\"(?<url>[^\"]+)\"[^>]*>"),
         QRegularExpression::CaseInsensitiveOption);
-    auto match = pattern.match(QString::fromUtf8(body));
+    QRegularExpression relPatternDoubleQuotes(QStringLiteral("\\s+rel=\"[^\"]*icon[^\"]*\""), QRegularExpression::CaseInsensitiveOption);
 
-    if (match.hasMatch()) {
-        QString href = match.captured(QStringLiteral("url"));
-        QUrl faviconUrl = makeUrlFromHref(feed.xmlUrl(), href);
+    QRegularExpression patternSingleQuotes(QStringLiteral("<\\s*link\\s+[^>]*href='(?<url>[^']+)'[^>]*>"), QRegularExpression::CaseInsensitiveOption);
+    QRegularExpression relPatternSingleQuotes(QStringLiteral("\\s+rel='[^']*icon[^']*'"), QRegularExpression::CaseInsensitiveOption);
 
-        feed.setFaviconUrl(faviconUrl);
-    } else
+    qDebug() << "Probing" << feed.xmlUrl() << "for favicon...";
+
+    if (!findFaviconUrl(body, feed, patternDoubleQuotes, relPatternDoubleQuotes) && !findFaviconUrl(body, feed, patternSingleQuotes, relPatternSingleQuotes)) {
         qDebug() << "Feed::loadFavicon: No favicon match";
+    }
 }
