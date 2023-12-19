@@ -49,7 +49,12 @@ Kirigami.ScrollablePage {
         property QtObject item: page.model.items[index]
         bold: true
         label: item.name
-        subtitle: item.description
+        subtitle: item.description.replace(/\n/g, '')
+        subtitleItem {
+          clip: true
+          textFormat: Text.PlainText
+          wrapMode: Text.NoWrap
+        }
         leadingFillVertically: false
         leading: Item {
           implicitWidth: 16
