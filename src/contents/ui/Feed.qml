@@ -22,11 +22,32 @@ Kirigami.ScrollablePage {
       Layout.fillWidth: true
     }
 
-    Text {
-      text: model.description
-      wrapMode: Text.WordWrap
+    GridLayout {
       Layout.fillWidth: true
       Layout.bottomMargin: Kirigami.Units.smallSpacing
+      columns: width > 500 ? 2 : 1
+
+      Item {
+        Layout.fillHeight: true
+        Layout.alignment: Qt.AlignHCenter
+        implicitWidth: logo.width
+        implicitHeight: logo.height
+        visible: model.logoUrl != null
+        Image {
+          id: logo
+          source: model.logoUrl
+          height: Math.min(sourceSize.height, description.text.length > 150 ? 200 : 50)
+          width: Math.min(sourceSize.width, height)
+          fillMode: Image.PreserveAspectFit
+        }
+      }
+
+      Text {
+        id: description
+        Layout.fillWidth: true
+        text: model.description
+        wrapMode: Text.WordWrap
+      }
     }
 
     Kirigami.Separator {
