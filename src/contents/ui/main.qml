@@ -52,6 +52,7 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: i18n("Export feeds...")
                 icon.name: "document-export"
+                onTriggered: exportFeedsDialog.open()
             },
             Kirigami.Action {
                 text: i18n("About KFeedReader")
@@ -101,8 +102,18 @@ Kirigami.ApplicationWindow {
     FileDialog {
         id: importFeedsDialog
         title: i18n("Pick a feed source to import")
+        selectExisting: true
         nameFilters: [i18n("OPML structures") + " (*.opml)"]
         folder: shortcuts.home
         onAccepted: App.importOpml(fileUrl)
+    }
+
+    FileDialog {
+        id: exportFeedsDialog
+        title: i18n("Pick a file to export your feeds to")
+        selectExisting: false
+        nameFilters: [i18n("OPML structures") + " (*.opml)"]
+        folder: shortcuts.home
+        onAccepted: App.exportOpml(fileUrl)
     }
 }

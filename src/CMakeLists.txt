@@ -2,6 +2,8 @@
 # SPDX-FileCopyrightText: %{CURRENT_YEAR} %{AUTHOR} <%{EMAIL}>
 
 add_executable(kfeedreader
+    opml/import.cpp
+    opml/export.cpp
     main.cpp
     app.cpp
     menuitemmodel.cpp

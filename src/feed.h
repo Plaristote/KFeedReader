@@ -102,6 +102,14 @@ public:
     {
         return m_xmlUrl;
     }
+    int maxArticleAge() const
+    {
+        return m_maxArticleAge;
+    }
+    int maxArticleNumber() const
+    {
+        return m_maxArticleNumber;
+    }
     const QString &uuid() const
     {
         return m_uuid;

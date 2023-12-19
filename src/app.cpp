@@ -14,6 +14,9 @@
 #include <QQuickWindow>
 #include <QStandardPaths>
 
+void importOpmlDocumentIn(FeedFolder *folder, QDomDocument &document);
+void exportAsOpmlDocument(const FeedFolder *folder, QDomDocument &document);
+
 App::App(QObject *parent)
     : QObject(parent)
 {
@@ -75,60 +78,30 @@ void App::save()
         qDebug() << "App::save: failed to open" << storagePath();
 }
 
-static void importOpmlOutlineIn(FeedFolder *folder, QDomElement root)
-{
-    const QString itemTag = QStringLiteral("outline");
-    const QString xmlUrlAttribute = QStringLiteral("xmlUrl");
-    const QString linkAttribute = QStringLiteral("link");
-    const QString nameAttribute = QStringLiteral("text");
-    const QString descriptionAttribute = QStringLiteral("comment");
-    const QString idAttribute = QStringLiteral("id");
-    const QString isOpen = QStringLiteral("isOpen");
-
-    for (QDomElement outline = root.firstChildElement(itemTag); !outline.isNull(); outline = outline.nextSiblingElement(itemTag)) {
-        MenuItem *item = nullptr;
-
-        if (outline.hasAttribute(xmlUrlAttribute)) {
-            Feed *feed = new Feed(folder);
-
-            item = feed;
-            if (outline.hasAttribute(idAttribute) && !outline.attribute(idAttribute).isEmpty())
-                feed->setUuid(outline.attribute(idAttribute));
-            feed->setXmlUrl(QUrl(outline.attribute(xmlUrlAttribute)));
-            feed->setLink(QUrl(outline.attribute(linkAttribute)));
-        } else {
-            FeedFolder *subfolder = new FeedFolder(folder);
-
-            subfolder->setExpanded(outline.attribute(isOpen) == QStringLiteral("true"));
-            item = subfolder;
-            importOpmlOutlineIn(subfolder, outline);
-        }
-        item->setName(outline.attribute(nameAttribute));
-        item->setDescription(outline.attribute(descriptionAttribute));
-        folder->addItem(item);
-    }
-}
-
 void App::importOpml(const QUrl &filepath)
 {
     QFile file(filepath.path());
 
-    qDebug() << "IMPORT OPML" << filepath.toString();
     if (file.open(QIODevice::ReadOnly)) {
         QDomDocument document;
         QDomElement base;
 
         document.setContent(file.readAll());
-        base = document.firstChildElement(QStringLiteral("opml")).firstChildElement(QStringLiteral("body"));
-        qDebug() << "OPML BASE EXISTS" << base.isNull();
-        importOpmlOutlineIn(m_rootFolder, base);
-    } else
-        qDebug() << "Could not open OPML file";
+        importOpmlDocumentIn(m_rootFolder, document);
+    }
 }
 
 void App::exportOpml(const QUrl &filepath)
 {
-    // TODO
+    QFile file(filepath.path());
+
+    if (file.open(QIODevice::WriteOnly)) {
+        QDomDocument document;
+
+        exportAsOpmlDocument(m_rootFolder, document);
+        file.write(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n").toUtf8());
+        file.write(document.toString().toUtf8());
+    }
 }
 
 #include "moc_app.cpp"
