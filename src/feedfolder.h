@@ -34,6 +34,7 @@ public:
     MenuItem *childAt(int) const override;
     DisplayType displayType() const;
     bool expanded() const;
+    void markAsRead() override;
 
 public Q_SLOTS:
     void setDisplayType(DisplayType);

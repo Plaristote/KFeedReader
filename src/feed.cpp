@@ -405,3 +405,9 @@ qint64 Feed::unreadCount() const
         total += !article->isRead() ? 1 : 0;
     return total;
 }
+
+void Feed::markAsRead()
+{
+    for (FeedArticle *article : m_articles)
+        article->setRead(true);
+}

@@ -76,6 +76,7 @@ public:
     Q_INVOKABLE FeedArticle *findNextArticle(const FeedArticle *) const;
     Q_INVOKABLE FeedArticle *findPreviousArticle(const FeedArticle *) const;
     qint64 unreadCount() const override;
+    void markAsRead() override;
     bool fetching() const override
     {
         return m_fetching;

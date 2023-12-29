@@ -282,3 +282,9 @@ void FeedFolder::triggerBeforeSave()
     }
     Q_EMIT beforeSave();
 }
+
+void FeedFolder::markAsRead()
+{
+    for (int i = 0; i < childCount(); ++i)
+        childAt(i)->markAsRead();
+}

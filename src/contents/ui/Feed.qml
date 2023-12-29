@@ -110,6 +110,7 @@ Kirigami.ScrollablePage {
     readOnly: page.readOnly
     onRequireDestroy: destroyConfirmDialog.open()
     onToggleSearch: searchField.visible = !searchField.visible
+    onMarkAsRead: page.model.markAsRead()
   }
 
   actions.main: feedActions.mainAction

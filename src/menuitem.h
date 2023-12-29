@@ -45,6 +45,7 @@ public Q_SLOTS:
     virtual void fetch(){};
     virtual void remove();
     virtual void triggerBeforeSave(){};
+    virtual void markAsRead(){};
 
 Q_SIGNALS:
     void nameChanged(const QString &name);

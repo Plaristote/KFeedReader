@@ -33,6 +33,13 @@ Item {
       onTriggered: pageStack.push(Qt.resolvedUrl("AddFolder.qml"), { parentFolder: root.model })
     },
     Kirigami.Action {
+      id: markAsReadAction
+      text: i18n("Mark all as read")
+      icon.name: "mail-mark-read"
+      tooltip: i18n("Mark all the articles in this feed as having already been read")
+      onTriggered: root.model.markAsRead()
+    },
+    Kirigami.Action {
       text: i18n("Configure")
       icon.name: "configure"
       tooltip: i18n("Change a folder's identity and re-arrange its contents")

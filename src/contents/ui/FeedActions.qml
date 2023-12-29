@@ -10,8 +10,9 @@ Item {
 
   signal requireDestroy()
   signal toggleSearch()
+  signal markAsRead()
 
-  contextualActions: readOnly ? [searchAction] : [searchAction, editAction, removeAction]
+  contextualActions: readOnly ? [searchAction] : [searchAction, markAsRead, editAction, removeAction]
 
   Kirigami.Action {
     id: updateAction
@@ -31,6 +32,14 @@ Item {
       sequence: "Ctrl+F"
       onActivated: searchAction.trigger()
     }
+  }
+
+  Kirigami.Action {
+    id: markAsReadAction
+    text: i18n("Mark all as read")
+    icon.name: "mail-mark-read"
+    tooltip: i18n("Mark all the articles in this feed as having already been read")
+    onTriggered: root.markAsRead()
   }
 
   Kirigami.Action {
