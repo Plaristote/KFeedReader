@@ -76,6 +76,7 @@ ColumnLayout {
   }
 
   TextEdit {
+    Layout.fillWidth: true
     text: model.descriptionAsRichText
     readOnly: true
     wrapMode: Text.WordWrap
