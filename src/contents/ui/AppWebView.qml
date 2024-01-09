@@ -15,6 +15,12 @@ WebEngineView {
     request.accept();
   }
 
+  // Qt6: onNewWindowRequested: function (request) {
+  onNewViewRequested: function (request) {
+    if (request.userInitiated)
+      Qt.openUrlExternally(request.requestedUrl);
+  }
+
   Shortcut {
     sequence: "Esc"
     enabled: webView.fullScreen
