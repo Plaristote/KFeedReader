@@ -14,6 +14,7 @@ QtObject {
       text: i18n("Next")
       icon.name: "arrow-up"
       tooltip: i18n("Go to the next article")
+      shortcut: "Alt+Up"
       enabled: nextArticle
       onTriggered: requestArticleChange(nextArticle)
     },
@@ -21,6 +22,7 @@ QtObject {
       text: i18n("Previous")
       icon.name: "arrow-down"
       tooltip: i18n("Go to the previous article")
+      shortcut: "Alt+Down"
       enabled: previousArticle
       onTriggered: requestArticleChange(previousArticle)
     },
