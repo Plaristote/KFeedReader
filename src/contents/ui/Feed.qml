@@ -66,6 +66,7 @@ Kirigami.ScrollablePage {
         property QtObject item: page.model.articles[index]
         label: item.title
         bold: !item.read
+        reserveSpaceForIcon: false
         trailing: Text {
           text: item.publicationDate.toLocaleDateString()
         }
