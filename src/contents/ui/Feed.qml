@@ -68,7 +68,7 @@ Kirigami.ScrollablePage {
         bold: !item.read
         reserveSpaceForIcon: false
         trailing: Text {
-          text: item.publicationDate.toLocaleDateString()
+          text: item.publicationDate.toLocaleDateString({})
         }
         visible: !searchField.visible || searchField.matches(item.title)
         action: Controls.Action {
