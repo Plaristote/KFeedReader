@@ -26,9 +26,10 @@ public:
     void fetch() override;
     const QList<FeedArticle *> &articles() const;
     bool hasTextInput() const;
+    qint64 listMaxLength() const;
 
-    Q_INVOKABLE FeedArticle *findNextArticle(const FeedArticle *) const;
-    Q_INVOKABLE FeedArticle *findPreviousArticle(const FeedArticle *) const;
+    Q_INVOKABLE FeedArticle *findNextArticle(const FeedArticle *);
+    Q_INVOKABLE FeedArticle *findPreviousArticle(const FeedArticle *);
 
 public Q_SLOTS:
     void addFolder(FeedFolder *);
@@ -38,6 +39,7 @@ public Q_SLOTS:
     void removeFolder(FeedFolder *);
     void removeAggregatedResource(QObject *);
     void updateArticles();
+    void loadMore();
 
 Q_SIGNALS:
     void articlesChanged();
@@ -48,6 +50,7 @@ private:
 
     QList<Feed *> m_feeds;
     QList<FeedArticle *> m_articles;
+    qint64 m_listMaxLength;
 };
 
 #endif

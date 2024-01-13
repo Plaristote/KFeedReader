@@ -387,12 +387,12 @@ FeedArticle *Feed::findArticleByLink(const QUrl &link) const
     return nullptr;
 }
 
-FeedArticle *Feed::findPreviousArticle(const FeedArticle *article) const
+FeedArticle *Feed::findPreviousArticle(const FeedArticle *article)
 {
     return ::findPreviousArticle(m_articles, article);
 }
 
-FeedArticle *Feed::findNextArticle(const FeedArticle *article) const
+FeedArticle *Feed::findNextArticle(const FeedArticle *article)
 {
     return ::findNextArticle(m_articles, article);
 }

@@ -11,6 +11,7 @@ FeedArticle *findNextArticle(const QList<FeedArticle *> &articles, const FeedArt
 AggregatedFeed::AggregatedFeed(QObject *parent)
     : MenuItem(parent)
 {
+    m_listMaxLength = MAX_AGGREGATED_ARTICLE_COUNT;
     connect(this, &AggregatedFeed::feedsChanged, this, &AggregatedFeed::updateArticles);
 }
 
@@ -29,12 +30,16 @@ const QList<FeedArticle *> &AggregatedFeed::articles() const
     return m_articles;
 }
 
-FeedArticle *AggregatedFeed::findPreviousArticle(const FeedArticle *article) const
+FeedArticle *AggregatedFeed::findPreviousArticle(const FeedArticle *article)
 {
-    return ::findPreviousArticle(m_articles, article);
+    FeedArticle *result = ::findPreviousArticle(m_articles, article);
+
+    if (m_articles.indexOf(result) >= m_listMaxLength)
+        loadMore();
+    return result;
 }
 
-FeedArticle *AggregatedFeed::findNextArticle(const FeedArticle *article) const
+FeedArticle *AggregatedFeed::findNextArticle(const FeedArticle *article)
 {
     return ::findNextArticle(m_articles, article);
 }
@@ -185,11 +190,23 @@ double AggregatedFeed::progress() const
     return fetchingCount ? (total / fetchingCount) : 0;
 }
 
+qint64 AggregatedFeed::listMaxLength() const
+{
+    return m_listMaxLength;
+}
+
+void AggregatedFeed::loadMore()
+{
+    m_listMaxLength += MAX_AGGREGATED_ARTICLE_COUNT;
+    Q_EMIT articlesChanged();
+}
+
 int aggregatedFeedCount(QQmlListProperty<QObject> *property)
 {
+    auto *feed = reinterpret_cast<AggregatedFeed *>(property->object);
     auto *list = static_cast<QList<FeedArticle *> *>(property->data);
 
-    return list->size() < MAX_AGGREGATED_ARTICLE_COUNT ? list->size() : MAX_AGGREGATED_ARTICLE_COUNT;
+    return list->size() < feed->listMaxLength() ? list->size() : feed->listMaxLength();
 }
 
 QObject *aggregatedFeedAt(QQmlListProperty<QObject> *property, int index)
