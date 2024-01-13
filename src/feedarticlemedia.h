@@ -99,8 +99,8 @@ private:
     QUrl m_thumbnailUrl;
     QSize m_thumbnailSize;
     QString m_description;
-    double m_starRating;
-    qint64 m_viewCount;
+    double m_starRating = 0;
+    qint64 m_viewCount = 0;
 };
 
 #endif

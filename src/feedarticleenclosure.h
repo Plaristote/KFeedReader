@@ -60,7 +60,7 @@ Q_SIGNALS:
 private:
     QString m_title;
     QString m_type;
-    qint64 m_size;
+    qint64 m_size = 0;
     QUrl m_url;
 };
 
