@@ -212,6 +212,9 @@ public:
 
     void setFaviconUrl(const QUrl &value);
 
+    Q_INVOKABLE bool isSkippedHour(unsigned short index);
+    Q_INVOKABLE bool isSkippedDay(unsigned short index);
+
 public Q_SLOTS:
     void remove() override;
     void loadArticleFile();
@@ -232,6 +235,8 @@ public Q_SLOTS:
     void setTextInputLink(const QUrl &);
     void setLastBuildDate(const QDateTime &);
     void setWebmaster(const QString &);
+    void setSkipHour(unsigned short index, bool skipped = true);
+    void setSkipDay(unsigned short index, bool skipped = true);
     void setTtl(int);
     void setCustomTtl(int);
     void setUseCustomTtl(bool);
@@ -289,6 +294,8 @@ private:
     QList<FeedArticle *> m_articles;
     QVector<unsigned short> m_skipDays;
     QVector<unsigned short> m_skipHours;
+    QVector<unsigned short> m_customSkipDays;
+    QVector<unsigned short> m_customSkipHours;
     QDateTime m_lastBuildDate;
     QDateTime m_publicationDate;
     QString m_managingEditor;

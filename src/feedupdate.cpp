@@ -33,16 +33,18 @@ void FeedUpdater::resetUpdateTimer()
 {
     QSettings settings;
     qint64 ttl = feed.m_ttl > 0 ? feed.m_ttl : settings.value(QStringLiteral("defaultTTL"), 60).toInt();
+    QDateTime nextUpdate;
 
     if (feed.m_useCustomTtl && feed.m_customTtl > 0)
         ttl = feed.m_customTtl;
     if (feed.m_lastUpdate.isNull())
         feed.m_lastUpdate = QDateTime::currentDateTime();
-    for (char i = 0; i < 7 && feed.m_skipDays.contains(feed.m_lastUpdate.date().dayOfWeek()); ++i)
-        feed.m_lastUpdate = feed.m_lastUpdate.addDays(1);
-    for (char i = 0; i < 24 && feed.m_skipHours.contains(feed.m_lastUpdate.time().hour()); ++i)
-        feed.m_lastUpdate = feed.m_lastUpdate.addSecs(3600);
-    feed.setScheduledUpdate(QDateTime(feed.m_lastUpdate).addSecs(ttl * 60));
+    nextUpdate = QDateTime(feed.m_lastUpdate).addSecs(ttl * 60);
+    for (char i = 0; i < 7 && feed.isSkippedDay(nextUpdate.date().dayOfWeek()); ++i)
+        nextUpdate = nextUpdate.addDays(1);
+    for (char i = 0; i < 24 && feed.isSkippedHour(nextUpdate.time().hour()); ++i)
+        nextUpdate = nextUpdate.addSecs(3600);
+    feed.setScheduledUpdate(nextUpdate);
 }
 
 void FeedUpdater::restartUpdateTimer()

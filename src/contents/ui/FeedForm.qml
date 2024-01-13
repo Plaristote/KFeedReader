@@ -148,6 +148,48 @@ Kirigami.ScrollablePage {
           onCurrentValueChanged: updateFeedTtl()
         }
       }
+
+      Row {
+        Kirigami.FormData.label: i18n("Skip hours")
+        visible: useCustomTtlInput.checked
+        Repeater {
+          model: 24
+          delegate: Column {
+            Controls.Label { text: `${index}` }
+            Controls.CheckBox {
+              checked: page.feed.isSkippedHour(index)
+              onCheckedChanged: page.feed.setSkipHour(index, checked)
+              Connections {
+                target: page.feed
+                function onSkipHoursChanged() {
+                  checked = page.feed.isSkippedHour(index);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      Row {
+        Kirigami.FormData.label: i18n("Skip days")
+        visible: useCustomTtlInput.checked
+        Repeater {
+          model: 7
+          delegate: Column {
+            Controls.Label { text: `${index}` }
+            Controls.CheckBox {
+              checked: page.feed.isSkippedDay(index)
+              onCheckedChanged: page.feed.setSkipDay(index, checked)
+              Connections {
+                target: page.feed
+                function onSkipDaysChanged() {
+                  checked = page.feed.isSkippedDay(index)
+                }
+              }
+            }
+          }
+        }
+      }
     }
 
     Controls.Button {

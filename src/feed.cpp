@@ -355,6 +355,42 @@ void Feed::setAutoUpdateEnabled(bool value)
     }
 }
 
+bool Feed::isSkippedHour(unsigned short value)
+{
+    return (m_useCustomTtl ? m_customSkipHours : m_skipHours).indexOf(value) >= 0;
+}
+
+bool Feed::isSkippedDay(unsigned short value)
+{
+    return (m_useCustomTtl ? m_customSkipDays : m_skipHours).indexOf(value) >= 0;
+}
+
+void Feed::setSkipHour(unsigned short value, bool skipped)
+{
+    int index = m_customSkipHours.indexOf(value);
+
+    if (index < 0 && skipped)
+        m_customSkipHours.append(value);
+    else if (index >= 0 && !skipped)
+        m_customSkipHours.removeAt(index);
+    else
+        return;
+    Q_EMIT skipHoursChanged();
+}
+
+void Feed::setSkipDay(unsigned short value, bool skipped)
+{
+    int index = m_customSkipDays.indexOf(value);
+
+    if (index < 0 && skipped)
+        m_customSkipDays.append(value);
+    else if (index >= 0 && !skipped)
+        m_customSkipDays.removeAt(index);
+    else
+        return;
+    Q_EMIT skipDaysChanged();
+}
+
 void Feed::insertArticle(FeedArticle *article)
 {
     QDateTime publicationDate = article->publicationDate();
