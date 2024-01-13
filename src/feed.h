@@ -43,6 +43,7 @@ class Feed : public MenuItem
     Q_PROPERTY(bool useCustomTtl READ useCustomTtl WRITE setUseCustomTtl NOTIFY customTtlChanged)
     Q_PROPERTY(QDateTime lastUpdate READ lastUpdate WRITE setLastUpdate NOTIFY lastUpdateChanged)
     Q_PROPERTY(QDateTime scheduledUpdate READ scheduledUpdate WRITE setScheduledUpdate NOTIFY scheduledUpdateChanged)
+    Q_PROPERTY(bool autoUpdateEnabled READ autoUpdateEnabled WRITE setAutoUpdateEnabled NOTIFY customTtlChanged)
 public:
     friend class AtomFeedReader;
     friend class RssFeedReader;
@@ -199,6 +200,10 @@ public:
     {
         return m_articles;
     }
+    bool autoUpdateEnabled() const
+    {
+        return m_autoUpdateEnabled;
+    }
 
     void setUuid(const QString &value)
     {
@@ -232,6 +237,7 @@ public Q_SLOTS:
     void setUseCustomTtl(bool);
     void setScheduledUpdate(const QDateTime &);
     void setLastUpdate(const QDateTime &);
+    void setAutoUpdateEnabled(bool);
     void loadFaviconFrom(const QUrl &);
     void copy(const Feed *);
 
@@ -303,6 +309,7 @@ private:
     QDateTime m_lastUpdate;
     QDateTime m_scheduledUpdate;
     FeedUpdater m_feedUpdater;
+    int m_autoUpdateEnabled = true;
     int m_ttl = 0;
     int m_customTtl = 0;
     bool m_useCustomTtl = false;

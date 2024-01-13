@@ -116,6 +116,13 @@ Kirigami.ScrollablePage {
       }
 
       Controls.CheckBox {
+        id: enableAutoUpdateInput
+        text: i18n("Enable periodic updates")
+        checked: page.feed.autoUpdateEnabled
+        onCheckedChanged: page.feed.autoUpdateEnabled = checked
+      }
+
+      Controls.CheckBox {
         id: useCustomTtlInput
         text: i18n("Use a custom update interval")
         checked: page.feed.useCustomTtl
@@ -123,7 +130,7 @@ Kirigami.ScrollablePage {
       }
 
       Row {
-        Kirigami.FormData.label: i18n("Suggested update interval")
+        Kirigami.FormData.label: i18n("Custom update interval")
         visible: useCustomTtlInput.checked
         Controls.TextField {
           id: customTtlInput

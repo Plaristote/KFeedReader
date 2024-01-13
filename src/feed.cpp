@@ -65,6 +65,7 @@ QStringList Feed::persistentProperties() const
             QStringLiteral("ttl"),
             QStringLiteral("customTtl"),
             QStringLiteral("useCustomTtl"),
+            QStringLiteral("autoUpdateEnabled"),
             QStringLiteral("faviconUrl"),
             QStringLiteral("logoUrl"),
             QStringLiteral("link"),
@@ -343,6 +344,14 @@ void Feed::setScheduledUpdate(const QDateTime &value)
     if (value != m_scheduledUpdate) {
         m_scheduledUpdate = value;
         Q_EMIT scheduledUpdateChanged();
+    }
+}
+
+void Feed::setAutoUpdateEnabled(bool value)
+{
+    if (value != m_autoUpdateEnabled) {
+        m_autoUpdateEnabled = value;
+        Q_EMIT customTtlChanged();
     }
 }
 

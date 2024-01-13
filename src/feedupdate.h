@@ -21,6 +21,9 @@ public Q_SLOTS:
     void resetUpdateTimer();
     void restartUpdateTimer();
 
+private Q_SLOTS:
+    void timerTicked();
+
 private:
     Feed &feed;
     QTimer m_updateTimer;

@@ -9,7 +9,13 @@ FeedUpdater::FeedUpdater(Feed &feed)
     connect(&feed, &Feed::customTtlChanged, this, &FeedUpdater::resetUpdateTimer);
     connect(&feed, &Feed::lastUpdateChanged, this, &FeedUpdater::resetUpdateTimer);
     connect(&feed, &Feed::scheduledUpdateChanged, this, &FeedUpdater::restartUpdateTimer);
-    connect(&m_updateTimer, &QTimer::timeout, &feed, &Feed::fetch);
+    connect(&m_updateTimer, &QTimer::timeout, this, &FeedUpdater::timerTicked);
+}
+
+void FeedUpdater::timerTicked()
+{
+    if (feed.autoUpdateEnabled())
+        feed.fetch();
 }
 
 int FeedUpdater::ttlInUnits(int ttl, TtlType type)
