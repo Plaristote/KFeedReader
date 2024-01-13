@@ -45,7 +45,8 @@ TreeView.TreeListView {
     }
 
     Component.onDestruction: {
-      menuItem.expanded = kDescendantExpanded;
+      if (typeof kDescendantExpanded !== "undefined")
+        menuItem.expanded = kDescendantExpanded;
     }
 
     Connections {
