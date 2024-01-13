@@ -81,6 +81,7 @@ int MenuItem::row() const
 
 void MenuItem::setParentItem(MenuItem *parentItem)
 {
+    Q_ASSERT(parentItem != this);
     setParent(parentItem);
     m_parentItem = parentItem;
     Q_EMIT parentChanged();

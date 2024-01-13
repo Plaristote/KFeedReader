@@ -32,6 +32,7 @@ public Q_SLOTS:
 
 private:
     void appendToFolder(MenuItem *item, FeedFolder *folder);
+    bool isAncestorOf(MenuItem *folder, MenuItem *item) const;
 
     MenuItem *m_root = nullptr;
 };

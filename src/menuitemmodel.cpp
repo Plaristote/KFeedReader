@@ -78,9 +78,24 @@ QHash<int, QByteArray> MenuItemModel::roleNames() const
     return {{DisplayNameRole, "displayName"}, {DescriptionRole, "description"}, {IconUrlRole, "iconUrl"}, {MenuItemRole, "menuItem"}};
 }
 
+bool MenuItemModel::isAncestorOf(MenuItem *folderItem, MenuItem *item) const
+{
+    if (folderItem->itemType() == MenuItem::FolderMenuItem) {
+        FeedFolder *folder = reinterpret_cast<FeedFolder *>(folderItem);
+
+        for (int i = 0; i < folder->childCount(); ++i) {
+            MenuItem *child = folder->childAt(i);
+
+            if (child == item || isAncestorOf(child, item))
+                return true;
+        }
+    }
+    return false;
+}
+
 void MenuItemModel::reparent(MenuItem *target, MenuItem *subject)
 {
-    if (target && subject) {
+    if (target && subject && target != subject && !isAncestorOf(subject, target)) {
         switch (target->itemType()) {
         case MenuItem::FolderMenuItem:
             appendToFolder(subject, reinterpret_cast<FeedFolder *>(target));
