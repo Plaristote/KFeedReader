@@ -46,6 +46,7 @@ public Q_SLOTS:
     void fetch() override;
     void remove() override;
     void triggerBeforeSave() override;
+    void synchronizeWithYouTube(const QUrl &takeoutUrl);
 
 Q_SIGNALS:
     void itemsChanged();

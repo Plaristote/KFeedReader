@@ -4,6 +4,7 @@
 add_executable(kfeedreader
     opml/import.cpp
     opml/export.cpp
+    youtube/sync.cpp
     main.cpp
     app.cpp
     menuitemmodel.cpp
