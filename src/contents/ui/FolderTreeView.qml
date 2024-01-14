@@ -106,8 +106,10 @@ TreeView.TreeListView {
       RowLayout {
         id: row
         spacing: 5
+        height: parent.height
         anchors {
-          fill: parent
+          left: parent.left
+          right: parent.right
           leftMargin: Kirigami.Units.largeSpacing
           rightMargin: Kirigami.Units.largeSpacing
         }
