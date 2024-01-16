@@ -15,11 +15,13 @@ ColumnLayout {
       name: "fullscreen"
       when: layout.fullScreen
       ParentChange { target: content; parent: window.fullScreenContainer }
+      StateChangeScript { script: window.showFullScreen() }
     },
     State {
       name: "default"
       when: !layout.fullScreen
       ParentChange { target: content; parent: contentContainer }
+      StateChangeScript { script: window.showNormal() }
     }
   ]
 
