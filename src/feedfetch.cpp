@@ -46,7 +46,7 @@ void FeedFetcher::fetch()
 {
     if (m_requestCounter < 5) {
         QNetworkRequest request(m_feed.m_xmlUrl);
-        request.setRawHeader("Accept", "application/rss+xml, application/atom+xml, application/feed+json, text/html");
+        request.setRawHeader("Accept", "application/rss+xml, application/atom+xml, application/feed+json, text/xml, text/html");
         QNetworkReply *reply = m_feed.m_network->get(request);
 
         connect(reply, &QNetworkReply::downloadProgress, this, [this](qint64 bytesRead, qint64 totalBytes) {
@@ -88,6 +88,8 @@ void FeedFetcher::readResponse(QNetworkReply *reply)
     } else if (status > 300 && status < 304) {
         redirectTo(QUrl(reply->header(QNetworkRequest::LocationHeader).toString()));
         return;
+    } else if (status == 406) {
+        qDebug() << "/!\\ Fetch status" << status << m_feed.xmlUrl() << ", acceptable formats are:" << reply->readAll();
     } else {
         qDebug() << "/!\\ Fetch status" << status << m_feed.xmlUrl();
     }
