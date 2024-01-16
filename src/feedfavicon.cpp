@@ -64,12 +64,12 @@ void FeedFavicon::fetchFromHtmlPage(const QUrl &remoteUrl)
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         unsigned int status = reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toUInt();
 
+        reply->deleteLater();
         if (status > 300 && status < 304 && m_fetchCount < maxRedirectCount) {
             fetchFromHtmlPage(QUrl(reply->header(QNetworkRequest::LocationHeader).toString()));
             return;
         } else if (status >= 200 && status < 300)
             probeHtmlForFavicon(reply->readAll(), m_feed);
-        reply->deleteLater();
         deleteLater();
     });
 }
