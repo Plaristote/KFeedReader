@@ -3,6 +3,7 @@
 #include "feedarticle.h"
 #include "feedarticleenclosure.h"
 #include "feedfavicon.h"
+#include "medialistupdater.h"
 #include <QDebug>
 #include <QDomDocument>
 
@@ -97,6 +98,7 @@ void RssFeedReader::loadArticle(const QDomElement &node, FeedArticle &article)
     QDomElement linkElement = node.firstChildElement(QStringLiteral("link"));
     QDomElement pubDateElement = node.firstChildElement(QStringLiteral("pubDate"));
     QDomElement titleElement = node.firstChildElement(QStringLiteral("title"));
+    XmlMediaListUpdater<FeedArticleEnclosure> mediaList(article, article.m_medias);
 
     article.setAuthor(authorElement.isNull() ? QString() : authorElement.text());
     article.setCategory(categoryElement.isNull() ? QString() : categoryElement.text());
@@ -106,14 +108,13 @@ void RssFeedReader::loadArticle(const QDomElement &node, FeedArticle &article)
     article.setLink(linkElement.isNull() ? QUrl() : QUrl(linkElement.text()));
     article.setPublicationDate(pubDateElement.isNull() ? QDateTime() : QDateTime::fromString(pubDateElement.text(), Qt::RFC2822Date));
     article.setTitle(titleElement.isNull() ? QString() : titleElement.text());
-    article.clearMedias();
-    if (!enclosureElement.isNull()) {
-        auto *enclosure = new FeedArticleEnclosure(&article);
 
-        enclosure->loadFromXml(enclosureElement);
-        article.m_medias << enclosure;
+    if (!enclosureElement.isNull()) {
+        mediaList.append(enclosureElement);
+    } else {
+        article.clearMedias();
+        Q_EMIT article.mediasChanged();
     }
-    Q_EMIT article.mediasChanged();
 }
 
 void RssFeedReader::loadSkipDays(const QDomElement &element)

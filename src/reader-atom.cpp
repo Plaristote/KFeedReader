@@ -3,6 +3,7 @@
 #include "feedarticle.h"
 #include "feedarticlemedia.h"
 #include "feedfavicon.h"
+#include "medialistupdater.h"
 #include <QDebug>
 #include <QDomDocument>
 
@@ -78,6 +79,7 @@ void AtomFeedReader::loadArticle(const QDomElement &node, FeedArticle &article)
     QDomElement authorUrlElement = authorElement.firstChildElement(QStringLiteral("uri"));
     QDomElement summaryElement = node.firstChildElement(QStringLiteral("summary"));
     QDomElement mediaGroupElement = node.firstChildElement(QStringLiteral("media:group"));
+    XmlMediaListUpdater<FeedArticleMedia> mediaList(article, article.m_medias);
 
     if (publishedElement.isNull())
         publishedElement = updatedElement;
@@ -88,13 +90,9 @@ void AtomFeedReader::loadArticle(const QDomElement &node, FeedArticle &article)
     article.setLink(linkElement.isNull() ? QUrl() : QUrl(linkElement.attribute(QStringLiteral("href"))));
     article.setPublicationDate(publishedElement.isNull() ? QDateTime() : QDateTime::fromString(publishedElement.text(), Qt::ISODate));
     article.setTitle(titleElement.isNull() ? QString() : titleElement.text());
-    article.clearMedias();
+
     for (QDomElement mediaGroup = node.firstChildElement(QStringLiteral("media:group")); !mediaGroup.isNull();
          mediaGroup = mediaGroup.nextSiblingElement(QStringLiteral("media:group"))) {
-        auto *media = new FeedArticleMedia(&article);
-
-        media->loadFromXml(mediaGroup);
-        article.m_medias << media;
+        mediaList.append(mediaGroup);
     }
-    Q_EMIT article.mediasChanged();
 }

@@ -3,6 +3,7 @@
 #include "feedarticle.h"
 #include "feedarticleenclosure.h"
 #include "feedfavicon.h"
+#include "medialistupdater.h"
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -139,18 +140,21 @@ void JsonFeedReader::loadArticle(const QJsonObject &data, FeedArticle &article)
         loadAttachments(data[attributes[AttachmentsAttribute]].toArray(), article);
 }
 
+static void initializeMedia(FeedArticleEnclosure &media, const QJsonObject &attachment)
+{
+    media.setTitle(attachment[attributes[TitleAttribute]].toString());
+    media.setUrl(QUrl(attachment[attributes[UrlAttribute]].toString()));
+    media.setSize(attachment[attributes[SizeAttribute]].toInt());
+    media.setType(attachment[attributes[MimetypeAttribute]].toString());
+}
+
 void JsonFeedReader::loadAttachments(const QJsonArray &list, FeedArticle &article)
 {
-    article.clearMedias();
+    MediaListUpdater<FeedArticleEnclosure, QJsonObject> medias(article, article.m_medias, &initializeMedia);
+
     for (const QJsonValue &value : list) {
-        FeedArticleEnclosure *media = new FeedArticleEnclosure(&article);
         QJsonObject attachment = value.toObject();
 
-        media->setTitle(attachment[attributes[TitleAttribute]].toString());
-        media->setUrl(QUrl(attachment[attributes[UrlAttribute]].toString()));
-        media->setSize(attachment[attributes[SizeAttribute]].toInt());
-        media->setType(attachment[attributes[MimetypeAttribute]].toString());
-        article.m_medias.append(media);
+        medias.append(attachment);
     }
-    Q_EMIT article.mediasChanged();
 }
