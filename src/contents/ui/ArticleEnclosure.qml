@@ -48,6 +48,14 @@ ColumnLayout {
     onTriggered: layout.fullScreen = !layout.fullScreen
   }
 
+  Kirigami.Action {
+    id: exitFullScreen
+    text: i18n("Exit full screen")
+    shortcut: "ESC"
+    enabled: layout.fullScreen
+    onTriggered: toggleFullScreenAction.trigger()
+  }
+
   Kirigami.Separator {
     Layout.fillWidth: true
   }
