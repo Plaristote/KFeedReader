@@ -94,31 +94,43 @@ ColumnLayout {
           fillMode: VideoOutput.PreserveAspectFit
           anchors.fill: parent
         }
+
+        MouseArea {
+          anchors.fill: parent
+          onDoubleClicked: toggleFullScreenAction.trigger()
+        }
       }
 
-      RowLayout {
+      Rectangle {
         Layout.fillWidth: true
+        Layout.preferredHeight: videoControlsRow.height
+        color: layout.fullScreen ? "black" : "transparent"
 
-        Controls.Button {
-          action: togglePlayAction
-        }
+        RowLayout {
+          id: videoControlsRow
+          width: parent.width
 
-        Controls.Slider {
-          Layout.fillWidth: true
-          from: 0
-          to: mediaPlayer.duration
-          value: mediaPlayer.position
-          onValueChanged: {
-            if (value != mediaPlayer.position)
-              mediaPlayer.seek(value);
+          Controls.Button {
+            action: togglePlayAction
           }
-        }
 
-        Controls.Button {
-          action: toggleFullScreenAction
-          visible: withVideo
-        }
-      }
+          Controls.Slider {
+            Layout.fillWidth: true
+            from: 0
+            to: mediaPlayer.duration
+            value: mediaPlayer.position
+            onValueChanged: {
+              if (value != mediaPlayer.position)
+                mediaPlayer.seek(value);
+            }
+          }
+
+          Controls.Button {
+            action: toggleFullScreenAction
+            visible: withVideo
+          }
+        } // END videoControlsRow
+      } // END Rectangle
     }
   }
 
