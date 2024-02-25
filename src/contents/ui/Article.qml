@@ -36,6 +36,15 @@ Kirigami.ScrollablePage {
     anchors.left: parent.left
     anchors.right: parent.right
 
+    Item {
+      Layout.fillWidth: true
+      Layout.preferredHeight: 50
+      Breadcrumbs {
+        crumbs: page.model.crumbs
+        anchors { top: parent.top; right: parent.right }
+      }
+    }
+
     RowLayout {
       id: authorRow
       visible: page.model.author.length > 0
@@ -56,10 +65,12 @@ Kirigami.ScrollablePage {
 
     Kirigami.Separator {
       Layout.fillWidth: true
-      visible: authorRow.visible
+      visible: authorRow.visible && articleDescription.visible
     }
 
     Text {
+      id: articleDescription
+      visible: text.length > 0
       text: page.model.description
       wrapMode: Text.WordWrap
       Layout.fillWidth: true

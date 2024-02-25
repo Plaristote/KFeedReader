@@ -24,6 +24,7 @@ class FeedArticle : public QObject
     Q_PROPERTY(QUrl source READ source WRITE setSource NOTIFY sourceChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QQmlListProperty<QObject> medias READ qmlMedias NOTIFY mediasChanged)
+    Q_PROPERTY(QQmlListProperty<QObject> crumbs READ qmlCrumbs CONSTANT)
 public:
     friend class RssFeedReader;
     friend class AtomFeedReader;
@@ -78,6 +79,7 @@ Q_SIGNALS:
     void mediasChanged();
 
 private:
+    QQmlListProperty<QObject> qmlCrumbs();
     QQmlListProperty<QObject> qmlMedias()
     {
         return QQmlListProperty<QObject>(this, reinterpret_cast<QList<QObject *> *>(&m_medias));

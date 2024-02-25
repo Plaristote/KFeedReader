@@ -1,9 +1,10 @@
 #ifndef MENUITEM_H
 #define MENUITEM_H
 
+#include "ttlsettings.h"
+#include <QQmlListProperty>
 #include <QUrl>
 #include <qobject.h>
-#include "ttlsettings.h"
 
 class MenuItem : public TtlSettings
 {
@@ -15,7 +16,7 @@ class MenuItem : public TtlSettings
     Q_PROPERTY(double progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(QString view READ view NOTIFY viewChanged)
     Q_PROPERTY(ItemType type READ itemType CONSTANT)
-
+    Q_PROPERTY(QQmlListProperty<QObject> crumbs READ qmlCrumbs NOTIFY crumbsChanged)
 public:
     enum ItemType { NoItemType = 0, FolderMenuItem, FeedMenuItem };
     Q_ENUM(ItemType)
@@ -42,6 +43,11 @@ public:
     virtual int autoUpdateEnabled() const override;
     virtual void enableAutoUpdate(bool) override;
 
+    QQmlListProperty<QObject> qmlCrumbs()
+    {
+        return QQmlListProperty<QObject>(this, reinterpret_cast<QList<QObject *> *>(&m_crumbs));
+    }
+
 public Q_SLOTS:
     void setName(const QString &name);
     void setDescription(const QString &description);
@@ -50,6 +56,7 @@ public Q_SLOTS:
     virtual void remove();
     virtual void triggerBeforeSave(){};
     virtual void markAsRead(){};
+    void updateCrumbs();
 
 Q_SIGNALS:
     void nameChanged(const QString &name);
@@ -61,11 +68,13 @@ Q_SIGNALS:
     void parentChanged();
     void beforeSave();
     void removed(QObject *);
+    void crumbsChanged();
 
 private:
     QString m_name;
     QString m_description;
     MenuItem *m_parentItem = nullptr;
+    QList<MenuItem *> m_crumbs;
 };
 
 #endif // MENUITEM_H

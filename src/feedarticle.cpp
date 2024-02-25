@@ -244,3 +244,9 @@ void FeedArticle::setTitle(const QString &title)
     m_title = title;
     Q_EMIT titleChanged(m_title);
 }
+
+QQmlListProperty<QObject> FeedArticle::qmlCrumbs()
+{
+    qDebug() << "Feed::qmlCrumbs" << parent();
+    return qobject_cast<MenuItem *>(parent())->qmlCrumbs();
+}
