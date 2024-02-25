@@ -63,9 +63,6 @@ QStringList Feed::persistentProperties() const
     return {QStringLiteral("xmlUrl"),
             QStringLiteral("lastUpdate"),
             QStringLiteral("ttl"),
-            QStringLiteral("customTtl"),
-            QStringLiteral("useCustomTtl"),
-            QStringLiteral("autoUpdateEnabled"),
             QStringLiteral("faviconUrl"),
             QStringLiteral("logoUrl"),
             QStringLiteral("link"),
@@ -315,22 +312,6 @@ void Feed::setTtl(int value)
     }
 }
 
-void Feed::setCustomTtl(int value)
-{
-    if (value != m_customTtl) {
-        m_customTtl = value;
-        Q_EMIT customTtlChanged();
-    }
-}
-
-void Feed::setUseCustomTtl(bool value)
-{
-    if (value != m_useCustomTtl) {
-        m_useCustomTtl = value;
-        Q_EMIT customTtlChanged();
-    }
-}
-
 void Feed::setLastUpdate(const QDateTime &value)
 {
     if (value != m_lastUpdate) {
@@ -347,48 +328,14 @@ void Feed::setScheduledUpdate(const QDateTime &value)
     }
 }
 
-void Feed::setAutoUpdateEnabled(bool value)
+bool Feed::isSkippedHour(unsigned short value) const
 {
-    if (value != m_autoUpdateEnabled) {
-        m_autoUpdateEnabled = value;
-        Q_EMIT customTtlChanged();
-    }
+    return (useCustomTtl() ? m_customSkipHours : m_skipHours).indexOf(value) >= 0;
 }
 
-bool Feed::isSkippedHour(unsigned short value)
+bool Feed::isSkippedDay(unsigned short value) const
 {
-    return (m_useCustomTtl ? m_customSkipHours : m_skipHours).indexOf(value) >= 0;
-}
-
-bool Feed::isSkippedDay(unsigned short value)
-{
-    return (m_useCustomTtl ? m_customSkipDays : m_skipHours).indexOf(value) >= 0;
-}
-
-void Feed::setSkipHour(unsigned short value, bool skipped)
-{
-    int index = m_customSkipHours.indexOf(value);
-
-    if (index < 0 && skipped)
-        m_customSkipHours.append(value);
-    else if (index >= 0 && !skipped)
-        m_customSkipHours.removeAt(index);
-    else
-        return;
-    Q_EMIT skipHoursChanged();
-}
-
-void Feed::setSkipDay(unsigned short value, bool skipped)
-{
-    int index = m_customSkipDays.indexOf(value);
-
-    if (index < 0 && skipped)
-        m_customSkipDays.append(value);
-    else if (index >= 0 && !skipped)
-        m_customSkipDays.removeAt(index);
-    else
-        return;
-    Q_EMIT skipDaysChanged();
+    return (useCustomTtl() ? m_customSkipDays : m_skipHours).indexOf(value) >= 0;
 }
 
 void Feed::insertArticle(FeedArticle *article)

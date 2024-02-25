@@ -2,14 +2,17 @@
 #include <QJsonObject>
 
 MenuItem::MenuItem(QObject *parent)
-    : QObject(parent)
+    : TtlSettings(parent)
 {
+    connect(this, &MenuItem::parentChanged, this, &MenuItem::updateCrumbs);
 }
 
 MenuItem::MenuItem(MenuItem &parent)
-    : QObject(&parent)
+    : TtlSettings(&parent)
     , m_parentItem(&parent)
 {
+    connect(this, &MenuItem::parentChanged, this, &MenuItem::updateCrumbs);
+    updateCrumbs();
 }
 
 MenuItem *MenuItem::parentItem() const
@@ -113,10 +116,60 @@ void MenuItem::setDescription(const QString &description)
     Q_EMIT descriptionChanged(m_description);
 }
 
+int MenuItem::autoUpdateEnabled() const
+{
+    if (itemType() == FolderMenuItem) {
+        bool allEnabled = true;
+        bool allDisabled = true;
+
+        for (int i = 0; i < childCount() && (allEnabled || allDisabled); ++i) {
+            switch (childAt(i)->autoUpdateEnabled()) {
+            case 0:
+                allEnabled = false;
+                break;
+            case 1:
+                allEnabled = allDisabled = false;
+                break;
+            case 2:
+                allDisabled = false;
+                break;
+            }
+        }
+        return allEnabled ? 2 : (allDisabled ? 0 : 1);
+    }
+    return TtlSettings::autoUpdateEnabled();
+}
+
+void MenuItem::enableAutoUpdate(bool trigger)
+{
+    qDebug() << "enableAutoUdpate called" << trigger;
+    for (int i = 0; i < childCount(); ++i) {
+        childAt(i)->enableAutoUpdate(trigger);
+    }
+    TtlSettings::enableAutoUpdate(trigger);
+    Q_EMIT customTtlChanged();
+}
+
+void MenuItem::updateCrumbs()
+{
+    MenuItem *currentItem = this;
+
+    m_crumbs.clear();
+    do {
+        m_crumbs.append(currentItem);
+        currentItem = currentItem->m_parentItem;
+    } while (currentItem);
+    std::reverse(m_crumbs.begin(), m_crumbs.end());
+    for (int i = 0; i < childCount(); ++i)
+        childAt(i)->updateCrumbs();
+    Q_EMIT crumbsChanged();
+}
+
 void MenuItem::loadFromJson(QJsonObject &root)
 {
     setName(root.value(QStringLiteral("name")).toString());
     setDescription(root.value(QStringLiteral("description")).toString());
+    TtlSettings::loadFromJson(root);
 }
 
 void MenuItem::saveToJson(QJsonObject &root) const
@@ -124,4 +177,5 @@ void MenuItem::saveToJson(QJsonObject &root) const
     root.insert(QStringLiteral("name"), m_name);
     root.insert(QStringLiteral("description"), m_description);
     root.insert(QStringLiteral("type"), static_cast<int>(itemType()));
+    TtlSettings::saveToJson(root);
 }

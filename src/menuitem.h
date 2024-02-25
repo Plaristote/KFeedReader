@@ -3,8 +3,9 @@
 
 #include <QUrl>
 #include <qobject.h>
+#include "ttlsettings.h"
 
-class MenuItem : public QObject
+class MenuItem : public TtlSettings
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
@@ -28,8 +29,8 @@ public:
     virtual qint64 unreadCount() const;
     virtual bool fetching() const;
     virtual double progress() const;
-    virtual void loadFromJson(QJsonObject &);
-    virtual void saveToJson(QJsonObject &) const;
+    virtual void loadFromJson(QJsonObject &) override;
+    virtual void saveToJson(QJsonObject &) const override;
     virtual ItemType itemType() const;
     virtual QString view() const;
     virtual int indexOf(const QObject *) const;
@@ -37,6 +38,9 @@ public:
     virtual MenuItem *childAt(int) const;
     MenuItem *parentItem() const;
     int row() const;
+
+    virtual int autoUpdateEnabled() const override;
+    virtual void enableAutoUpdate(bool) override;
 
 public Q_SLOTS:
     void setName(const QString &name);

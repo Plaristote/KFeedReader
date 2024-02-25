@@ -23,6 +23,7 @@ add_executable(kfeedreader
     reader-rdf.cpp
     reader-atom.cpp
     reader-json.cpp
+    ttlsettings.cpp
     htmlprobe.cpp
     resources.qrc)
 

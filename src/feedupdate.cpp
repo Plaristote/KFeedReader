@@ -29,20 +29,30 @@ int FeedUpdater::ttlInUnits(int ttl, TtlType type)
     return ttl;
 }
 
+MenuItem *findNearestCustomTtlSettings(MenuItem *item)
+{
+    if (item->useCustomTtl())
+        return item;
+    return item->parentItem() ? findNearestCustomTtlSettings(item->parentItem()) : nullptr;
+}
+
 void FeedUpdater::resetUpdateTimer()
 {
     QSettings settings;
     qint64 ttl = feed.m_ttl > 0 ? feed.m_ttl : settings.value(QStringLiteral("defaultTTL"), 60).toInt();
     QDateTime nextUpdate;
+    const MenuItem *ttlSettings = findNearestCustomTtlSettings(&feed);
 
-    if (feed.m_useCustomTtl && feed.m_customTtl > 0)
-        ttl = feed.m_customTtl;
+    if (ttlSettings)
+        ttl = ttlSettings->customTtl();
+    else
+        ttlSettings = &feed;
     if (feed.m_lastUpdate.isNull())
         feed.m_lastUpdate = QDateTime::currentDateTime();
     nextUpdate = QDateTime(feed.m_lastUpdate).addSecs(ttl * 60);
-    for (char i = 0; i < 7 && feed.isSkippedDay(nextUpdate.date().dayOfWeek()); ++i)
+    for (char i = 0; i < 7 && ttlSettings->isSkippedDay(nextUpdate.date().dayOfWeek()); ++i)
         nextUpdate = nextUpdate.addDays(1);
-    for (char i = 0; i < 24 && feed.isSkippedHour(nextUpdate.time().hour()); ++i)
+    for (char i = 0; i < 24 && ttlSettings->isSkippedHour(nextUpdate.time().hour()); ++i)
         nextUpdate = nextUpdate.addSecs(3600);
     feed.setScheduledUpdate(nextUpdate);
 }

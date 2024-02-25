@@ -39,11 +39,8 @@ class Feed : public MenuItem
     Q_PROPERTY(QDateTime lastBuildDate READ lastBuildDate WRITE setLastBuildDate NOTIFY lastBuildDateChanged)
     Q_PROPERTY(QString webmaster READ webmaster WRITE setWebmaster NOTIFY webmasterChanged)
     Q_PROPERTY(int ttl READ ttl WRITE setTtl NOTIFY ttlChanged)
-    Q_PROPERTY(int customTtl READ customTtl WRITE setCustomTtl NOTIFY customTtlChanged)
-    Q_PROPERTY(bool useCustomTtl READ useCustomTtl WRITE setUseCustomTtl NOTIFY customTtlChanged)
     Q_PROPERTY(QDateTime lastUpdate READ lastUpdate WRITE setLastUpdate NOTIFY lastUpdateChanged)
     Q_PROPERTY(QDateTime scheduledUpdate READ scheduledUpdate WRITE setScheduledUpdate NOTIFY scheduledUpdateChanged)
-    Q_PROPERTY(bool autoUpdateEnabled READ autoUpdateEnabled WRITE setAutoUpdateEnabled NOTIFY customTtlChanged)
 public:
     friend class AtomFeedReader;
     friend class RssFeedReader;
@@ -58,11 +55,6 @@ public:
 
     Feed(QObject *parent = nullptr);
     ~Feed();
-
-    Q_INVOKABLE int ttlInUnits(qint64 value, int type) const
-    {
-        return FeedUpdater::ttlInUnits(value, static_cast<FeedUpdater::TtlType>(type));
-    }
 
     QString view() const override
     {
@@ -180,14 +172,6 @@ public:
     {
         return m_ttl;
     }
-    int customTtl() const
-    {
-        return m_customTtl;
-    }
-    bool useCustomTtl() const
-    {
-        return m_useCustomTtl;
-    }
     const QDateTime &scheduledUpdate() const
     {
         return m_scheduledUpdate;
@@ -200,10 +184,6 @@ public:
     {
         return m_articles;
     }
-    bool autoUpdateEnabled() const
-    {
-        return m_autoUpdateEnabled;
-    }
 
     void setUuid(const QString &value)
     {
@@ -212,8 +192,8 @@ public:
 
     void setFaviconUrl(const QUrl &value);
 
-    Q_INVOKABLE bool isSkippedHour(unsigned short index);
-    Q_INVOKABLE bool isSkippedDay(unsigned short index);
+    bool isSkippedHour(unsigned short index) const override;
+    bool isSkippedDay(unsigned short index) const override;
 
 public Q_SLOTS:
     void remove() override;
@@ -235,14 +215,9 @@ public Q_SLOTS:
     void setTextInputLink(const QUrl &);
     void setLastBuildDate(const QDateTime &);
     void setWebmaster(const QString &);
-    void setSkipHour(unsigned short index, bool skipped = true);
-    void setSkipDay(unsigned short index, bool skipped = true);
     void setTtl(int);
-    void setCustomTtl(int);
-    void setUseCustomTtl(bool);
     void setScheduledUpdate(const QDateTime &);
     void setLastUpdate(const QDateTime &);
-    void setAutoUpdateEnabled(bool);
     void loadFaviconFrom(const QUrl &);
     void copy(const Feed *);
 
@@ -268,10 +243,7 @@ Q_SIGNALS:
     void textInputChanged();
     void lastBuildDateChanged();
     void webmasterChanged();
-    void skipDaysChanged();
-    void skipHoursChanged();
     void ttlChanged();
-    void customTtlChanged();
     void scheduledUpdateChanged();
     void lastUpdateChanged();
 
@@ -283,6 +255,7 @@ private:
     {
         return QQmlListProperty<QObject>(this, reinterpret_cast<QList<QObject *> *>(&m_articles));
     }
+
     FeedArticle *newArticle();
     void insertArticle(FeedArticle *);
 
@@ -294,8 +267,6 @@ private:
     QList<FeedArticle *> m_articles;
     QVector<unsigned short> m_skipDays;
     QVector<unsigned short> m_skipHours;
-    QVector<unsigned short> m_customSkipDays;
-    QVector<unsigned short> m_customSkipHours;
     QDateTime m_lastBuildDate;
     QDateTime m_publicationDate;
     QString m_managingEditor;
@@ -316,10 +287,7 @@ private:
     QDateTime m_lastUpdate;
     QDateTime m_scheduledUpdate;
     FeedUpdater m_feedUpdater;
-    int m_autoUpdateEnabled = true;
     int m_ttl = 0;
-    int m_customTtl = 0;
-    bool m_useCustomTtl = false;
 };
 
 #endif // FEED_H

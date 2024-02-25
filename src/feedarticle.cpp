@@ -2,6 +2,7 @@
 #include "feedarticleenclosure.h"
 #include "feedarticlemedia.h"
 #include "feedattachment.h"
+#include "menuitem.h"
 #include <QDomElement>
 #include <QJsonArray>
 #include <QJsonObject>

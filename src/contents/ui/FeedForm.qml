@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 import org.kde.kfeedreader 1.0
+import "."
 
 Kirigami.ScrollablePage {
   required property QtObject feed
@@ -16,16 +17,12 @@ Kirigami.ScrollablePage {
 
   function reset() {
     xmlUrlField.text = page.feed.xmlUrl;
-    useCustomTtlInput.checked = page.feed.useCustomTtl;
-    customTtlInput.text = page.feed.customTtl.toString();
-    customTtlTypeInput.currentIndex = customTtlTypeInput.indexOfValue(FeedUpdater.TtlInMinutes);
+    ttlSettingsForm.reset();
   }
 
   function save() {
     page.feed.xmlUrl = xmlUrlField.text;
-    console.log("Saving custom ttl", parseInt(customTtlInput.text), customTtlTypeInput.currentValue, page.feed.ttlInUnits(parseInt(customTtlInput.text), customTtlTypeInput.currentValue));
-    page.feed.customTtl = page.feed.ttlInUnits(parseInt(customTtlInput.text), customTtlTypeInput.currentValue);
-    page.feed.useCustomTtl = useCustomTtlInput.checked;
+    ttlSettingsForm.save();
   }
 
   function updateXmlUrl() {
@@ -33,16 +30,6 @@ Kirigami.ScrollablePage {
       page.feed.xmlUrl = xmlUrlField.text
       page.feed.fetch()
     }
-  }
-
-  function updateFeedTtl() {
-    let ttl = parseInt(customTtlInput.text);
-    switch (customTtlTypeInput.currentValue) {
-      case FeedUpdater.TtlInHours:
-        ttl = ttl * 60;
-        break ;
-    }
-    page.feed.useCustomTtl = useCustomTtlInput.checked;
   }
 
   ColumnLayout {
@@ -114,82 +101,11 @@ Kirigami.ScrollablePage {
           return i18n("No suggested update interval");
         }
       }
+    }
 
-      Controls.CheckBox {
-        id: enableAutoUpdateInput
-        text: i18n("Enable periodic updates")
-        checked: page.feed.autoUpdateEnabled
-        onCheckedChanged: page.feed.autoUpdateEnabled = checked
-      }
-
-      Controls.CheckBox {
-        id: useCustomTtlInput
-        text: i18n("Use a custom update interval")
-        checked: page.feed.useCustomTtl
-        onCheckedChanged: updateFeedTtl()
-      }
-
-      Row {
-        Kirigami.FormData.label: i18n("Custom update interval")
-        visible: useCustomTtlInput.checked
-        Controls.TextField {
-          id: customTtlInput
-          validator: IntValidator { bottom: 0 }
-          text: page.feed.ttlInUnits(page.feed.customTtl, customTtlTypeInput.currentValue).toString()
-        }
-        Controls.ComboBox {
-          id: customTtlTypeInput
-          textRole: "text"
-          valueRole: "value"
-          model: [
-            { value: FeedUpdater.TtlInMinutes, text: i18n("minutes") },
-            { value: FeedUpdater.TtlInHours, text: i18n("hours") }
-          ]
-          onCurrentValueChanged: updateFeedTtl()
-        }
-      }
-
-      Row {
-        Kirigami.FormData.label: i18n("Skip hours")
-        visible: useCustomTtlInput.checked
-        Repeater {
-          model: 24
-          delegate: Column {
-            Controls.Label { text: `${index}` }
-            Controls.CheckBox {
-              checked: page.feed.isSkippedHour(index)
-              onCheckedChanged: page.feed.setSkipHour(index, checked)
-              Connections {
-                target: page.feed
-                function onSkipHoursChanged() {
-                  checked = page.feed.isSkippedHour(index);
-                }
-              }
-            }
-          }
-        }
-      }
-
-      Row {
-        Kirigami.FormData.label: i18n("Skip days")
-        visible: useCustomTtlInput.checked
-        Repeater {
-          model: 7
-          delegate: Column {
-            Controls.Label { text: `${index}` }
-            Controls.CheckBox {
-              checked: page.feed.isSkippedDay(index)
-              onCheckedChanged: page.feed.setSkipDay(index, checked)
-              Connections {
-                target: page.feed
-                function onSkipDaysChanged() {
-                  checked = page.feed.isSkippedDay(index)
-                }
-              }
-            }
-          }
-        }
-      }
+    TtlSettingsForm {
+      id: ttlSettingsForm
+      ttlSettings: page.feed
     }
 
     Controls.Button {

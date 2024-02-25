@@ -43,6 +43,11 @@ Kirigami.Page {
       }
     }
 
+    TtlSettingsForm {
+      ttlSettings: page.model
+      Component.onCompleted: reset()
+    }
+
     FolderTreeView {
       Layout.fillWidth: true
       Layout.fillHeight: true

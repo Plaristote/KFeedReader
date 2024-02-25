@@ -134,8 +134,8 @@ void RssFeedReader::loadSkipDays(const QDomElement &element)
         if (day != 0 && feed.m_skipDays.indexOf(day) == -1)
             feed.m_skipDays << day;
     }
-    if (!feed.m_useCustomTtl)
-        feed.m_customSkipDays = feed.m_skipDays;
+    // if (!feed.m_useCustomTtl)
+    //     feed.m_customSkipDays = feed.m_skipDays;
     Q_EMIT feed.skipDaysChanged();
 }
 
@@ -148,8 +148,8 @@ void RssFeedReader::loadSkipHours(const QDomElement &element)
         if (feed.m_skipHours.indexOf(hour) == -1)
             feed.m_skipHours << hour;
     }
-    if (!feed.m_useCustomTtl)
-        feed.m_customSkipHours = feed.m_skipHours;
+    // if (!feed.m_useCustomTtl)
+    //     feed.m_customSkipHours = feed.m_skipHours;
     Q_EMIT feed.skipHoursChanged();
 }
 
