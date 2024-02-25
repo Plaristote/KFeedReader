@@ -28,8 +28,9 @@ QtObject {
     },
     Kirigami.Action {
       text: i18n("Open")
-      icon.name: "internet-web-browser"
+      icon.name: "window-new"
       tooltip: i18n("Open the current article in a web browser")
+      shortcut: "Ctrl+Alt+O"
       onTriggered: Qt.openUrlExternally(page.model.link)
     },
     Kirigami.Action {
