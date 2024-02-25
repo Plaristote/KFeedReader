@@ -95,7 +95,7 @@ Kirigami.ApplicationWindow {
 
     Rectangle {
         id: fullScreenContainer
-        color: "transparent"
+        color: children.length ? "black" : "transparent"
         anchors.fill: parent
     }
 
