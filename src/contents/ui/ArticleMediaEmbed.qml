@@ -6,6 +6,17 @@ ArticleMedia {
   property url embedUrl: model.embedUrl
   id: mediaRoot
   contentComponent: embedComponent
+  onWidthChanged: updateContentSize()
+  Component.onCompleted: updateContentSize()
+
+  function updateContentSize() {
+    const maxHeight = window.height * 0.67;
+    const idealRatio = mediaSize.height / mediaSize.width;
+    const desiredHeight = mediaRoot.width * idealRatio;
+    const finalHeight = desiredHeight > maxHeight ? maxHeight : desiredHeight;
+    const finalWidth = finalHeight * (1 / idealRatio);
+    contentSize = Qt.size(finalWidth, finalHeight);
+  }
 
   Component {
     id: embedComponent
