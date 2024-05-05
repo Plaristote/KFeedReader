@@ -20,14 +20,6 @@ Kirigami.ScrollablePage {
   ColumnLayout {
     spacing: 0
 
-    Controls.ProgressBar {
-      visible: model.fetching
-      from: 0
-      to: 1
-      value: model.progress
-      Layout.fillWidth: true
-    }
-
     Kirigami.BasicListItem {
       bold: true
       label: i18n("All")
@@ -75,6 +67,16 @@ Kirigami.ScrollablePage {
           onTriggered: pageStack.push(item.view, { model: item })
         }
       } // END delegate
+    }
+  }
+
+  footer: ColumnLayout {
+    Controls.ProgressBar {
+      visible: model.fetching
+      from: 0
+      to: 1
+      value: model.progress
+      Layout.fillWidth: true
     }
   }
 }

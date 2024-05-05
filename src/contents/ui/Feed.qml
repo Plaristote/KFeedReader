@@ -14,18 +14,11 @@ Kirigami.ScrollablePage {
   ColumnLayout {
     spacing: 0
 
-    Controls.ProgressBar {
-      visible: model.fetching
-      from: 0
-      to: 1
-      value: model.progress
-      Layout.fillWidth: true
-    }
-
     GridLayout {
       Layout.fillWidth: true
       Layout.bottomMargin: Kirigami.Units.smallSpacing
       columns: width > 500 ? 2 : 1
+      visible: description.text.length || model.logoUrl != null
 
       Item {
         Layout.fillHeight: true
@@ -81,6 +74,14 @@ Kirigami.ScrollablePage {
   }
 
   footer: ColumnLayout {
+    Controls.ProgressBar {
+      visible: model.fetching
+      from: 0
+      to: 1
+      value: model.progress
+      Layout.fillWidth: true
+    }
+
     Kirigami.Separator {
       Layout.fillWidth: true
       visible: (model.copyright || "").length > 0
