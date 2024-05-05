@@ -36,10 +36,12 @@ Kirigami.ScrollablePage {
     anchors.left: parent.left
     anchors.right: parent.right
 
-    Item {
+    Flickable {
       Layout.fillWidth: true
       Layout.preferredHeight: 50
+      contentWidth: breadcrumbs.width
       Breadcrumbs {
+        id: breadcrumbs
         crumbs: page.model.crumbs
         anchors { top: parent.top; right: parent.right }
       }
