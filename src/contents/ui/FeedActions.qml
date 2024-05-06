@@ -12,7 +12,7 @@ Item {
   signal toggleSearch()
   signal markAsRead()
 
-  contextualActions: readOnly ? [searchAction] : [searchAction, markAsRead, editAction, removeAction]
+  contextualActions: readOnly ? [searchAction, markAsReadAction] : [searchAction, markAsReadAction, editAction, removeAction]
 
   Kirigami.Action {
     id: updateAction
