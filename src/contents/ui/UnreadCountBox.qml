@@ -8,13 +8,13 @@ Rectangle {
   property QtObject model
 
   visible: model.unreadCount > 0
-  color: "orange"
+  color: Kirigami.Theme.highlightColor
   implicitHeight: 16
   implicitWidth: unreadText.width + 10
   Text {
     id: unreadText
     anchors.centerIn: parent
     text: model.unreadCount
-    color: "white"
+    color: Kirigami.Theme.highlightedTextColor
   }
 }
