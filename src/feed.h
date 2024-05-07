@@ -49,6 +49,7 @@ public:
     friend class FeedUpdater;
     friend class FeedFetcher;
     friend class FeedFavicon;
+    friend class FeedYoutubeFavicon;
 
     enum FeedType { HTMLView, RDFFeed, RSSFeed, AtomFeed, JSONFeed };
     Q_ENUM(FeedType)

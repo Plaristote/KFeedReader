@@ -5,6 +5,7 @@
 #include "reader-atom.h"
 #include "reader-json.h"
 #include "reader-rss.h"
+#include "youtube/favicon.h"
 #include <QDomDocument>
 #include <QFile>
 #include <QJsonArray>
@@ -167,9 +168,15 @@ void Feed::fetch()
 
 void Feed::loadFaviconFrom(const QUrl &remoteUrl)
 {
-    FeedFavicon *favicon = new FeedFavicon(*this);
+    if (FeedYoutubeFavicon::isYouTubeFeed(xmlUrl())) {
+        FeedYoutubeFavicon *favicon = new FeedYoutubeFavicon(*this);
 
-    favicon->fetchFromHtmlPage(remoteUrl == QUrl() ? m_link : remoteUrl);
+        favicon->fetch();
+    } else {
+        FeedFavicon *favicon = new FeedFavicon(*this);
+
+        favicon->fetchFromHtmlPage(remoteUrl == QUrl() ? m_link : remoteUrl);
+    }
 }
 
 void Feed::setFaviconUrl(const QUrl &value)
