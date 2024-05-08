@@ -39,6 +39,12 @@ Kirigami.ApplicationWindow {
 
     property int counter: 0
 
+    menuBar: MainMenuBar {
+      globalActions: window.globalDrawer.actions
+      pageStack: window.pageStack
+      visible: false
+    }
+
     globalDrawer: Kirigami.GlobalDrawer {
         title: i18n("KFeedReader")
         titleIcon: "applications-graphics"
@@ -53,6 +59,12 @@ Kirigami.ApplicationWindow {
                 text: i18n("Export feeds...")
                 icon.name: "document-export"
                 onTriggered: exportFeedsDialog.open()
+            },
+            Kirigami.Action {
+                text: i18n("Toggle menu")
+                icon.name: "show-menu"
+                shortcut: "Ctrl+M"
+                onTriggered: window.menuBar.visible = !window.menuBar.visible
             },
             Kirigami.Action {
                 text: i18n("About KFeedReader")

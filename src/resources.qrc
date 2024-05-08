@@ -32,6 +32,8 @@
         <file alias="AppWebView.qml">contents/ui/AppWebView.qml</file>
         <file alias="FolderTreeView.qml">contents/ui/FolderTreeView.qml</file>
         <file alias="Breadcrumbs.qml">contents/ui/Breadcrumbs.qml</file>
+        <file alias="MainMenuBar.qml">contents/ui/MainMenuBar.qml</file>
+        <file alias="PageMenu.qml">contents/ui/PageMenu.qml</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="feed.png">contents/icons/feed.png</file>
