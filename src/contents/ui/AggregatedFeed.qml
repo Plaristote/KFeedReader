@@ -9,6 +9,7 @@ Feed {
   property QtObject folder
   id: page
   readOnly: true
+  leadingFeedIcon: true
 
   model: KFeedReader.AggregatedFeed {
     id: aggregatedFeed

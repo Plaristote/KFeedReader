@@ -23,6 +23,7 @@ class FeedArticle : public QObject
     Q_PROPERTY(QDateTime publicationDate READ publicationDate WRITE setPublicationDate NOTIFY publicationDateChanged)
     Q_PROPERTY(QUrl source READ source WRITE setSource NOTIFY sourceChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+    Q_PROPERTY(QUrl faviconUrl READ faviconUrl CONSTANT)
     Q_PROPERTY(QQmlListProperty<QObject> medias READ qmlMedias NOTIFY mediasChanged)
     Q_PROPERTY(QQmlListProperty<QObject> crumbs READ qmlCrumbs CONSTANT)
 public:
@@ -50,6 +51,7 @@ public:
     QDateTime publicationDate() const;
     QUrl source() const;
     QString title() const;
+    QUrl faviconUrl() const;
 
 public Q_SLOTS:
     void setRead(bool read);

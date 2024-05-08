@@ -1,4 +1,5 @@
 #include "feedarticle.h"
+#include "feed.h"
 #include "feedarticleenclosure.h"
 #include "feedarticlemedia.h"
 #include "feedattachment.h"
@@ -243,6 +244,11 @@ void FeedArticle::setTitle(const QString &title)
 
     m_title = title;
     Q_EMIT titleChanged(m_title);
+}
+
+QUrl FeedArticle::faviconUrl() const
+{
+    return reinterpret_cast<Feed *>(parent())->faviconUrl();
 }
 
 QQmlListProperty<QObject> FeedArticle::qmlCrumbs()

@@ -7,6 +7,7 @@ import org.kde.kfeedreader 1.0
 Kirigami.ScrollablePage {
   property QtObject model
   property bool readOnly: false
+  property bool leadingFeedIcon: false
   id: page
   title: model.name
   Kirigami.ColumnView.pinned: true
@@ -62,6 +63,16 @@ Kirigami.ScrollablePage {
         reserveSpaceForIcon: false
         trailing: Text {
           text: item.publicationDate.toLocaleDateString({})
+        }
+        leading: Item {
+          implicitWidth: leadingFeedIcon ? 16 : 0
+          visible: leadingFeedIcon
+          Image {
+            source: item.faviconUrl
+            height: parent.height > 16 ? 16 : parent.height
+            width: 16
+            anchors.centerIn: parent
+          }
         }
         visible: !searchField.visible || searchField.matches(item.title)
         action: Controls.Action {
