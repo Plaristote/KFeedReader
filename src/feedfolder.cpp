@@ -258,18 +258,18 @@ bool FeedFolder::fetching() const
 
 double FeedFolder::progress() const
 {
-    int fetchingCount = 0;
     double totalProgress = 0;
 
     for (QObject *item : m_items) {
         MenuItem *menuItem = qobject_cast<MenuItem *>(item);
 
         if (menuItem->fetching()) {
-            fetchingCount++;
             totalProgress += menuItem->progress();
+        } else {
+            totalProgress += 1;
         }
     }
-    return totalProgress / fetchingCount;
+    return totalProgress / m_items.size();
 }
 
 void FeedFolder::triggerBeforeSave()
