@@ -3,6 +3,7 @@
 
 #include "app.h"
 #include "feed.h"
+#include "feedfetch.h"
 #include "feedfolder.h"
 #include <KSharedConfig>
 #include <KWindowConfig>
@@ -102,6 +103,11 @@ void App::exportOpml(const QUrl &filepath)
         file.write(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n").toUtf8());
         file.write(document.toString().toUtf8());
     }
+}
+
+void App::stopFetching()
+{
+    FeedFetcher::interrupt();
 }
 
 #include "moc_app.cpp"

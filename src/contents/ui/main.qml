@@ -61,6 +61,11 @@ Kirigami.ApplicationWindow {
                 onTriggered: exportFeedsDialog.open()
             },
             Kirigami.Action {
+                text: i18n("Stop fetching")
+                icon.name: "stop"
+                onTriggered: App.stopFetching();
+            },
+            Kirigami.Action {
                 text: i18n("Toggle menu")
                 icon.name: "show-menu"
                 shortcut: "Ctrl+M"

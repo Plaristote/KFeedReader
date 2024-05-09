@@ -33,6 +33,7 @@ public:
 public Q_SLOTS:
     void load();
     void save();
+    void stopFetching();
     void importOpml(const QUrl &filepath);
     void exportOpml(const QUrl &filepath);
 

@@ -9,6 +9,9 @@
 
 void probeHtmlForFeedAndRefetch(const QByteArray &body, FeedFetcher &);
 
+QNetworkReply *FeedFetcher::g_pendingReply = nullptr;
+QVector<FeedFetcher *> FeedFetcher::g_pendingFetchers;
+
 static Feed::FeedType inferFeedType(QNetworkReply &reply, const QByteArray &body)
 {
     QString contentType = reply.header(QNetworkRequest::ContentTypeHeader).toString();
@@ -37,6 +40,22 @@ FeedFetcher::FeedFetcher(Feed &feed)
 {
 }
 
+void FeedFetcher::interrupt()
+{
+    while (g_pendingFetchers.size()) {
+        FeedFetcher *fetcher = g_pendingFetchers.takeFirst();
+        fetcher->onEnded();
+    }
+}
+
+void FeedFetcher::runNextQuery()
+{
+    if (g_pendingFetchers.size() > 0) {
+        qDebug() << "Queued queries: " << g_pendingFetchers.size();
+        g_pendingFetchers.takeFirst()->fetch();
+    }
+}
+
 Feed &FeedFetcher::feed()
 {
     return m_feed;
@@ -44,14 +63,21 @@ Feed &FeedFetcher::feed()
 
 void FeedFetcher::fetch()
 {
-    if (m_requestCounter < 5) {
+    if (g_pendingReply) {
+        g_pendingFetchers.push_back(this);
+        onStarted();
+    } else if (m_requestCounter < 5) {
         QNetworkRequest request(m_feed.m_xmlUrl);
         request.setRawHeader("Accept", "application/rss+xml, application/atom+xml, application/feed+json, text/xml, text/html");
         QNetworkReply *reply = m_feed.m_network->get(request);
 
+        g_pendingReply = reply;
         connect(reply, &QNetworkReply::downloadProgress, this, [this](qint64 bytesRead, qint64 totalBytes) {
             m_feed.m_progress = static_cast<double>(bytesRead) / totalBytes;
             Q_EMIT m_feed.progressChanged();
+        });
+        connect(reply, &QNetworkReply::finished, this, [this]() {
+            g_pendingReply = nullptr;
         });
         connect(reply, &QNetworkReply::finished, this, std::bind(&FeedFetcher::readResponse, this, reply));
         onStarted();
@@ -87,6 +113,7 @@ void FeedFetcher::readResponse(QNetworkReply *reply)
         }
     } else if (status > 300 && status < 304) {
         redirectTo(QUrl(reply->header(QNetworkRequest::LocationHeader).toString()));
+        delete reply;
         return;
     } else if (status == 406) {
         qDebug() << "/!\\ Fetch status" << status << m_feed.xmlUrl() << ", acceptable formats are:" << reply->readAll();
@@ -94,6 +121,7 @@ void FeedFetcher::readResponse(QNetworkReply *reply)
         qDebug() << "/!\\ Fetch status" << status << m_feed.xmlUrl();
     }
     onFinished();
+    delete reply;
 }
 
 void FeedFetcher::redirectTo(const QUrl &url)
@@ -110,11 +138,17 @@ void FeedFetcher::onStarted()
     Q_EMIT m_feed.fetchingChanged();
 }
 
-void FeedFetcher::onFinished()
+void FeedFetcher::onEnded()
 {
-    m_feed.setLastUpdate(QDateTime::currentDateTime());
     m_feed.m_progress = 1;
     m_feed.m_fetching = false;
     Q_EMIT m_feed.fetchingChanged();
     deleteLater();
+}
+
+void FeedFetcher::onFinished()
+{
+    m_feed.setLastUpdate(QDateTime::currentDateTime());
+    runNextQuery();
+    onEnded();
 }

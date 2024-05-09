@@ -15,14 +15,19 @@ public:
     void fetch();
     void redirectTo(const QUrl &);
     Feed &feed();
+    static void interrupt();
 
 private:
     void readResponse(QNetworkReply *reply);
     void onStarted();
     void onFinished();
+    void onEnded();
+    static void runNextQuery();
 
     Feed &m_feed;
     int m_requestCounter = 0;
+    static QNetworkReply *g_pendingReply;
+    static QVector<FeedFetcher *> g_pendingFetchers;
 };
 
 #endif
