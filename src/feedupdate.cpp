@@ -14,8 +14,10 @@ FeedUpdater::FeedUpdater(Feed &feed)
 
 void FeedUpdater::timerTicked()
 {
-    if (feed.autoUpdateEnabled())
+    if (feed.autoUpdateEnabled()) {
         feed.fetch();
+        feed.setLastUpdate(QDateTime::currentDateTime());
+    }
 }
 
 int FeedUpdater::ttlInUnits(int ttl, TtlType type)
