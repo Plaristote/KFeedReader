@@ -2,10 +2,10 @@
 # SPDX-FileCopyrightText: %{CURRENT_YEAR} %{AUTHOR} <%{EMAIL}>
 [Desktop Entry]
 Name=KFeedReader
-Comment=KFeedReader Kirigami Application
+Comment=Web feed aggregator
 Version=1.0
 Exec=kfeedreader
-Icon=applications-development
+Icon=akregator
 Type=Application
 Terminal=false
 # Add an actual main category here (and possibly applicable additional ones)
