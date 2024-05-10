@@ -5,16 +5,10 @@ Controls.Menu {
   required property QtObject pageItem
   id: menuRoot
 
-  Controls.MenuSeparator {}
-
-  Controls.MenuItem {
-    action: pageItem.actions.main
-  }
-
   Instantiator {
-    model: pageItem.actions.contextualActions
+    model: pageItem.actions
     delegate: Controls.MenuItem {
-      action: pageItem.actions.contextualActions[index]
+      action: pageItem.actions[index]
     }
     onObjectAdded: (index, object) => menuRoot.insertItem(index + 1, object)
     onObjectRemoved: (index, object) => menuRoot.removeItem(object)

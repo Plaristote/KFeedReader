@@ -201,7 +201,7 @@ void AggregatedFeed::loadMore()
     Q_EMIT articlesChanged();
 }
 
-int aggregatedFeedCount(QQmlListProperty<QObject> *property)
+qint64 aggregatedFeedCount(QQmlListProperty<QObject> *property)
 {
     auto *feed = reinterpret_cast<AggregatedFeed *>(property->object);
     auto *list = static_cast<QList<FeedArticle *> *>(property->data);
@@ -209,7 +209,7 @@ int aggregatedFeedCount(QQmlListProperty<QObject> *property)
     return list->size() < feed->listMaxLength() ? list->size() : feed->listMaxLength();
 }
 
-QObject *aggregatedFeedAt(QQmlListProperty<QObject> *property, int index)
+QObject *aggregatedFeedAt(QQmlListProperty<QObject> *property, qint64 index)
 {
     auto *list = static_cast<QList<FeedArticle *> *>(property->data);
 

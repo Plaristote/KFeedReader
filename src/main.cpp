@@ -24,15 +24,14 @@
 #include "feedfolder.h"
 #include "kfeedreaderconfig.h"
 #include "menuitemmodel.h"
-#include <QtWebEngine/qtwebengineglobal.h>
+#include <QtWebEngineQuick/qtwebenginequickglobal.h>
 
 #ifdef Q_OS_ANDROID
 Q_DECL_EXPORT
 #endif
 int main(int argc, char *argv[])
 {
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QtWebEngine::initialize();
+    QtWebEngineQuick::initialize();
 
 #ifdef Q_OS_ANDROID
     QGuiApplication app(argc, argv);

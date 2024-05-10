@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.19 as Kirigami
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kfeedreader 1.0
 import "."
 
@@ -29,7 +29,7 @@ Kirigami.Page {
       Layout.fillWidth: true
     }
 
-    Kirigami.BasicListItem {
+    Controls.ItemDelegate {
       bold: true
       label: i18n("All")
       action: Controls.Action {

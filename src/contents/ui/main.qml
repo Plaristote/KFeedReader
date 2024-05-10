@@ -7,7 +7,7 @@ import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 import org.kde.kfeedreader 1.0
 import "."
-import QtQuick.Dialogs 1.3
+import QtQuick.Dialogs
 
 Kirigami.ApplicationWindow {
     property alias fullScreenContainer: fullScreenContainer
@@ -92,17 +92,18 @@ Kirigami.ApplicationWindow {
     pageStack.initialPage: {
       switch (App.rootFolder.displayType) {
       case FeedFolder.ListDisplay: return listRootPage;
-      case FeedFolder.TreeDisplay: return treeRootPage;
+      //case FeedFolder.TreeDisplay: return treeRootPage;
       }
+      return listRootPage;
     }
-
+/*
     Component {
       id: treeRootPage
       FolderTreePage {
         model: App.rootFolder
       }
     }
-
+*/
     Component {
       id: listRootPage
       FolderListPage {
@@ -119,18 +120,18 @@ Kirigami.ApplicationWindow {
     FileDialog {
         id: importFeedsDialog
         title: i18n("Pick a feed source to import")
-        selectExisting: true
+        fileMode: FileDialog.OpenFile
         nameFilters: [i18n("OPML structures") + " (*.opml)"]
-        folder: shortcuts.home
-        onAccepted: App.importOpml(fileUrl)
+        currentFolder: StandardPaths.standardLocations(StandardPaths.HomeLocation)
+        onAccepted: App.importOpml(selectedFile)
     }
 
     FileDialog {
         id: exportFeedsDialog
         title: i18n("Pick a file to export your feeds to")
-        selectExisting: false
+        fileMode: FileDialog.SaveFile
         nameFilters: [i18n("OPML structures") + " (*.opml)"]
-        folder: shortcuts.home
-        onAccepted: App.exportOpml(fileUrl)
+        currentFolder: StandardPaths.standardLocations(StandardPaths.HomeLocation)
+        onAccepted: App.exportOpml(selectedFile)
     }
 }

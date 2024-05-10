@@ -10,7 +10,7 @@ class FeedFolder : public MenuItem
     Q_OBJECT
     Q_PROPERTY(QUrl faviconUrl READ faviconUrl CONSTANT)
     Q_PROPERTY(QQmlListProperty<QObject> items READ items NOTIFY itemsChanged)
-    Q_PROPERTY(DisplayType displayType READ displayType WRITE setDisplayType NOTIFY viewChanged)
+    Q_PROPERTY(FeedFolder::DisplayType displayType READ displayType WRITE setDisplayType NOTIFY viewChanged)
     Q_PROPERTY(bool expanded READ expanded WRITE setExpanded NOTIFY expandedChanged)
 public:
     enum DisplayType { ListDisplay = 1, TreeDisplay };

@@ -10,7 +10,7 @@ Kirigami.Page {
   id: page
   title: webview.title
   onModelChanged: model.read = true
-  actions.contextualActions: pageActions.contextualActions
+  actions: pageActions.contextualActions
   states: [
     State {
       name: "fullScreen"

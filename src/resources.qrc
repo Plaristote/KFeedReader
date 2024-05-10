@@ -34,6 +34,7 @@
         <file alias="Breadcrumbs.qml">contents/ui/Breadcrumbs.qml</file>
         <file alias="MainMenuBar.qml">contents/ui/MainMenuBar.qml</file>
         <file alias="PageMenu.qml">contents/ui/PageMenu.qml</file>
+        <file alias="ListItemDelegate.qml">contents/ui/ListItemDelegate.qml</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="feed.png">contents/icons/feed.png</file>

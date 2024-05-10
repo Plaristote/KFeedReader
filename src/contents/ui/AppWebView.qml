@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtWebEngine 1.10
+import QtQuick
+import QtWebEngine
 
 WebEngineView {
   id: webView
@@ -15,8 +15,7 @@ WebEngineView {
     request.accept();
   }
 
-  // Qt6: onNewWindowRequested: function (request) {
-  onNewViewRequested: function (request) {
+  onNewWindowRequested: function (request) {
     if (request.userInitiated)
       Qt.openUrlExternally(request.requestedUrl);
   }

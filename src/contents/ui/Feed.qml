@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 import org.kde.kfeedreader 1.0
+import "."
 
 Kirigami.ScrollablePage {
   property QtObject model
@@ -10,6 +11,7 @@ Kirigami.ScrollablePage {
   property bool leadingFeedIcon: false
   id: page
   title: model.name
+  actions: feedActions.actions
   Kirigami.ColumnView.pinned: true
 
   ColumnLayout {
@@ -56,25 +58,19 @@ Kirigami.ScrollablePage {
     Repeater {
       focus: true
       model: page.model.articles
-      delegate: Kirigami.BasicListItem {
+      delegate: Controls.ItemDelegate {
         property QtObject item: page.model.articles[index]
-        label: item.title
-        bold: !item.read
-        reserveSpaceForIcon: false
-        trailing: Text {
-          text: item.publicationDate.toLocaleDateString({})
-        }
-        leading: Item {
-          implicitWidth: leadingFeedIcon ? 16 : 0
-          visible: leadingFeedIcon
-          Image {
-            source: item.faviconUrl
-            height: parent.height > 16 ? 16 : parent.height
-            width: 16
-            anchors.centerIn: parent
+        Layout.fillWidth: true
+        visible: !searchField.visible || searchField.matches(item.title)
+        highlighted: action.checked
+        contentItem: ListItemDelegate {
+          title: item.title
+          bold: !item.read
+          iconSource: leadingFeedIcon ? item.faviconUrl : ""
+          trailing: Text {
+            text: page.model.articles[index].publicationDate.toLocaleDateString({})
           }
         }
-        visible: !searchField.visible || searchField.matches(item.title)
         action: Controls.Action {
           checkable: true
           checked: pageStack.lastItem.model == item
@@ -125,9 +121,6 @@ Kirigami.ScrollablePage {
     onToggleSearch: searchField.visible = !searchField.visible
     onMarkAsRead: page.model.markAsRead()
   }
-
-  actions.main: feedActions.mainAction
-  actions.contextualActions: feedActions.contextualActions
 
   Kirigami.PromptDialog {
     id: destroyConfirmDialog

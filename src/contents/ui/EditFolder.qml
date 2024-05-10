@@ -1,11 +1,11 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.19 as Kirigami
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kirigamiaddons.treeview 1.0 as TreeView
 import org.kde.kfeedreader 1.0
 import "."
-import QtQuick.Dialogs 1.3
+import QtQuick.Dialogs
 
 Kirigami.Page {
   required property QtObject model
@@ -67,8 +67,8 @@ Kirigami.Page {
   FileDialog {
     id: importYouTubeDialog
     title: i18n("Pick a YouTube subcription file from a Google Takeout archive")
+    fileMode: FileDialog.OpenFile
     nameFilters: ["(*.csv)"]
-    folder: shortcuts.home
-    onAccepted: model.synchronizeWithYouTube(fileUrl)
+    onAccepted: model.synchronizeWithYouTube(selectedFile)
   }
 }

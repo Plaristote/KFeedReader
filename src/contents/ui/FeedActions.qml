@@ -6,6 +6,7 @@ Item {
   property bool readOnly: false
   property alias mainAction: updateAction
   property list<QtObject> contextualActions
+  property list<QtObject> actions: [mainAction].concat(contextualActions)
   id: root
 
   signal requireDestroy()

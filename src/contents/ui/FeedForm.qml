@@ -119,22 +119,20 @@ Kirigami.ScrollablePage {
     onTriggered: updateXmlUrl()
   }
 
-  actions {
-    main: Kirigami.Action {
+  actions: [
+    Kirigami.Action {
       id: confirmAction
       text: i18n("Confirm")
       enabled: !page.feed.fetching && page.feed.name.length > 0
       icon.name: "dialog-ok-apply"
       tooltip: i18n("Adds this feed to the current folder")
       onTriggered: page.confirmed()
+    },
+    Kirigami.Action {
+      text: i18n("Cancel")
+      icon.name: "dialog-cancel"
+      tooltip: i18n("Discard changes and go back to the previous page")
+      onTriggered: pageStack.pop();
     }
-    contextualActions: [
-      Kirigami.Action {
-        text: i18n("Cancel")
-        icon.name: "dialog-cancel"
-        tooltip: i18n("Discard changes and go back to the previous page")
-        onTriggered: pageStack.pop();
-      }
-    ]
-  }
+  ]
 }

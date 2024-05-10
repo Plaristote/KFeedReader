@@ -29,19 +29,20 @@ add_executable(kfeedreader
     resources.qrc)
 
 target_link_libraries(kfeedreader
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Qml
-    Qt5::Quick
-    Qt5::QuickControls2
-    Qt5::Svg
-    Qt5::Multimedia
-    Qt5::Xml
-    Qt5::WebEngine
-    KF5::I18n
-    KF5::CoreAddons
-    KF5::ConfigCore
-    KF5::ConfigGui)
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Qml
+    Qt6::Quick
+    Qt6::QuickControls2
+    Qt6::Svg
+    Qt6::Multimedia
+    Qt6::Xml
+    Qt6::WebEngineQuick
+    Qt6::Widgets
+    KF6::I18n
+    KF6::CoreAddons
+    KF6::ConfigCore
+    KF6::ConfigGui)
 
 if (ANDROID)
     kirigami_package_breeze_icons(ICONS

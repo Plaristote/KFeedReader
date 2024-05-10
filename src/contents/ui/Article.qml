@@ -12,8 +12,10 @@ Kirigami.ScrollablePage {
   id: page
   title: model.title
   onModelChanged: model.read = true
-  actions.contextualActions: pageActions.contextualActions
-  actions.main: Kirigami.Action {
+  actions: [viewAction].concat(pageActions.contextualActions)
+
+  Kirigami.Action {
+    id: viewAction
     text: i18n("View")
     icon.name: "quickview"
     tooltip: i18n("Open the article link in the application")
