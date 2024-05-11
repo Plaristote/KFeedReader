@@ -48,10 +48,10 @@ Kirigami.Page {
       Component.onCompleted: reset()
     }
 
-    FolderTreeView {
+    SortableFolderTree {
       Layout.fillWidth: true
       Layout.fillHeight: true
-      model: page.model 
+      model: page.model
       clip: true
     }
 

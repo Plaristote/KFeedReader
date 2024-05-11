@@ -8,7 +8,6 @@ add_executable(kfeedreader
     youtube/favicon.cpp
     main.cpp
     app.cpp
-    menuitemmodel.cpp
     menuitem.cpp
     feedfolder.cpp
     feed.cpp

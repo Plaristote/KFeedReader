@@ -18,11 +18,21 @@ class MenuItem : public TtlSettings
     Q_PROPERTY(ItemType type READ itemType CONSTANT)
     Q_PROPERTY(QQmlListProperty<QObject> crumbs READ qmlCrumbs NOTIFY crumbsChanged)
 public:
+    enum Role { DisplayNameRole = Qt::UserRole + 1, DescriptionRole, IconUrlRole, MenuItemRole };
     enum ItemType { NoItemType = 0, FolderMenuItem, FeedMenuItem };
     Q_ENUM(ItemType)
 
     MenuItem(QObject *parent = nullptr);
     MenuItem(MenuItem &parent);
+
+    static MenuItem *fromIndex(const QModelIndex &item);
+    QVariant data(const QModelIndex &index, int role) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent = {}) const override;
+    QModelIndex parent(const QModelIndex &item) const override;
+    int rowCount(const QModelIndex &item) const override;
+    int columnCount(const QModelIndex &) const override;
+    QHash<int, QByteArray> roleNames() const override;
+    bool isAncestorOf(const MenuItem *) const;
 
     virtual QUrl faviconUrl() const;
     const QString &name() const;
@@ -52,6 +62,9 @@ public Q_SLOTS:
     void setName(const QString &name);
     void setDescription(const QString &description);
     void setParentItem(MenuItem *);
+    void reparent(MenuItem *target, MenuItem *subject);
+    void appendNextToSibling(MenuItem *item, MenuItem *sibling);
+    void appendBeforeSibling(MenuItem *item, MenuItem *sibling);
     virtual void fetch(){};
     virtual void remove();
     virtual void triggerBeforeSave(){};

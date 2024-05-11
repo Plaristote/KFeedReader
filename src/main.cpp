@@ -23,7 +23,6 @@
 #include "feedarticle.h"
 #include "feedfolder.h"
 #include "kfeedreaderconfig.h"
-#include "menuitemmodel.h"
 #include <QtWebEngineQuick/qtwebenginequickglobal.h>
 
 #ifdef Q_OS_ANDROID
@@ -98,7 +97,6 @@ int main(int argc, char *argv[])
     App application;
     qmlRegisterSingletonInstance("org.kde.kfeedreader", 1, 0, "App", &application);
 
-    qmlRegisterType<MenuItemModel>("org.kde.kfeedreader", 1, 0, "MenuItemModel");
     qmlRegisterType<MenuItem>("org.kde.kfeedreader", 1, 0, "MenuItem");
     qmlRegisterType<FeedFolder>("org.kde.kfeedreader", 1, 0, "FeedFolder");
     qmlRegisterType<FeedArticle>("org.kde.kfeedreader", 1, 0, "FeedArticle");

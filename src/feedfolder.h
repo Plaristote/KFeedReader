@@ -20,6 +20,7 @@ public:
     FeedFolder(FeedFolder &parent);
     ~FeedFolder();
 
+    QModelIndex selfIndex() const;
     QString view() const override;
     QUrl faviconUrl() const override;
     qint64 unreadCount() const override;

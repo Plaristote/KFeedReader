@@ -1,11 +1,11 @@
 #ifndef TTLSETTINGS_H
 #define TTLSETTINGS_H
 
-#include <QObject>
+#include <QAbstractItemModel>
 #include <QVector>
 #include <optional>
 
-class TtlSettings : public QObject
+class TtlSettings : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(int customTtl READ customTtl WRITE setCustomTtl NOTIFY customTtlChanged)

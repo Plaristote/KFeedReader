@@ -36,7 +36,7 @@ Kirigami.ScrollablePage {
 
     Repeater {
       focus: true
-      model: page.model.items
+      model: page.model.items.length
       delegate: Controls.ItemDelegate {
         property QtObject item: page.model.items[index]
         Layout.fillWidth: true

@@ -19,6 +19,11 @@ FeedFolder::~FeedFolder()
     Q_EMIT itemsChanged();
 }
 
+QModelIndex FeedFolder::selfIndex() const
+{
+    return createIndex(row(), 0, const_cast<FeedFolder *>(this));
+}
+
 QString FeedFolder::view() const
 {
     switch (m_displayType) {
@@ -139,10 +144,7 @@ void FeedFolder::addItem(QObject *item)
 
         Q_EMIT menuItem->removed(menuItem);
         menuItem->setParentItem(this);
-        connectItem(menuItem);
-        m_items << item;
-        Q_EMIT itemsChanged();
-        Q_EMIT unreadCountChanged();
+        insertItemAt(m_items.end(), menuItem);
     }
 }
 
@@ -150,15 +152,11 @@ void FeedFolder::addItemAfter(QObject *item, QObject *previousItem)
 {
     if (m_items.indexOf(previousItem) >= 0) {
         MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+        QList<QObject *>::iterator it;
 
         Q_EMIT menuItem->removed(menuItem);
-        m_items.removeAll(item);
-        for (auto it = m_items.begin(); it != m_items.end(); ++it) {
-            if (*it == previousItem) {
-                insertItemAt(++it, menuItem);
-                break;
-            }
-        }
+        it = std::find(m_items.begin(), m_items.end(), previousItem);
+        insertItemAt(++it, menuItem);
     }
 }
 
@@ -166,15 +164,11 @@ void FeedFolder::addItemBefore(QObject *item, QObject *previousItem)
 {
     if (m_items.indexOf(previousItem) >= 0) {
         MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+        QList<QObject *>::iterator it;
 
         Q_EMIT menuItem->removed(menuItem);
-        m_items.removeAll(item);
-        for (auto it = m_items.begin(); it != m_items.end(); ++it) {
-            if (*it == previousItem) {
-                insertItemAt(it, menuItem);
-                break;
-            }
-        }
+        it = std::find(m_items.begin(), m_items.end(), previousItem);
+        insertItemAt(it, menuItem);
     }
 }
 
@@ -211,6 +205,8 @@ int FeedFolder::childCount() const
 
 MenuItem *FeedFolder::childAt(int index) const
 {
+    if (m_items.size() <= index)
+        return nullptr;
     return reinterpret_cast<MenuItem *>(m_items.at(index));
 }
 

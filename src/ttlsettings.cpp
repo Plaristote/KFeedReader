@@ -5,7 +5,7 @@
 #include <algorithm>
 
 TtlSettings::TtlSettings(QObject *parent)
-    : QObject(parent)
+    : QAbstractItemModel(parent)
 {
 }
 

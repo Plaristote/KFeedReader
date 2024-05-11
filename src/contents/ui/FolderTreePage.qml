@@ -1,16 +1,15 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15 as Controls
-import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.20 as Kirigami
-import org.kde.kfeedreader 1.0
+import QtQuick
+import QtQuick.Controls as Controls
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
+import org.kde.kfeedreader
 import "."
 
 Kirigami.Page {
   property QtObject model
   id: page
   title: model.name
-  actions.main: folderActions.mainAction
-  actions.contextualActions: folderActions.contextualActions
+  actions: folderActions.actions
 
   FolderActions {
     id: folderActions
@@ -30,26 +29,60 @@ Kirigami.Page {
     }
 
     Controls.ItemDelegate {
-      bold: true
-      label: i18n("All")
+      Layout.fillWidth: true
+      contentItem: ListItemDelegate {
+        bold: true
+        title: i18n("All")
+        trailing: UnreadCountBox { model: page.model }
+      }
       action: Controls.Action {
         checkable: true
         checked: pageStack.lastItem.folder == page.model
         onTriggered: pageStack.push(Qt.resolvedUrl("./AggregatedFeed.qml"), { folder: page.model })
       }
-      UnreadCountBox {
-        model: page.model
-        Layout.alignment: Qt.VerticalCenter
-      }
     }
 
-    FolderTreeView {
-      model: page.model
-      withDragHandles: false
-      onActivated: pageStack.push(item.view, { model: item });
-      clip: true
+    TreeView {
+      id: treeView
       Layout.fillWidth: true
       Layout.fillHeight: true
+
+      Timer {
+        interval: 300
+        running: true
+        onTriggered: parent.model = page.model
+      }
+
+      delegate: Controls.ItemDelegate {
+        id: treeItem
+        required property bool expanded
+        required property bool hasChildren
+        required property int depth
+        required property string displayName
+        required property url iconUrl
+        required property QtObject menuItem
+
+        Component.onCompleted: {
+          if (menuItem.expanded)
+            treeView.expand(row)
+        }
+
+        onExpandedChanged: menuItem.expanded = expanded
+
+        implicitWidth: treeView.width
+
+        contentItem: TreeItemDelegate {
+          title: displayName
+          iconSource: iconUrl
+          trailing: UnreadCountBox { model: menuItem }
+        }
+
+        action: Controls.Action {
+          checkable: true
+          checked: pageStack.lastItem.model == menuItem
+          onTriggered: pageStack.push(menuItem.view, { model: menuItem })
+        }
+      }
     }
   }
 }

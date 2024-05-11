@@ -18,16 +18,27 @@ Item {
   property alias iconSource: iconImage.source
   property real iconSize: 18
   property bool bold: false
+  property alias leading: leadingItem.sourceComponent
   property alias trailing: trailingItem.sourceComponent
 
   implicitWidth: iconItem.implicitWidth + titleSubtitle.anchors.leftMargin + titleSubtitle.implicitWidth
   implicitHeight: titleSubtitle.implicitHeight
+
+  Loader {
+    id: leadingItem
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+  }
 
   Item {
     id: iconItem
     implicitWidth: root.iconSize
     implicitHeight: root.iconSize
     visible: root.iconSize > 0
+    anchors {
+      left: leadingItem.right
+      leftMargin: leadingItem.width > 0 ? Kirigami.Units.mediumSpacing : 0
+    }
     Image {
       id: iconImage
       height: parent.height > root.iconSize ? root.iconSize : parent.height
@@ -39,7 +50,7 @@ Item {
   KirigamiDelegate.TitleSubtitle {
     id: titleSubtitle
     title: root.bold ? `<b>${root.title}</b>` : root.title
-    selected: root.parent.action.checked
+    selected: root.parent.action && root.parent.action.checked
 
     anchors {
       left: iconItem.right

@@ -1,4 +1,5 @@
 #include "menuitem.h"
+#include "feedfolder.h"
 #include <QJsonObject>
 
 MenuItem::MenuItem(QObject *parent)
@@ -13,6 +14,77 @@ MenuItem::MenuItem(MenuItem &parent)
 {
     connect(this, &MenuItem::parentChanged, this, &MenuItem::updateCrumbs);
     updateCrumbs();
+}
+
+MenuItem *MenuItem::fromIndex(const QModelIndex &item)
+{
+    if (item.internalPointer())
+        return reinterpret_cast<MenuItem *>(item.internalPointer());
+    return nullptr;
+}
+
+QVariant MenuItem::data(const QModelIndex &index, int role) const
+{
+    MenuItem *item = fromIndex(index);
+
+    if (item) {
+        switch (static_cast<Role>(role)) {
+        case DisplayNameRole:
+            return item->name();
+        case DescriptionRole:
+            return item->description();
+        case IconUrlRole:
+            return item->faviconUrl();
+        case MenuItemRole:
+            return QVariant::fromValue(reinterpret_cast<QObject *>(item));
+        }
+    }
+    return {};
+}
+
+QModelIndex MenuItem::index(int row, int column, const QModelIndex &parentIndex) const
+{
+    const MenuItem *parent = fromIndex(parentIndex);
+    const MenuItem *child;
+
+    if (parent)
+        return parent->index(row, column);
+    child = childAt(row);
+    if (child)
+        return createIndex(row, column, child);
+    else
+        qDebug() << "No child at row" << row << "???" << childCount();
+    return {};
+}
+
+QModelIndex MenuItem::parent(const QModelIndex &index) const
+{
+    const MenuItem *item = fromIndex(index);
+
+    if (item) {
+        MenuItem *parentItem = item->parentItem();
+
+        if (parentItem)
+            return createIndex(parentItem->row(), 0, parentItem);
+    }
+    return {};
+}
+
+int MenuItem::rowCount(const QModelIndex &index) const
+{
+    const MenuItem *item = fromIndex(index);
+
+    return item ? item->childCount() : childCount();
+}
+
+int MenuItem::columnCount(const QModelIndex &) const
+{
+    return 1;
+}
+
+QHash<int, QByteArray> MenuItem::roleNames() const
+{
+    return {{DisplayNameRole, "displayName"}, {DescriptionRole, "description"}, {IconUrlRole, "iconUrl"}, {MenuItemRole, "menuItem"}};
 }
 
 MenuItem *MenuItem::parentItem() const
@@ -88,6 +160,55 @@ void MenuItem::setParentItem(MenuItem *parentItem)
     setParent(parentItem);
     m_parentItem = parentItem;
     Q_EMIT parentChanged();
+}
+
+bool MenuItem::isAncestorOf(const MenuItem *item) const
+{
+    for (int i = 0; i < childCount(); ++i) {
+        MenuItem *child = childAt(i);
+
+        if (child == item || child->isAncestorOf(item))
+            return true;
+    }
+    return false;
+}
+
+void MenuItem::reparent(MenuItem *target, MenuItem *subject)
+{
+    if (target && subject && target != subject && !subject->isAncestorOf(target)) {
+        switch (target->itemType()) {
+        case MenuItem::FolderMenuItem:
+            beginResetModel();
+            reinterpret_cast<FeedFolder *>(target)->addItem(subject);
+            endResetModel();
+            break;
+        default:
+            appendNextToSibling(subject, target);
+            break;
+        }
+    }
+}
+
+void MenuItem::appendNextToSibling(MenuItem *item, MenuItem *sibling)
+{
+    FeedFolder *folder = reinterpret_cast<FeedFolder *>(sibling->parentItem());
+
+    if (folder) {
+        beginResetModel();
+        folder->addItemAfter(item, sibling);
+        endResetModel();
+    }
+}
+
+void MenuItem::appendBeforeSibling(MenuItem *item, MenuItem *sibling)
+{
+    FeedFolder *folder = reinterpret_cast<FeedFolder *>(sibling->parentItem());
+
+    if (folder) {
+        beginResetModel();
+        folder->addItemBefore(item, sibling);
+        endResetModel();
+    }
 }
 
 void MenuItem::remove()
