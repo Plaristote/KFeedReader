@@ -1,3 +1,4 @@
+import QtCore
 import QtQuick 2.15
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
@@ -69,6 +70,7 @@ Kirigami.Page {
     title: i18n("Pick a YouTube subcription file from a Google Takeout archive")
     fileMode: FileDialog.OpenFile
     nameFilters: ["(*.csv)"]
+    currentFolder: StandardPaths.standardLocations(StandardPaths.DownloadLocation)[0]
     onAccepted: model.synchronizeWithYouTube(selectedFile)
   }
 }

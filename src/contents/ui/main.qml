@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: %{CURRENT_YEAR} %{AUTHOR} <%{EMAIL}>
 
+import QtCore
 import QtQuick 2.15
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
@@ -122,7 +123,7 @@ Kirigami.ApplicationWindow {
         title: i18n("Pick a feed source to import")
         fileMode: FileDialog.OpenFile
         nameFilters: [i18n("OPML structures") + " (*.opml)"]
-        currentFolder: StandardPaths.standardLocations(StandardPaths.HomeLocation)
+        currentFolder: StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
         onAccepted: App.importOpml(selectedFile)
     }
 
@@ -131,7 +132,7 @@ Kirigami.ApplicationWindow {
         title: i18n("Pick a file to export your feeds to")
         fileMode: FileDialog.SaveFile
         nameFilters: [i18n("OPML structures") + " (*.opml)"]
-        currentFolder: StandardPaths.standardLocations(StandardPaths.HomeLocation)
+        currentFolder: StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
         onAccepted: App.exportOpml(selectedFile)
     }
 }
