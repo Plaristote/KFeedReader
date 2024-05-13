@@ -7,6 +7,7 @@ import "."
 
 Kirigami.Page {
   property QtObject model
+  property var nextPage: window.getNextPageInStack(this, window.pageStack.lastItem)
   id: page
   title: model.name
   actions: folderActions.actions
@@ -37,7 +38,7 @@ Kirigami.Page {
       }
       action: Controls.Action {
         checkable: true
-        checked: pageStack.lastItem.folder == page.model
+        checked: nextPage != null && nextPage.folder == page.model
         onTriggered: pageStack.push(Qt.resolvedUrl("./AggregatedFeed.qml"), { folder: page.model })
       }
     }
@@ -79,7 +80,7 @@ Kirigami.Page {
 
         action: Controls.Action {
           checkable: true
-          checked: pageStack.lastItem.model == menuItem
+          checked: nextPage != null && nextPage.model == menuItem
           onTriggered: pageStack.push(menuItem.view, { model: menuItem })
         }
       }

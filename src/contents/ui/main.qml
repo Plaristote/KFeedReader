@@ -46,6 +46,15 @@ Kirigami.ApplicationWindow {
       visible: false
     }
 
+    function getNextPageInStack(page) {
+        for (let i = 0 ; i < window.pageStack.items.length ; ++i) {
+            if (window.pageStack.items[i] == page) {
+                return window.pageStack.items[i + 1];
+            }
+        }
+        return null;
+    }
+
     globalDrawer: Kirigami.GlobalDrawer {
         title: i18n("KFeedReader")
         titleIcon: "applications-graphics"

@@ -11,7 +11,7 @@ RowLayout {
   spacing: 0
 
   Repeater {
-    model: crumbs
+    model: crumbs.length
     delegate: Controls.Button {
       Layout.fillWidth: index !== 0
       visible: crumbs[index].name.length > 0

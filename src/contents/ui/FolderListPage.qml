@@ -8,6 +8,7 @@ import "."
 
 Kirigami.ScrollablePage {
   property QtObject model
+  property var nextPage: window.getNextPageInStack(this, window.pageStack.lastItem)
   id: page
   title: model.name
 
@@ -29,7 +30,7 @@ Kirigami.ScrollablePage {
       }
       action: Controls.Action {
         checkable: true
-        checked: pageStack.lastItem.folder == page.model
+        checked: nextPage != null && nextPage.folder == page.model
         onTriggered: pageStack.push(Qt.resolvedUrl("./AggregatedFeed.qml"), { folder: page.model })
       }
     }
@@ -51,7 +52,7 @@ Kirigami.ScrollablePage {
         }
         action: Controls.Action {
           checkable: true
-          checked: pageStack.lastItem.model == item
+          checked: nextPage != null && nextPage.model == item
           onTriggered: pageStack.push(item.view, { model: item })
         }
       } // END delegate
