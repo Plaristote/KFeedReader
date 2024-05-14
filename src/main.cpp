@@ -23,6 +23,7 @@
 #include "feedarticle.h"
 #include "feedfolder.h"
 #include "kfeedreaderconfig.h"
+#include <QQuickWebEngineProfile>
 #include <QtWebEngineQuick/qtwebenginequickglobal.h>
 
 #ifdef Q_OS_ANDROID
@@ -83,6 +84,12 @@ int main(int argc, char *argv[])
     // aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"), i18nc("EMAIL OF TRANSLATORS", "Your emails"));
     KAboutData::setApplicationData(aboutData);
     QGuiApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("akregator")));
+
+    QQuickWebEngineProfile *webEngineProfile = QQuickWebEngineProfile::defaultProfile();
+    webEngineProfile->setPersistentCookiesPolicy(QQuickWebEngineProfile::ForcePersistentCookies);
+    webEngineProfile->setOffTheRecord(false);
+    webEngineProfile->setStorageName(QStringLiteral("KFeedReader"));
+    webEngineProfile->setCachePath(webEngineProfile->persistentStoragePath() + QStringLiteral("/Cache"));
 
     QQmlApplicationEngine engine;
 

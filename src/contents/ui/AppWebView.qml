@@ -5,6 +5,9 @@ WebEngineView {
   id: webView
   property bool fullScreen: false
 
+  profile.persistentCookiesPolicy: WebEngineProfile.ForcePersistentCookies
+  profile.offTheRecord: false
+
   onFullScreenRequested: {
     if (request.toggleOn) {
       window.showFullScreen();
