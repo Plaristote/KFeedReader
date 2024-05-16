@@ -1,8 +1,8 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15 as Controls
-import QtQuick.Layouts 1.15
-import QtMultimedia 5.15
-import org.kde.kirigami 2.19 as Kirigami
+import QtQuick
+import QtQuick.Controls as Controls
+import QtQuick.Layouts
+import QtMultimedia
+import org.kde.kirigami as Kirigami
 
 ColumnLayout {
   property bool fullScreen: false
@@ -69,6 +69,8 @@ ColumnLayout {
   MediaPlayer {
     id: mediaPlayer
     source: model.url
+    videoOutput: videoOutputComponent
+    audioOutput: AudioOutput { }
   }
 
   Item {
@@ -89,8 +91,7 @@ ColumnLayout {
         Layout.fillHeight: true
 
         VideoOutput {
-          id: videoOutput
-          source: mediaPlayer
+          id: videoOutputComponent
           fillMode: VideoOutput.PreserveAspectFit
           anchors.fill: parent
         }
@@ -121,7 +122,7 @@ ColumnLayout {
             value: mediaPlayer.position
             onValueChanged: {
               if (value != mediaPlayer.position)
-                mediaPlayer.seek(value);
+                mediaPlayer.position = value;
             }
           }
 
