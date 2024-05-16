@@ -35,8 +35,8 @@ Kirigami.ScrollablePage {
     }
   }
 
-  actions {
-    main: Kirigami.Action {
+  actions: [
+    Kirigami.Action {
       id: confirmAction
       text: i18n("Confirm")
       enabled: nameField.text.length > 0
@@ -48,14 +48,12 @@ Kirigami.ScrollablePage {
         page.parentFolder.addItem(newFolder);
         pageStack.pop();
       }
+    },
+    Kirigami.Action {
+      text: i18n("Cancel")
+      icon.name: "dialog-cancel"
+      tooltip: i18n("Discard changes and go back to the previous page")
+      onTriggered: pageStack.pop();
     }
-    contextualActions: [
-      Kirigami.Action {
-        text: i18n("Cancel")
-        icon.name: "dialog-cancel"
-        tooltip: i18n("Discard changes and go back to the previous page")
-        onTriggered: pageStack.pop();
-      }
-    ]
-  }
+  ]
 }
