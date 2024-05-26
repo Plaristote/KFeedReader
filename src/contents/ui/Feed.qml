@@ -12,7 +12,6 @@ Kirigami.ScrollablePage {
   id: page
   title: model.name
   actions: feedActions.actions
-  Kirigami.ColumnView.pinned: true
 
   ColumnLayout {
     spacing: 0

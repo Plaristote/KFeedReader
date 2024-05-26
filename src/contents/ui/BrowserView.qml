@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 import QtWebEngine 1.10
 import "."
@@ -6,6 +7,7 @@ import "."
 Kirigami.Page {
   required property QtObject model
   required property QtObject feed
+  Kirigami.ColumnView.pinned: true
 
   id: page
   title: webview.title
@@ -31,13 +33,29 @@ Kirigami.Page {
     onRequestArticleChange: page.model = article
   }
 
-  Item {
-    id: webviewContainer
+  ColumnLayout {
     anchors.fill: parent
-    AppWebView {
-      id: webview
-      url: model.link
-      anchors.fill: parent
+
+    Flickable {
+      Layout.fillWidth: true
+      Layout.preferredHeight: 50
+      contentWidth: breadcrumbs.width
+      Breadcrumbs {
+        id: breadcrumbs
+        crumbs: page.model.crumbs
+        anchors { top: parent.top; right: parent.right }
+      }
+    }
+
+    Item {
+      id: webviewContainer
+      Layout.fillWidth: true
+      Layout.fillHeight: true
+      AppWebView {
+        id: webview
+        url: model.link
+        anchors.fill: parent
+      }
     }
   }
 }

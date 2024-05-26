@@ -8,6 +8,7 @@ import "."
 Kirigami.ScrollablePage {
   required property QtObject model
   required property QtObject feed
+  Kirigami.ColumnView.pinned: true
 
   id: page
   title: model.title
