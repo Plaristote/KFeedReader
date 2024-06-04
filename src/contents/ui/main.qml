@@ -99,24 +99,11 @@ Kirigami.ApplicationWindow {
         id: contextDrawer
     }
 
-    pageStack.initialPage: {
-      switch (App.rootFolder.displayType) {
-      case FeedFolder.ListDisplay: return listRootPage;
-      //case FeedFolder.TreeDisplay: return treeRootPage;
-      }
-      return listRootPage;
-    }
-/*
+    pageStack.initialPage: treeRootPage
+
     Component {
       id: treeRootPage
       FolderTreePage {
-        model: App.rootFolder
-      }
-    }
-*/
-    Component {
-      id: listRootPage
-      FolderListPage {
         model: App.rootFolder
       }
     }
