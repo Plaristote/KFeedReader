@@ -12,6 +12,23 @@ QUrl baseUrlForLink(const QUrl &link)
     return QUrl(link.scheme() + QStringLiteral("://") + link.host());
 }
 
+static QDateTime getPubDateTime(QDomElement pubDateElement)
+{
+    QDateTime result;
+
+    if (!pubDateElement.isNull()) {
+        QString src = pubDateElement.text();
+        qsizetype comma = src.indexOf(QStringLiteral(","));
+
+        if (comma > 3)
+            src = src.sliced(0, 3) + QStringLiteral(",") + src.sliced(comma + 1);
+        src = src.replace(QStringLiteral("GMT"), QStringLiteral("+0000"));
+        src = src.replace(QStringLiteral("EST"), QStringLiteral("-0500"));
+        result = QDateTime::fromString(src, Qt::RFC2822Date);
+    }
+    return result;
+}
+
 void RssFeedReader::loadBytes(const QByteArray &bytes)
 {
     QDomDocument document;
@@ -106,7 +123,7 @@ void RssFeedReader::loadArticle(const QDomElement &node, FeedArticle &article)
     article.setDescription(descriptionElement.isNull() ? QString() : descriptionElement.text());
     article.setGuid(guidElement.isNull() ? QString() : guidElement.text());
     article.setLink(linkElement.isNull() ? QUrl() : QUrl(linkElement.text()));
-    article.setPublicationDate(pubDateElement.isNull() ? QDateTime() : QDateTime::fromString(pubDateElement.text(), Qt::RFC2822Date));
+    article.setPublicationDate(getPubDateTime(pubDateElement));
     article.setTitle(titleElement.isNull() ? QString() : titleElement.text());
 
     if (!enclosureElement.isNull()) {
