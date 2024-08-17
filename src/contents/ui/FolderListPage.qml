@@ -19,45 +19,55 @@ Kirigami.ScrollablePage {
     model: page.model
   }
 
-  ColumnLayout {
-    spacing: 0
+  Item {
+    implicitWidth: 0 // Workaround supposed KF6 Kirigami issue with page width
+    implicitHeight: contentItem.height
+    ColumnLayout {
+      id: contentItem
+      spacing: 0
+      width: parent.width
 
-    Controls.ItemDelegate {
-      Layout.fillWidth: true
-      contentItem: ListItemDelegate {
-        title: i18n("All")
-        trailing: UnreadCountBox { model: page.model }
-      }
-      action: Controls.Action {
-        checkable: true
-        checked: nextPage != null && nextPage.folder == page.model
-        onTriggered: pageStack.push(Qt.resolvedUrl("./AggregatedFeed.qml"), { folder: page.model })
-      }
-    }
-
-    Repeater {
-      focus: true
-      model: page.model.items.length
-      delegate: Controls.ItemDelegate {
-        property QtObject item: page.model.items[index]
+      AllFeedListItem {
+        label: i18n("All")
+        iconSource: "mail-message-new-list"
+        model: page.model
+        nextPage: page.nextPage
         Layout.fillWidth: true
-        highlighted: action.checked
-        contentItem: ListItemDelegate {
-          title: item.name
-          subtitle: item.description.replace(/\n/g, '')
-          iconSource: item.faviconUrl
-          trailing: UnreadCountBox {
-            model: page.model.items[index]
+      }
+
+      AllFeedListItem {
+        unreadOnly: true
+        label: i18n("Unread")
+        iconSource: "mail-mark-unread-new"
+        model: page.model
+        nextPage: page.nextPage
+        Layout.fillWidth: true
+      }
+
+      Repeater {
+        focus: true
+        model: page.model.items.length
+        delegate: Controls.ItemDelegate {
+          property QtObject item: page.model.items[index]
+          Layout.fillWidth: true
+          highlighted: action.checked
+          contentItem: ListItemDelegate {
+            title: item.name
+            subtitle: item.description.replace(/\n/g, '')
+            iconSource: item.faviconUrl
+            trailing: UnreadCountBox {
+              model: page.model.items[index]
+            }
           }
-        }
-        action: Controls.Action {
-          checkable: true
-          checked: nextPage != null && nextPage.model == item
-          onTriggered: pageStack.push(item.view, { model: item })
-        }
-      } // END delegate
-    }
-  }
+          action: Controls.Action {
+            checkable: true
+            checked: nextPage != null && nextPage.model == item
+            onTriggered: pageStack.push(item.view, { model: item })
+          }
+        } // END delegate
+      } // END Repeater
+    } // END ColumnLayout
+  } // END KF6 workaround
 
   footer: ColumnLayout {
     Controls.ProgressBar {

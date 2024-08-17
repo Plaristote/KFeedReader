@@ -13,6 +13,7 @@ AggregatedFeed::AggregatedFeed(QObject *parent)
 {
     m_listMaxLength = MAX_AGGREGATED_ARTICLE_COUNT;
     connect(this, &AggregatedFeed::feedsChanged, this, &AggregatedFeed::updateArticles);
+    connect(this, &AggregatedFeed::onlyUnreadChanged, this, &AggregatedFeed::updateArticles);
 }
 
 QString AggregatedFeed::view() const
@@ -139,7 +140,9 @@ void AggregatedFeed::updateArticles()
     m_articles.clear();
     for (Feed *feed : m_feeds) {
         for (FeedArticle *article : feed->articles()) {
-            m_articles.append(article);
+            if (!m_onlyUnread || !article->isRead()) {
+                m_articles.append(article);
+            }
         }
     }
     std::sort(m_articles.begin(), m_articles.end(), [](const FeedArticle *a, const FeedArticle *b) -> bool {

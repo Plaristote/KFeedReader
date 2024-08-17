@@ -33,6 +33,7 @@
         <file alias="Breadcrumbs.qml">contents/ui/Breadcrumbs.qml</file>
         <file alias="MainMenuBar.qml">contents/ui/MainMenuBar.qml</file>
         <file alias="PageMenu.qml">contents/ui/PageMenu.qml</file>
+        <file alias="AllFeedListItem.qml">contents/ui/AllFeedListItem.qml</file>
         <file alias="ListItemDelegate.qml">contents/ui/ListItemDelegate.qml</file>
         <file alias="TreeItemDelegate.qml">contents/ui/TreeItemDelegate.qml</file>
         <file alias="SortableFolderTree.qml">contents/ui/SortableFolderTree.qml</file>

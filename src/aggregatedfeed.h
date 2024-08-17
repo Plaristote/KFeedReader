@@ -13,6 +13,7 @@ class AggregatedFeed : public MenuItem
     Q_OBJECT
     Q_PROPERTY(QQmlListProperty<QObject> articles READ qmlArticles NOTIFY articlesChanged)
     Q_PROPERTY(bool hasTextInput READ hasTextInput CONSTANT)
+    Q_PROPERTY(bool onlyUnread MEMBER m_onlyUnread NOTIFY onlyUnreadChanged)
 public:
     AggregatedFeed(QObject *parent = nullptr);
 
@@ -44,6 +45,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void articlesChanged();
     void feedsChanged();
+    void onlyUnreadChanged();
 
 private:
     QQmlListProperty<QObject> qmlArticles();
@@ -51,6 +53,7 @@ private:
     QList<Feed *> m_feeds;
     QList<FeedArticle *> m_articles;
     qint64 m_listMaxLength;
+    bool m_onlyUnread = false;
 };
 
 #endif

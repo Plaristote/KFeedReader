@@ -29,18 +29,21 @@ Kirigami.Page {
       Layout.fillWidth: true
     }
 
-    Controls.ItemDelegate {
+    AllFeedListItem {
+      label: i18n("All")
+      iconSource: "mail-message-new-list"
+      model: page.model
+      nextPage: page.nextPage
       Layout.fillWidth: true
-      contentItem: ListItemDelegate {
-        bold: true
-        title: i18n("All")
-        trailing: UnreadCountBox { model: page.model }
-      }
-      action: Controls.Action {
-        checkable: true
-        checked: nextPage != null && nextPage.folder == page.model
-        onTriggered: pageStack.push(Qt.resolvedUrl("./AggregatedFeed.qml"), { folder: page.model })
-      }
+    }
+
+    AllFeedListItem {
+      unreadOnly: true
+      label: i18n("Unread")
+      iconSource: "mail-mark-unread-new"
+      model: page.model
+      nextPage: page.nextPage
+      Layout.fillWidth: true
     }
 
     TreeView {

@@ -7,6 +7,7 @@ import "."
 
 Feed {
   property QtObject folder
+  property alias showUnreadOnly: aggregatedFeed.onlyUnread
   id: page
   readOnly: true
   leadingFeedIcon: true
