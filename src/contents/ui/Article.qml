@@ -35,58 +35,62 @@ Kirigami.ScrollablePage {
     onRequestArticleChange: page.model = article
   }
 
-  ColumnLayout {
-    anchors.left: parent.left
-    anchors.right: parent.right
+  Item {
+    implicitWidth: 0 // Workaround supposed KF6 Kirigami issue with page width
+    implicitHeight: contentItem.height
+    ColumnLayout {
+      id: contentItem
+      width: parent.width
 
-    Flickable {
-      Layout.fillWidth: true
-      Layout.preferredHeight: 50
-      contentWidth: breadcrumbs.width
-      Breadcrumbs {
-        id: breadcrumbs
-        crumbs: page.model.crumbs
-        anchors { top: parent.top; right: parent.right }
-      }
-    }
-
-    RowLayout {
-      id: authorRow
-      visible: page.model.author.length > 0
-      spacing: 5
-      Controls.Label {
-        text: i18n("Author")
+      Flickable {
         Layout.fillWidth: true
+        Layout.preferredHeight: 50
+        contentWidth: breadcrumbs.width
+        Breadcrumbs {
+          id: breadcrumbs
+          crumbs: page.model.crumbs
+          anchors { top: parent.top; right: parent.right }
+        }
       }
+
+      RowLayout {
+        id: authorRow
+        visible: page.model.author.length > 0
+        spacing: 5
+        Controls.Label {
+          text: i18n("Author")
+          Layout.fillWidth: true
+        }
+        Text {
+          text: page.model.author
+        }
+        Controls.Button {
+          icon.name: "link"
+          visible: page.model.authorUrl.toString() != ""
+          onClicked: Qt.openUrlExternally(page.model.authorUrl)
+        }
+      }
+
+      Kirigami.Separator {
+        Layout.fillWidth: true
+        visible: authorRow.visible && articleDescription.visible
+      }
+
       Text {
-        text: page.model.author
-      }
-      Controls.Button {
-        icon.name: "link"
-        visible: page.model.authorUrl.toString() != ""
-        onClicked: Qt.openUrlExternally(page.model.authorUrl)
-      }
-    }
-
-    Kirigami.Separator {
-      Layout.fillWidth: true
-      visible: authorRow.visible && articleDescription.visible
-    }
-
-    Text {
-      id: articleDescription
-      visible: text.length > 0
-      text: page.model.description
-      wrapMode: Text.WordWrap
-      Layout.fillWidth: true
-    }
-
-    Repeater {
-      model: page.model.medias
-      delegate: Loader {
-        property QtObject model: page.model.medias[index]
-        source: model.qmlView()
+        id: articleDescription
+        visible: text.length > 0
+        text: page.model.description
+        wrapMode: Text.WordWrap
         Layout.fillWidth: true
+      }
+
+      Repeater {
+        model: page.model.medias
+        delegate: Loader {
+          property QtObject model: page.model.medias[index]
+          source: model.qmlView()
+          Layout.fillWidth: true
+        }
       }
     }
   }

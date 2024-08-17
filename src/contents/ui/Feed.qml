@@ -13,71 +13,77 @@ Kirigami.ScrollablePage {
   title: model.name
   actions: feedActions.actions
 
-  ColumnLayout {
-    spacing: 0
+  Item {
+    implicitWidth: 0 // Workaround supposed KF6 Kirigami issue with page width
+    implicitHeight: contentItem.height
+    ColumnLayout {
+      id: contentItem
+      spacing: 0
+      width: parent.width
 
-    GridLayout {
-      Layout.fillWidth: true
-      Layout.bottomMargin: Kirigami.Units.smallSpacing
-      columns: width > 500 ? 2 : 1
-      visible: description.text.length || model.logoUrl != null
-
-      Item {
-        Layout.fillHeight: true
-        Layout.alignment: Qt.AlignHCenter
-        implicitWidth: logo.width
-        implicitHeight: logo.height
-        visible: model.logoUrl != null
-        Image {
-          id: logo
-          source: model.logoUrl
-          height: Math.min(sourceSize.height, description.text.length > 150 ? 200 : 50)
-          width: Math.min(sourceSize.width, height)
-          fillMode: Image.PreserveAspectFit
-        }
-      }
-
-      Text {
-        id: description
+      GridLayout {
         Layout.fillWidth: true
-        text: model.description
-        wrapMode: Text.WordWrap
-      }
-    }
+        Layout.bottomMargin: Kirigami.Units.smallSpacing
+        columns: width > 500 ? 2 : 1
+        visible: description.text.length || model.logoUrl != null
 
-    Kirigami.Separator {
-      Layout.fillWidth: true
-      visible: model.description.length > 0
-    }
-
-    RssTextInput {
-      model: page.model
-    }
-
-    Repeater {
-      focus: true
-      model: page.model.articles
-      delegate: Controls.ItemDelegate {
-        property QtObject item: page.model.articles[index]
-        Layout.fillWidth: true
-        visible: !searchField.visible || searchField.matches(item.title)
-        highlighted: action.checked
-        contentItem: ListItemDelegate {
-          title: item.title
-          bold: !item.read
-          iconSource: leadingFeedIcon ? item.faviconUrl : ""
-          trailing: Text {
-            text: page.model.articles[index].publicationDate.toLocaleDateString({})
+        Item {
+          Layout.fillHeight: true
+          Layout.alignment: Qt.AlignHCenter
+          implicitWidth: logo.width
+          implicitHeight: logo.height
+          visible: model.logoUrl != null
+          Image {
+            id: logo
+            source: model.logoUrl
+            height: Math.min(sourceSize.height, description.text.length > 150 ? 200 : 50)
+            width: Math.min(sourceSize.width, height)
+            fillMode: Image.PreserveAspectFit
           }
         }
-        action: Controls.Action {
-          checkable: true
-          checked: pageStack.lastItem.model == item
-          onTriggered: pageStack.push(Qt.resolvedUrl("./Article.qml"), { model: item, feed: page.model })
+
+        Text {
+          id: description
+          Layout.fillWidth: true
+          text: model.description
+          wrapMode: Text.WordWrap
         }
-      } // END delegate
-    }
-  }
+      }
+
+      Kirigami.Separator {
+        Layout.fillWidth: true
+        visible: model.description.length > 0
+      }
+
+      RssTextInput {
+        model: page.model
+      }
+
+      Repeater {
+        focus: true
+        model: page.model.articles
+        delegate: Controls.ItemDelegate {
+          property QtObject item: page.model.articles[index]
+          Layout.fillWidth: true
+          visible: !searchField.visible || searchField.matches(item.title)
+          highlighted: action.checked
+          contentItem: ListItemDelegate {
+            title: item.title
+            bold: !item.read
+            iconSource: leadingFeedIcon ? item.faviconUrl : ""
+            trailing: Text {
+              text: page.model.articles[index].publicationDate.toLocaleDateString({})
+            }
+          }
+          action: Controls.Action {
+            checkable: true
+            checked: pageStack.lastItem.model == item
+            onTriggered: pageStack.push(Qt.resolvedUrl("./Article.qml"), { model: item, feed: page.model })
+          }
+        } // END delegate
+      } // END Repeater
+    } // END ColumnLayout
+  } // END KF6 workaround
 
   footer: ColumnLayout {
     Controls.ProgressBar {
