@@ -89,4 +89,15 @@ Kirigami.Page {
       }
     }
   }
+
+  footer: ColumnLayout {
+    Controls.ProgressBar {
+      visible: model.fetching
+      from: 0
+      to: 1
+      value: model.progress
+      Layout.fillWidth: true
+      Layout.preferredHeight: 10
+    }
+  }
 }
