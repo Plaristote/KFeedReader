@@ -39,6 +39,7 @@
         <file alias="SortableFolderTree.qml">contents/ui/SortableFolderTree.qml</file>
     </qresource>
     <qresource prefix="/icons">
+        <file alias="icon.png">contents/icons/app.png</file>
         <file alias="feed.png">contents/icons/feed.png</file>
         <file alias="folder.png">contents/icons/folder.png</file>
     </qresource>

@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
                         QStringLiteral("https://invent.kde.org/louis-schul"));
     // aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"), i18nc("EMAIL OF TRANSLATORS", "Your emails"));
     KAboutData::setApplicationData(aboutData);
-    QGuiApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("akregator")));
+    QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/icon.png")));
 
     QQuickWebEngineProfile *webEngineProfile = QQuickWebEngineProfile::defaultProfile();
     webEngineProfile->setPersistentCookiesPolicy(QQuickWebEngineProfile::ForcePersistentCookies);
