@@ -39,8 +39,17 @@ QtObject {
       onTriggered: page.model.read = false
     },
     Kirigami.Action {
+      id: closeAction
       text: i18n("Close")
       icon.name: "view-right-close"
+      shortcut: Shortcut {
+        sequence: "Esc"
+        onActivatedAmbiguously: {
+          if (!window.isFullScreen) { closeAction.trigger() }
+          else { window.fullScreenWidget.closeFullScreen() }
+        }
+        onActivated: closeAction.trigger()
+      }
       onTriggered: pageStack.pop()
     }
   ]

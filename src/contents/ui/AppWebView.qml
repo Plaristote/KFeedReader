@@ -1,5 +1,6 @@
 import QtQuick
 import QtWebEngine
+import QtQuick.Controls as Controls
 
 WebEngineView {
   id: webView
@@ -10,6 +11,7 @@ WebEngineView {
 
   onFullScreenRequested: {
     if (request.toggleOn) {
+      window.fullScreenWidget = webView;
       window.showFullScreen();
     } else {
       window.showNormal();
@@ -23,13 +25,16 @@ WebEngineView {
       Qt.openUrlExternally(request.requestedUrl);
   }
 
+  function closeFullScreen() {
+    webView.fullScreen = false;
+    webView.fullScreenCancelled();
+    window.showNormal();
+  }
+
   Shortcut {
     sequence: "Esc"
     enabled: webView.fullScreen
-    onActivated: {
-      webView.fullScreen = false;
-      webView.fullScreenCancelled();
-      window.showNormal();
-    }
+    onActivatedAmbiguously: closeFullScreen();
+    onActivated: closeFullScreen();
   }
 }

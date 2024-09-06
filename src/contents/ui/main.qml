@@ -13,6 +13,7 @@ import QtQuick.Dialogs
 Kirigami.ApplicationWindow {
     property alias fullScreenContainer: fullScreenContainer
     property bool isFullScreen: visibility === Window.FullScreen
+    property var fullScreenWidget
     property int titleMaxLength: 40
     id: window
 
