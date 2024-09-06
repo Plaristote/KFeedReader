@@ -76,7 +76,7 @@ ColumnLayout {
   Item {
     id: contentContainer
     Layout.fillWidth: true
-    Layout.preferredHeight: width * 0.6
+    Layout.preferredHeight: withVideo ? width * 0.6 : 50
 
     ColumnLayout {
       id: content
