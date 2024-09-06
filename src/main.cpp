@@ -29,6 +29,19 @@
 #ifdef Q_OS_ANDROID
 Q_DECL_EXPORT
 #endif
+
+#ifdef Q_OS_WINDOWS
+#include <QDebug>
+#include <iostream>
+#include <windows.h>
+
+static void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QTextStream cout(stdout, QIODevice::WriteOnly);
+    std::cout << msg << std::endl;
+}
+#endif
+
 int main(int argc, char *argv[])
 {
     QtWebEngineQuick::initialize();
@@ -46,6 +59,8 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef Q_OS_WINDOWS
+    qInstallMessageHandler(myMessageOutput);
+
     if (AttachConsole(ATTACH_PARENT_PROCESS)) {
         freopen("CONOUT$", "w", stdout);
         freopen("CONOUT$", "w", stderr);
