@@ -14,9 +14,12 @@ Kirigami.ScrollablePage {
 
   actions: folderActions.actions
 
+  function toggleSearch() { searchField.visible = !searchField.visible; }
+
   FolderActions {
     id: folderActions
     model: page.model
+    onToggleSearch: page.toggleSearch();
   }
 
   Item {
@@ -50,6 +53,7 @@ Kirigami.ScrollablePage {
         delegate: Controls.ItemDelegate {
           property QtObject item: page.model.items[index]
           Layout.fillWidth: true
+          visible: !searchField.visible || searchField.matches(item, searchField.text)
           highlighted: action.checked
           contentItem: ListItemDelegate {
             title: item.name
@@ -76,6 +80,17 @@ Kirigami.ScrollablePage {
       to: 1
       value: model.progress
       Layout.fillWidth: true
+    }
+
+    Kirigami.Separator {
+      Layout.fillWidth: true
+      visible: searchField.visible
+    }
+
+    FeedSearchField {
+      Layout.fillWidth: true
+      id: searchField
+      visible: false
     }
   }
 }

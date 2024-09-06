@@ -1,6 +1,7 @@
 #include "menuitem.h"
 #include "feedfolder.h"
 #include <QJsonObject>
+#include <QRegularExpression>
 
 MenuItem::MenuItem(QObject *parent)
     : TtlSettings(parent)
@@ -14,6 +15,13 @@ MenuItem::MenuItem(MenuItem &parent)
 {
     connect(this, &MenuItem::parentChanged, this, &MenuItem::updateCrumbs);
     updateCrumbs();
+}
+
+bool MenuItem::matchSearch(const QString &search) const
+{
+    QRegularExpression regex(search, QRegularExpression::PatternOption::CaseInsensitiveOption);
+
+    return regex.isValid() && regex.match(m_name).hasMatch();
 }
 
 MenuItem *MenuItem::fromIndex(const QModelIndex &item)

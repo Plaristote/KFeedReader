@@ -32,6 +32,10 @@ Item {
     shortcut: Shortcut {
       sequence: "Ctrl+F"
       onActivated: searchAction.trigger()
+      onActivatedAmbiguously: {
+        const page = window.pageStack.currentItem;
+        page.toggleSearch && page.toggleSearch();
+      }
     }
   }
 

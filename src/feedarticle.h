@@ -53,6 +53,8 @@ public:
     QString title() const;
     QUrl faviconUrl() const;
 
+    Q_INVOKABLE bool matchSearch(const QString &) const;
+
 public Q_SLOTS:
     void setRead(bool read);
     void setAuthor(const QString &author);

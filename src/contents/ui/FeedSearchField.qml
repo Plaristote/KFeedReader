@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 
 RowLayout {
   property var filter: null
+  property alias text: field.text
   id: searchField
   onVisibleChanged: {
     if (visible)
@@ -12,15 +13,16 @@ RowLayout {
 
   signal close()
 
-  function matches(string) {
-    return filter === null || filter.test(string);
+  function matches(item, query) {
+    return (!query && filter === null) || item.matchSearch(query ? query : filter);
   }
 
   Controls.Action {
     id: refreshAction
     icon.name: "search"
     onTriggered: {
-      searchField.filter = new RegExp(field.text, 'i');
+      filter = field.text;
+      //searchField.filter = new RegExp(field.text, 'i');
     }
   }
 
@@ -31,6 +33,7 @@ RowLayout {
       sequence: "Esc"
       enabled: field.activeFocus
       onActivated: closeAction.trigger()
+      onActivatedAmbiguously: if (field.activeFocus) { closeAction.trigger() }
     }
     onTriggered: searchField.visible = false
   }

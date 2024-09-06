@@ -50,6 +50,8 @@ public:
     MenuItem *parentItem() const;
     int row() const;
 
+    Q_INVOKABLE virtual bool matchSearch(const QString &) const;
+
     virtual int autoUpdateEnabled() const override;
     virtual void enableAutoUpdate(bool) override;
 

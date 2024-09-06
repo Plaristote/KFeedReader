@@ -284,3 +284,17 @@ void FeedFolder::markAsRead()
     for (int i = 0; i < childCount(); ++i)
         childAt(i)->markAsRead();
 }
+
+bool FeedFolder::matchSearch(const QString &search) const
+{
+    if (MenuItem::matchSearch(search)) {
+        return true;
+    }
+    for (QObject *item : m_items) {
+        MenuItem *menuItem = qobject_cast<MenuItem *>(item);
+
+        if (menuItem->matchSearch(search))
+            return true;
+    }
+    return false;
+}

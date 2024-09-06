@@ -11,6 +11,8 @@ Item {
   property list<QtObject> contextualActions
   property list<QtObject> actions: [mainAction].concat(contextualActions)
   id: root
+
+  signal toggleSearch()
   
   Kirigami.Action {
     id: updateAction
@@ -19,7 +21,7 @@ Item {
     tooltip: i18n("Refreshes all the feed contained in this folder")
     onTriggered: root.model.fetch()
   }
-  
+
   contextualActions: [
     Kirigami.Action {
       text: i18n("Add feed")
@@ -39,6 +41,21 @@ Item {
       icon.name: "mail-mark-read"
       tooltip: i18n("Mark all the articles in this feed as having already been read")
       onTriggered: root.model.markAsRead()
+    },
+    Kirigami.Action {
+      id: searchAction
+      text: i18n("Search")
+      icon.name: "search"
+      tooltip: i18n("Find a feed by name")
+      onTriggered: root.toggleSearch()
+      shortcut: Shortcut {
+        sequence: "Ctrl+F"
+        onActivated: searchAction.trigger()
+        onActivatedAmbiguously: {
+          const page = window.pageStack.currentItem;
+          page.toggleSearch && page.toggleSearch();
+        }
+      }
     },
     Kirigami.Action {
       text: i18n("Configure")

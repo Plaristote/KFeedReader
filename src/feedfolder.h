@@ -37,6 +37,8 @@ public:
     bool expanded() const;
     void markAsRead() override;
 
+    Q_INVOKABLE bool matchSearch(const QString &) const override;
+
 public Q_SLOTS:
     void setDisplayType(DisplayType);
     void setExpanded(bool);

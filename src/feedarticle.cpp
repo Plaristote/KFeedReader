@@ -7,6 +7,7 @@
 #include <QDomElement>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QRegularExpression>
 
 FeedArticle::FeedArticle(QObject *parent)
     : QObject(parent)
@@ -16,6 +17,13 @@ FeedArticle::FeedArticle(QObject *parent)
 FeedArticle::~FeedArticle() noexcept
 {
     clearMedias();
+}
+
+bool FeedArticle::matchSearch(const QString &search) const
+{
+    QRegularExpression regex(search, QRegularExpression::PatternOption::CaseInsensitiveOption);
+
+    return regex.isValid() && regex.match(m_title).hasMatch();
 }
 
 void FeedArticle::clearMedias()

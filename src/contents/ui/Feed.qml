@@ -65,7 +65,7 @@ Kirigami.ScrollablePage {
         delegate: Controls.ItemDelegate {
           property QtObject item: page.model.articles[index]
           Layout.fillWidth: true
-          visible: !searchField.visible || searchField.matches(item.title)
+          visible: !searchField.visible || searchField.matches(item, searchField.text)
           highlighted: action.checked
           contentItem: ListItemDelegate {
             title: item.title
@@ -118,12 +118,16 @@ Kirigami.ScrollablePage {
     }
   }
 
+  function toggleSearch() {
+    searchField.visible = !searchField.visible;
+  }
+
   FeedActions {
     id: feedActions
     model: page.model
     readOnly: page.readOnly
     onRequireDestroy: destroyConfirmDialog.open()
-    onToggleSearch: searchField.visible = !searchField.visible
+    onToggleSearch: page.toggleSearch()
     onMarkAsRead: page.model.markAsRead()
   }
 
