@@ -11,7 +11,12 @@ Kirigami.ScrollablePage {
   Kirigami.ColumnView.pinned: true
 
   id: page
-  title: model.title
+  title: {
+    if (model.title.length > window.titleMaxLength) {
+      return model.title.substring(0, window.titleMaxLength) + '…';
+    }
+    return model.title;
+  }
   onModelChanged: model.read = true
   actions: [viewAction].concat(pageActions.contextualActions)
 

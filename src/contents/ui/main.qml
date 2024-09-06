@@ -12,6 +12,8 @@ import QtQuick.Dialogs
 
 Kirigami.ApplicationWindow {
     property alias fullScreenContainer: fullScreenContainer
+    property bool isFullScreen: visibility === Window.FullScreen
+    property int titleMaxLength: 40
     id: window
 
     title: i18n("KFeedReader")

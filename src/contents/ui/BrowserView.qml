@@ -10,7 +10,12 @@ Kirigami.Page {
   Kirigami.ColumnView.pinned: true
 
   id: page
-  title: webview.title
+  title: {
+    if (webview.title.length > window.titleMaxLength) {
+      return webview.title.slice(0, window.titleMaxLength) + '…';
+    }
+    return webview.title;
+  }
   onModelChanged: model.read = true
   actions: pageActions.contextualActions
   states: [
