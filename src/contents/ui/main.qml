@@ -17,7 +17,7 @@ Kirigami.ApplicationWindow {
     property int titleMaxLength: 40
     id: window
 
-    title: i18n("KFeedReader")
+    title: i18n("FluxKap")
 
     minimumWidth: Kirigami.Units.gridUnit * 20
     minimumHeight: Kirigami.Units.gridUnit * 20
@@ -59,7 +59,7 @@ Kirigami.ApplicationWindow {
     }
 
     globalDrawer: Kirigami.GlobalDrawer {
-        title: i18n("KFeedReader")
+        title: i18n("FluxKap")
         titleIcon: "applications-graphics"
         isMenu: !window.isMobile
         actions: [
@@ -85,7 +85,7 @@ Kirigami.ApplicationWindow {
                 onTriggered: window.menuBar.visible = !window.menuBar.visible
             },
             Kirigami.Action {
-                text: i18n("About KFeedReader")
+                text: i18n("About FluxKap")
                 icon.name: "help-about"
                 //onTriggered: pageStack.layers.pushDialogLayer('qrc:About.qml')
                 onTriggered: pageStack.layers.push('qrc:About.qml')

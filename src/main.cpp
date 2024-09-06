@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
         // The program name used internally.
         QStringLiteral("kfeedreader"),
         // A displayable program name string.
-        i18nc("@title", "KFeedReader"),
+        i18nc("@title", "FluxKap"),
         // The program version string.
         QStringLiteral(KFEEDREADER_VERSION_STRING),
         // Short description of what the app does.
