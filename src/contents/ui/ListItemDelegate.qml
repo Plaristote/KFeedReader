@@ -39,7 +39,7 @@ Item {
       left: leadingItem.right
       leftMargin: leadingItem.width > 0 ? Kirigami.Units.mediumSpacing : 0
     }
-    Image {
+    Kirigami.Icon {
       id: iconImage
       height: parent.height > root.iconSize ? root.iconSize : parent.height
       width: root.iconSize
