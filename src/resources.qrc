@@ -19,6 +19,7 @@
         <file alias="Article.qml">contents/ui/Article.qml</file>
         <file alias="ArticleActions.qml">contents/ui/ArticleActions.qml</file>
         <file alias="ArticleEnclosure.qml">contents/ui/ArticleEnclosure.qml</file>
+        <file alias="ArticleImageEnclosure.qml">contents/ui/ArticleImageEnclosure.qml</file>
         <file alias="ArticleMedia.qml">contents/ui/ArticleMedia.qml</file>
         <file alias="ArticleYoutube.qml">contents/ui/ArticleYoutube.qml</file>
         <file alias="ArticleMediaContent.qml">contents/ui/ArticleMediaContent.qml</file>

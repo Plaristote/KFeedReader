@@ -22,10 +22,7 @@ public:
 
     void loadFromXml(const QDomElement &);
 
-    Q_INVOKABLE QUrl qmlView() const
-    {
-        return QUrl(QStringLiteral("qrc:/ArticleEnclosure.qml"));
-    }
+    Q_INVOKABLE QUrl qmlView() const;
 
     const QString &title() const
     {

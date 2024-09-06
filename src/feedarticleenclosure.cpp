@@ -7,6 +7,16 @@ FeedArticleEnclosure::FeedArticleEnclosure(QObject *parent)
 {
 }
 
+QUrl FeedArticleEnclosure::qmlView() const
+{
+    if (m_type.startsWith(QStringLiteral("image/"))) {
+        return QUrl(QStringLiteral("qrc:/ArticleImageEnclosure.qml"));
+    } else if (m_type.startsWith(QStringLiteral("video/")) || m_type.startsWith(QStringLiteral("audio/"))) {
+        return QUrl(QStringLiteral("qrc:/ArticleEnclosure.qml"));
+    }
+    return QUrl();
+}
+
 void FeedArticleEnclosure::saveToJson(QJsonObject &out) const
 {
     out.insert(QStringLiteral("_type"), static_cast<int>(EnclosureAttachment));
