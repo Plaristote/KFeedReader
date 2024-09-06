@@ -7,6 +7,7 @@ import "."
 
 Item {
   required property QtObject model
+  property bool focused: false
   property alias mainAction: updateAction
   property list<QtObject> contextualActions
   property list<QtObject> actions: [mainAction].concat(contextualActions)
@@ -50,6 +51,7 @@ Item {
       onTriggered: root.toggleSearch()
       shortcut: Shortcut {
         sequence: "Ctrl+F"
+        enabled: root.focused
         onActivated: searchAction.trigger()
         onActivatedAmbiguously: {
           const page = window.pageStack.currentItem;

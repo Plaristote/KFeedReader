@@ -19,6 +19,7 @@ Kirigami.ScrollablePage {
   FolderActions {
     id: folderActions
     model: page.model
+    focused: window.pageStack.currentItem === page
     onToggleSearch: page.toggleSearch();
   }
 

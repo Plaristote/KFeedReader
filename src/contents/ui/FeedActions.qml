@@ -3,6 +3,7 @@ import org.kde.kirigami 2.19 as Kirigami
 
 Item {
   required property QtObject model
+  property bool focused: false
   property bool readOnly: false
   property alias mainAction: updateAction
   property list<QtObject> contextualActions
@@ -31,6 +32,7 @@ Item {
     onTriggered: root.toggleSearch()
     shortcut: Shortcut {
       sequence: "Ctrl+F"
+      enabled: root.focused
       onActivated: searchAction.trigger()
       onActivatedAmbiguously: {
         const page = window.pageStack.currentItem;

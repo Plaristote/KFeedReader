@@ -126,6 +126,7 @@ Kirigami.ScrollablePage {
     id: feedActions
     model: page.model
     readOnly: page.readOnly
+    focused: window.pageStack.currentItem === page
     onRequireDestroy: destroyConfirmDialog.open()
     onToggleSearch: page.toggleSearch()
     onMarkAsRead: page.model.markAsRead()
