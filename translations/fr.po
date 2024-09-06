@@ -1,0 +1,370 @@
+# Translation of KFeedReader in LANGUAGE
+# Copyright (C) 2024
+# This file is distributed under the same license as the KFeedReader package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: KFeedReader\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-06 19:27+0200\n"
+"PO-Revision-Date: 2024-09-06 19:53+0200\n"
+"Last-Translator: Michael Martin Moro <michael@unetresgrossebite.com>\n"
+"Language-Team: fr\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/contents/ui/AddFolder.qml ../src/contents/ui/EditFolder.qml
+msgid "Name"
+msgstr "Titre"
+
+#: ../src/contents/ui/AddFolder.qml ../src/contents/ui/EditFolder.qml ../src/contents/ui/FeedForm.qml
+msgid "Description"
+msgstr "Description"
+
+#: ../src/contents/ui/AddFolder.qml ../src/contents/ui/FeedForm.qml
+msgid "Confirm"
+msgstr "Confirmer"
+
+#: ../src/contents/ui/AddFolder.qml
+msgid "Create a new folder"
+msgstr "Créer un nouveau dossier"
+
+#: ../src/contents/ui/AddFolder.qml ../src/contents/ui/FeedForm.qml
+msgid "Cancel"
+msgstr "Annuler"
+
+#: ../src/contents/ui/AddFolder.qml ../src/contents/ui/FeedForm.qml
+msgid "Discard changes and go back to the previous page"
+msgstr "Annuler les changements et revenir à la page précédente"
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Next"
+msgstr "Suivant"
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Go to the next article"
+msgstr "Aller à l'article suivant"
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Previous"
+msgstr "Précédent"
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Go to the previous article"
+msgstr "Aller à l'article précédent"
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Open"
+msgstr "Ouvrir"
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Open the current article in a web browser"
+msgstr "Ouvrir dans un navigateur web"
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Mark as unread"
+msgstr "Marquer comme non-lu"
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Close"
+msgstr "Fermer"
+
+#: ../src/contents/ui/ArticleEnclosure.qml
+msgid "Play"
+msgstr "Lecture"
+
+#: ../src/contents/ui/ArticleEnclosure.qml
+msgid "Full screen"
+msgstr "Plein écran"
+
+#: ../src/contents/ui/ArticleEnclosure.qml
+msgid "Exit full screen"
+msgstr "Quitter le plein écran"
+
+#: ../src/contents/ui/ArticleMedia.qml
+msgid "Rating"
+msgstr "Note"
+
+#: ../src/contents/ui/ArticleMedia.qml
+msgid "View count"
+msgstr "Nombre de vues"
+
+#: ../src/contents/ui/Article.qml
+msgid "View"
+msgstr "Voir"
+
+#: ../src/contents/ui/Article.qml
+msgid "Open the article link in the application"
+msgstr "Ouvrir le lien de l'article dans l'application"
+
+#: ../src/contents/ui/Article.qml
+msgid "Author"
+msgstr "Auteur"
+
+#: ../src/contents/ui/BrowserView.qml ../src/contents/ui/FeedActions.qml ../src/contents/ui/FeedSearchField.qml ../src/contents/ui/FolderActions.qml
+msgid "Search"
+msgstr "Chercher"
+
+#: ../src/contents/ui/EditFolder.qml
+msgid "Display"
+msgstr "Affichage"
+
+#: ../src/contents/ui/EditFolder.qml
+msgid "Tree"
+msgstr "Arbre"
+
+#: ../src/contents/ui/EditFolder.qml
+msgid "List"
+msgstr "Liste"
+
+#: ../src/contents/ui/EditFolder.qml
+msgid "Synchronize"
+msgstr "Synchroniser"
+
+#: ../src/contents/ui/EditFolder.qml
+msgid "YouTube Google Takeout subscriptions"
+msgstr "Abonnement YouTube via Google Takeout"
+
+#: ../src/contents/ui/EditFolder.qml
+msgid "Pick a YouTube subcription file from a Google Takeout archive"
+msgstr "Séléctionnez un fichier d'abonnements YouTube obtenus via le service Google Takeout"
+
+#: ../src/contents/ui/FeedActions.qml ../src/contents/ui/FolderActions.qml
+msgid "Update"
+msgstr "Mettre à jour"
+
+#: ../src/contents/ui/FeedActions.qml
+msgid "Download new articles from the remote server"
+msgstr "Télécharge les nouveaux articles du flux"
+
+#: ../src/contents/ui/FeedActions.qml
+msgid "Filter through the titles of feed articles"
+msgstr "Filtrer les titres des articles"
+
+#: ../src/contents/ui/FeedActions.qml ../src/contents/ui/FolderActions.qml
+msgid "Mark all as read"
+msgstr "Tout marquer comme lu"
+
+#: ../src/contents/ui/FeedActions.qml ../src/contents/ui/FolderActions.qml
+msgid "Mark all the articles in this feed as having already been read"
+msgstr "Marque tous les articles de ce flux comme ayant été déjà lu"
+
+#: ../src/contents/ui/FeedActions.qml
+msgid "Edit"
+msgstr "Modifier"
+
+#: ../src/contents/ui/FeedActions.qml
+msgid "Change the settings of a feed"
+msgstr "Modifier les options de ce flux"
+
+#: ../src/contents/ui/FeedActions.qml ../src/contents/ui/FolderActions.qml
+msgid "Remove"
+msgstr "Supprimer"
+
+#: ../src/contents/ui/FeedActions.qml
+msgid "Permanently remove the feed from the application"
+msgstr "Supprime de façon permanente ce flux de votre application"
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "URL"
+msgstr "URL"
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "Title"
+msgstr "Titre"
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "Favicon"
+msgstr "Icône"
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "Language"
+msgstr "Langage"
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "Link"
+msgstr "Lien"
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "Suggested update interval"
+msgstr "Interval de mise à jour suggéré"
+
+#: ../src/contents/ui/FeedForm.qml ../src/contents/ui/TtlSettingsForm.qml
+msgid "minutes"
+msgstr "minutes"
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "No suggested update interval"
+msgstr "Pas d'interval de mise à jour suggéré"
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "Adds this feed to the current folder"
+msgstr "Ajouter ce flux au dossier courant"
+
+#: ../src/contents/ui/Feed.qml
+msgid "Removing feed"
+msgstr "Supprimer le flux"
+
+#: ../src/contents/ui/Feed.qml
+msgid "Are you sure you want to permanently remove this feed ?"
+msgstr "Êtes-vous sûr de vouloir supprimer ce flux ?"
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Refreshes all the feed contained in this folder"
+msgstr "Met à jour l'intégralité des flux contenus dans ce dossier"
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Add feed"
+msgstr "Ajouter un flux"
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Adds an RSS feed to the current folder"
+msgstr "Ajoute un flux au dossier courant"
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Add folder"
+msgstr "Ajouter un dossier"
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Adds a sub-folder in the current folder"
+msgstr "Ajoute un sous-dossier dans le dossier courant"
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Find a feed by name"
+msgstr "Chercher un flux selon son titre"
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Configure"
+msgstr "Configurer"
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Change a folder's identity and re-arrange its contents"
+msgstr "Changer la présentation dun dossier et ré-ordonner son contenu"
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Permanently remove the folder and all its feeds from the application"
+msgstr "Supprime le dossier et les flux qu'il contient de façon permanente"
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Removing folder"
+msgstr "Supprimer le dossier"
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Are you sure you want to permanently remove this folder ?"
+msgstr "Êtes-vous sûr de vouloir supprimer ce dossier ?"
+
+#: ../src/contents/ui/FolderListPage.qml ../src/contents/ui/FolderTreePage.qml
+msgid "All"
+msgstr "Aggréger tous les articles"
+
+#: ../src/contents/ui/FolderListPage.qml ../src/contents/ui/FolderTreePage.qml
+msgid "Unread"
+msgstr "Aggréger tous les articles non lus"
+
+#: ../src/contents/ui/MainMenuBar.qml
+msgid "&File"
+msgstr "Fichier"
+
+#: ../src/contents/ui/MainMenuBar.qml
+msgid "Feed"
+msgstr "Flux"
+
+#: ../src/contents/ui/MainMenuBar.qml
+msgid "Article"
+msgstr "Article"
+
+#: ../src/contents/ui/main.qml
+msgid "FluxKap"
+msgstr "FluxKap"
+
+#: ../src/contents/ui/main.qml
+msgid "Import feeds..."
+msgstr "Importer des flux..."
+
+#: ../src/contents/ui/main.qml
+msgid "Export feeds..."
+msgstr "Exporter vos flux..."
+
+#: ../src/contents/ui/main.qml
+msgid "Stop fetching"
+msgstr "Arrêter la mise à jour"
+
+#: ../src/contents/ui/main.qml
+msgid "Toggle menu"
+msgstr "Activer/désactiver le menu"
+
+#: ../src/contents/ui/main.qml
+msgid "About FluxKap"
+msgstr "À propos de FluxKap"
+
+#: ../src/contents/ui/main.qml
+msgid "Quit"
+msgstr "Quitter"
+
+#: ../src/contents/ui/main.qml
+msgid "Pick a feed source to import"
+msgstr "Choisissez une source de flux à importer"
+
+#: ../src/contents/ui/main.qml
+msgid "OPML structures"
+msgstr "Structures OPML"
+
+#: ../src/contents/ui/main.qml
+msgid "Pick a file to export your feeds to"
+msgstr "Choisissez un fichier où exporter vos flux"
+
+#: ../src/contents/ui/TtlSettingsForm.qml
+msgid "Enable periodic updates"
+msgstr "Activer les mises à jour périodiques"
+
+#: ../src/contents/ui/TtlSettingsForm.qml
+msgid "Use a custom update interval"
+msgstr "Utiliser un interval de mise à jour personnalisé"
+
+#: ../src/contents/ui/TtlSettingsForm.qml
+msgid "Custom update interval"
+msgstr "Interval de mise à jour personnalisé"
+
+#: ../src/contents/ui/TtlSettingsForm.qml
+msgid "hours"
+msgstr "heures"
+
+#: ../src/contents/ui/TtlSettingsForm.qml
+msgid "Skip hours"
+msgstr "Sauter des heures"
+
+#: ../src/contents/ui/TtlSettingsForm.qml
+msgid "Skip days"
+msgstr "Sauter des jours de la semaine"
+
+#: ../src/main.cpp
+msgctxt "@title"
+msgid "FluxKap"
+msgstr "FluxKap"
+
+#: ../src/main.cpp
+msgid "RSS feed aggregator"
+msgstr "Aggregateur de flux RSS/ATOM/JSON"
+
+#: ../src/main.cpp
+msgid "(c) %{CURRENT_YEAR}"
+msgstr "(c) %{CURRENT_YEAR}"
+
+#: ../src/main.cpp
+msgctxt "@info:credit"
+msgid "Michael Martin Moro"
+msgstr "Michael Martin Moro"
+
+#: ../src/main.cpp
+msgctxt "@info:credit"
+msgid "Developer"
+msgstr "Développeur"
+
+#: ../src/main.cpp
+msgctxt "@info:credit"
+msgid "Louis Schul"
+msgstr "Louis Schul"

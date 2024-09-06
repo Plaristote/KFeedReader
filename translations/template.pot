@@ -1,0 +1,370 @@
+# Translation of KFeedReader in LANGUAGE
+# Copyright (C) 2024
+# This file is distributed under the same license as the KFeedReader package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: KFeedReader\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-06 19:27+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/contents/ui/AddFolder.qml ../src/contents/ui/EditFolder.qml
+msgid "Name"
+msgstr ""
+
+#: ../src/contents/ui/AddFolder.qml ../src/contents/ui/EditFolder.qml ../src/contents/ui/FeedForm.qml
+msgid "Description"
+msgstr ""
+
+#: ../src/contents/ui/AddFolder.qml ../src/contents/ui/FeedForm.qml
+msgid "Confirm"
+msgstr ""
+
+#: ../src/contents/ui/AddFolder.qml
+msgid "Create a new folder"
+msgstr ""
+
+#: ../src/contents/ui/AddFolder.qml ../src/contents/ui/FeedForm.qml
+msgid "Cancel"
+msgstr ""
+
+#: ../src/contents/ui/AddFolder.qml ../src/contents/ui/FeedForm.qml
+msgid "Discard changes and go back to the previous page"
+msgstr ""
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Next"
+msgstr ""
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Go to the next article"
+msgstr ""
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Previous"
+msgstr ""
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Go to the previous article"
+msgstr ""
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Open"
+msgstr ""
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Open the current article in a web browser"
+msgstr ""
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Mark as unread"
+msgstr ""
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Close"
+msgstr ""
+
+#: ../src/contents/ui/ArticleEnclosure.qml
+msgid "Play"
+msgstr ""
+
+#: ../src/contents/ui/ArticleEnclosure.qml
+msgid "Full screen"
+msgstr ""
+
+#: ../src/contents/ui/ArticleEnclosure.qml
+msgid "Exit full screen"
+msgstr ""
+
+#: ../src/contents/ui/ArticleMedia.qml
+msgid "Rating"
+msgstr ""
+
+#: ../src/contents/ui/ArticleMedia.qml
+msgid "View count"
+msgstr ""
+
+#: ../src/contents/ui/Article.qml
+msgid "View"
+msgstr ""
+
+#: ../src/contents/ui/Article.qml
+msgid "Open the article link in the application"
+msgstr ""
+
+#: ../src/contents/ui/Article.qml
+msgid "Author"
+msgstr ""
+
+#: ../src/contents/ui/BrowserView.qml ../src/contents/ui/FeedActions.qml ../src/contents/ui/FeedSearchField.qml ../src/contents/ui/FolderActions.qml
+msgid "Search"
+msgstr ""
+
+#: ../src/contents/ui/EditFolder.qml
+msgid "Display"
+msgstr ""
+
+#: ../src/contents/ui/EditFolder.qml
+msgid "Tree"
+msgstr ""
+
+#: ../src/contents/ui/EditFolder.qml
+msgid "List"
+msgstr ""
+
+#: ../src/contents/ui/EditFolder.qml
+msgid "Synchronize"
+msgstr ""
+
+#: ../src/contents/ui/EditFolder.qml
+msgid "YouTube Google Takeout subscriptions"
+msgstr ""
+
+#: ../src/contents/ui/EditFolder.qml
+msgid "Pick a YouTube subcription file from a Google Takeout archive"
+msgstr ""
+
+#: ../src/contents/ui/FeedActions.qml ../src/contents/ui/FolderActions.qml
+msgid "Update"
+msgstr ""
+
+#: ../src/contents/ui/FeedActions.qml
+msgid "Download new articles from the remote server"
+msgstr ""
+
+#: ../src/contents/ui/FeedActions.qml
+msgid "Filter through the titles of feed articles"
+msgstr ""
+
+#: ../src/contents/ui/FeedActions.qml ../src/contents/ui/FolderActions.qml
+msgid "Mark all as read"
+msgstr ""
+
+#: ../src/contents/ui/FeedActions.qml ../src/contents/ui/FolderActions.qml
+msgid "Mark all the articles in this feed as having already been read"
+msgstr ""
+
+#: ../src/contents/ui/FeedActions.qml
+msgid "Edit"
+msgstr ""
+
+#: ../src/contents/ui/FeedActions.qml
+msgid "Change the settings of a feed"
+msgstr ""
+
+#: ../src/contents/ui/FeedActions.qml ../src/contents/ui/FolderActions.qml
+msgid "Remove"
+msgstr ""
+
+#: ../src/contents/ui/FeedActions.qml
+msgid "Permanently remove the feed from the application"
+msgstr ""
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "URL"
+msgstr ""
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "Title"
+msgstr ""
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "Favicon"
+msgstr ""
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "Language"
+msgstr ""
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "Link"
+msgstr ""
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "Suggested update interval"
+msgstr ""
+
+#: ../src/contents/ui/FeedForm.qml ../src/contents/ui/TtlSettingsForm.qml
+msgid "minutes"
+msgstr ""
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "No suggested update interval"
+msgstr ""
+
+#: ../src/contents/ui/FeedForm.qml
+msgid "Adds this feed to the current folder"
+msgstr ""
+
+#: ../src/contents/ui/Feed.qml
+msgid "Removing feed"
+msgstr ""
+
+#: ../src/contents/ui/Feed.qml
+msgid "Are you sure you want to permanently remove this feed ?"
+msgstr ""
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Refreshes all the feed contained in this folder"
+msgstr ""
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Add feed"
+msgstr ""
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Adds an RSS feed to the current folder"
+msgstr ""
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Add folder"
+msgstr ""
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Adds a sub-folder in the current folder"
+msgstr ""
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Find a feed by name"
+msgstr ""
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Configure"
+msgstr ""
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Change a folder's identity and re-arrange its contents"
+msgstr ""
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Permanently remove the folder and all its feeds from the application"
+msgstr ""
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Removing folder"
+msgstr ""
+
+#: ../src/contents/ui/FolderActions.qml
+msgid "Are you sure you want to permanently remove this folder ?"
+msgstr ""
+
+#: ../src/contents/ui/FolderListPage.qml ../src/contents/ui/FolderTreePage.qml
+msgid "All"
+msgstr ""
+
+#: ../src/contents/ui/FolderListPage.qml ../src/contents/ui/FolderTreePage.qml
+msgid "Unread"
+msgstr ""
+
+#: ../src/contents/ui/MainMenuBar.qml
+msgid "&File"
+msgstr ""
+
+#: ../src/contents/ui/MainMenuBar.qml
+msgid "Feed"
+msgstr ""
+
+#: ../src/contents/ui/MainMenuBar.qml
+msgid "Article"
+msgstr ""
+
+#: ../src/contents/ui/main.qml
+msgid "FluxKap"
+msgstr ""
+
+#: ../src/contents/ui/main.qml
+msgid "Import feeds..."
+msgstr ""
+
+#: ../src/contents/ui/main.qml
+msgid "Export feeds..."
+msgstr ""
+
+#: ../src/contents/ui/main.qml
+msgid "Stop fetching"
+msgstr ""
+
+#: ../src/contents/ui/main.qml
+msgid "Toggle menu"
+msgstr ""
+
+#: ../src/contents/ui/main.qml
+msgid "About FluxKap"
+msgstr ""
+
+#: ../src/contents/ui/main.qml
+msgid "Quit"
+msgstr ""
+
+#: ../src/contents/ui/main.qml
+msgid "Pick a feed source to import"
+msgstr ""
+
+#: ../src/contents/ui/main.qml
+msgid "OPML structures"
+msgstr ""
+
+#: ../src/contents/ui/main.qml
+msgid "Pick a file to export your feeds to"
+msgstr ""
+
+#: ../src/contents/ui/TtlSettingsForm.qml
+msgid "Enable periodic updates"
+msgstr ""
+
+#: ../src/contents/ui/TtlSettingsForm.qml
+msgid "Use a custom update interval"
+msgstr ""
+
+#: ../src/contents/ui/TtlSettingsForm.qml
+msgid "Custom update interval"
+msgstr ""
+
+#: ../src/contents/ui/TtlSettingsForm.qml
+msgid "hours"
+msgstr ""
+
+#: ../src/contents/ui/TtlSettingsForm.qml
+msgid "Skip hours"
+msgstr ""
+
+#: ../src/contents/ui/TtlSettingsForm.qml
+msgid "Skip days"
+msgstr ""
+
+#: ../src/main.cpp
+msgctxt "@title"
+msgid "FluxKap"
+msgstr ""
+
+#: ../src/main.cpp
+msgid "RSS feed aggregator"
+msgstr ""
+
+#: ../src/main.cpp
+msgid "(c) %{CURRENT_YEAR}"
+msgstr ""
+
+#: ../src/main.cpp
+msgctxt "@info:credit"
+msgid "Michael Martin Moro"
+msgstr ""
+
+#: ../src/main.cpp
+msgctxt "@info:credit"
+msgid "Developer"
+msgstr ""
+
+#: ../src/main.cpp
+msgctxt "@info:credit"
+msgid "Louis Schul"
+msgstr ""
