@@ -81,14 +81,6 @@ Kirigami.ScrollablePage {
         visible: authorRow.visible && articleDescription.visible
       }
 
-      Text {
-        id: articleDescription
-        visible: text.length > 0
-        text: page.model.description
-        wrapMode: Text.WordWrap
-        Layout.fillWidth: true
-      }
-
       Repeater {
         model: page.model.medias
         delegate: Loader {
@@ -96,6 +88,14 @@ Kirigami.ScrollablePage {
           source: model.qmlView()
           Layout.fillWidth: true
         }
+      }
+
+      Text {
+        id: articleDescription
+        visible: text.length > 0
+        text: page.model.description
+        wrapMode: Text.WordWrap
+        Layout.fillWidth: true
       }
     }
   }
