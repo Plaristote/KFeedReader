@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KFeedReader\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 19:27+0200\n"
+"POT-Creation-Date: 2024-09-07 18:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,6 +58,14 @@ msgid "Go to the previous article"
 msgstr ""
 
 #: ../src/contents/ui/ArticleActions.qml
+msgid "Comments"
+msgstr ""
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "When available, opens the comment section for this article"
+msgstr ""
+
+#: ../src/contents/ui/ArticleActions.qml
 msgid "Open"
 msgstr ""
 
@@ -99,10 +107,6 @@ msgstr ""
 
 #: ../src/contents/ui/Article.qml
 msgid "Open the article link in the application"
-msgstr ""
-
-#: ../src/contents/ui/Article.qml
-msgid "Author"
 msgstr ""
 
 #: ../src/contents/ui/BrowserView.qml ../src/contents/ui/FeedActions.qml ../src/contents/ui/FeedSearchField.qml ../src/contents/ui/FolderActions.qml

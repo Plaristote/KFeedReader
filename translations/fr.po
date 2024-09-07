@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KFeedReader\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 19:27+0200\n"
-"PO-Revision-Date: 2024-09-06 19:53+0200\n"
+"POT-Creation-Date: 2024-09-07 18:52+0200\n"
+"PO-Revision-Date: 2024-09-07 18:55+0200\n"
 "Last-Translator: Michael Martin Moro <michael@unetresgrossebite.com>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -58,6 +58,14 @@ msgid "Go to the previous article"
 msgstr "Aller à l'article précédent"
 
 #: ../src/contents/ui/ArticleActions.qml
+msgid "Comments"
+msgstr "Commentaires"
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "When available, opens the comment section for this article"
+msgstr "Ouvre la section commentaire de cet article, lorsqu'elle est disponible"
+
+#: ../src/contents/ui/ArticleActions.qml
 msgid "Open"
 msgstr "Ouvrir"
 
@@ -100,10 +108,6 @@ msgstr "Voir"
 #: ../src/contents/ui/Article.qml
 msgid "Open the article link in the application"
 msgstr "Ouvrir le lien de l'article dans l'application"
-
-#: ../src/contents/ui/Article.qml
-msgid "Author"
-msgstr "Auteur"
 
 #: ../src/contents/ui/BrowserView.qml ../src/contents/ui/FeedActions.qml ../src/contents/ui/FeedSearchField.qml ../src/contents/ui/FolderActions.qml
 msgid "Search"
@@ -368,3 +372,6 @@ msgstr "Développeur"
 msgctxt "@info:credit"
 msgid "Louis Schul"
 msgstr "Louis Schul"
+
+#~ msgid "Author"
+#~ msgstr "Auteur"
