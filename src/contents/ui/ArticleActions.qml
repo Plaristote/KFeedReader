@@ -29,6 +29,7 @@ QtObject {
     Kirigami.Action {
       text: i18n("Comments")
       icon.name: "comment-symbolic"
+      tooltip: i18n("When available, opens the comment section for this article")
       enabled: page.model.comments.toString().length > 0
       onTriggered: pageStack.layers.push(Qt.resolvedUrl("Comments.qml"), { model: page.model })
     },
