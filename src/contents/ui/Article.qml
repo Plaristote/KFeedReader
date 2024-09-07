@@ -59,26 +59,33 @@ Kirigami.ScrollablePage {
       }
 
       RowLayout {
-        id: authorRow
-        visible: page.model.author.length > 0
-        spacing: 5
-        Controls.Label {
-          text: i18n("Author")
-          Layout.fillWidth: true
-        }
-        Text {
-          text: page.model.author
-        }
+        id: metaDataActions
+
+        Item { Layout.fillWidth: true }
+
         Controls.Button {
-          icon.name: "link"
-          visible: page.model.authorUrl.toString() != ""
+          id: dateLabel
+          icon.name: "view-calendar-day"
+          text: page.model.publicationDate.toLocaleDateString()
+          flat: true
+        }
+
+        Controls.Button {
+          id: categoryLabel
+          visible: page.model.category.length > 0
+          icon.name: "category"
+          text: page.model.category
+          flat: true
+        }
+
+        Controls.Button {
+          id: authorButton
+          visible: page.model.author.length > 0
+          icon.name: "user-identity"
+          text: page.model.author
+          flat: !page.model.authorUrl.toString().length
           onClicked: Qt.openUrlExternally(page.model.authorUrl)
         }
-      }
-
-      Kirigami.Separator {
-        Layout.fillWidth: true
-        visible: authorRow.visible && articleDescription.visible
       }
 
       Repeater {
