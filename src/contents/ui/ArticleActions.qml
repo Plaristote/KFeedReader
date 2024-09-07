@@ -27,6 +27,12 @@ QtObject {
       onTriggered: requestArticleChange(previousArticle)
     },
     Kirigami.Action {
+      text: i18n("Comments")
+      icon.name: "comment-symbolic"
+      enabled: page.model.comments.toString().length > 0
+      onTriggered: pageStack.layers.push(Qt.resolvedUrl("Comments.qml"), { model: page.model })
+    },
+    Kirigami.Action {
       text: i18n("Open")
       icon.name: "window-new"
       tooltip: i18n("Open the current article in a web browser")
