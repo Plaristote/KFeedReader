@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # SPDX-FileCopyrightText: %{CURRENT_YEAR} %{AUTHOR} <%{EMAIL}>
 
-add_executable(kfeedreader
+set(kfeedreader_src
     opml/import.cpp
     opml/export.cpp
     youtube/sync.cpp
@@ -26,6 +26,12 @@ add_executable(kfeedreader
     ttlsettings.cpp
     htmlprobe.cpp
     resources.qrc)
+
+if (WIN32)
+    add_executable(kfeedreader ${kfeedreader_src} contents/windows.rc)
+else()
+    add_executable(kfeedreader ${kfeedreader_src})
+endif()
 
 target_link_libraries(kfeedreader
     Qt6::Core
