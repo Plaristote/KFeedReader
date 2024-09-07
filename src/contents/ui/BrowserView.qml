@@ -2,13 +2,11 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15 as Controls
 import org.kde.kirigami 2.19 as Kirigami
-import QtWebEngine 1.10
 import "."
 
 Kirigami.Page {
-  required property QtObject model
-  required property QtObject feed
-  Kirigami.ColumnView.pinned: true
+  required property url url
+  property var crumbs: []
 
   function toggleSearch() {
     searchField.visible = !searchField.visible;
@@ -29,8 +27,6 @@ Kirigami.Page {
     }
     return webview.title;
   }
-  onModelChanged: model.read = true
-  actions: pageActions.contextualActions
   states: [
     State {
       name: "fullScreen"
@@ -44,23 +40,17 @@ Kirigami.Page {
     }
   ]
 
-  ArticleActions {
-    id: pageActions
-    model: page.model
-    feed: page.feed
-    onRequestArticleChange: page.model = article
-  }
-
   ColumnLayout {
     anchors.fill: parent
 
     Flickable {
+      visible: page.crumbs.length
       Layout.fillWidth: true
       Layout.preferredHeight: 50
       contentWidth: breadcrumbs.width
       Breadcrumbs {
         id: breadcrumbs
-        crumbs: page.model.crumbs
+        crumbs: page.crumbs
         anchors { top: parent.top; right: parent.right }
       }
     }
@@ -71,7 +61,7 @@ Kirigami.Page {
       Layout.fillHeight: true
       AppWebView {
         id: webview
-        url: model.link
+        url: page.url
         anchors.fill: parent
       }
     }

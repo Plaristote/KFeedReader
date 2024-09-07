@@ -27,7 +27,7 @@ Kirigami.ScrollablePage {
     tooltip: i18n("Open the article link in the application")
     shortcut: "Ctrl+O"
     onTriggered: {
-      pageStack.replace(Qt.resolvedUrl("BrowserView.qml"), { model: page.model, feed: page.feed });
+      pageStack.replace(Qt.resolvedUrl("BrowserArticleView.qml"), { model: page.model, feed: page.feed });
     }
   }
 
