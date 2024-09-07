@@ -1,13 +1,11 @@
 # SPDX-License-Identifier: CC0-1.0
 # SPDX-FileCopyrightText: %{CURRENT_YEAR} %{AUTHOR} <%{EMAIL}>
 [Desktop Entry]
-Name=KFeedReader
+Name=FluxKap
 Comment=Web feed aggregator
 Version=1.0
 Exec=kfeedreader
-Icon=akregator
+Icon=/usr/share/icons/hicolor/512x512/apps/fluxkap/app.png
 Type=Application
 Terminal=false
-# Add an actual main category here (and possibly applicable additional ones)
-#   https://specifications.freedesktop.org/menu-spec/latest/apa.html#main-category-registry
-Categories=Qt;KDE;Network
+Categories=Qt;KDE;Network;Feed

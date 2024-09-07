@@ -49,6 +49,7 @@ endif()
 
 add_subdirectory(src)
 
+install(FILES src/contents/icons/app.png DESTINATION share/icons/hicolor/512x512/apps/fluxkap)
 install(FILES org.kde.kfeedreader.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES org.kde.kfeedreader.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 ki18n_install(po)
