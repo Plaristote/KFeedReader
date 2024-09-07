@@ -52,9 +52,18 @@ Kirigami.Page {
       Layout.fillHeight: true
 
       Timer {
+        id: elTimer
         interval: 300
         running: true
-        onTriggered: parent.model = page.model
+        onTriggered: {
+          parent.model = null
+          parent.model = page.model
+        }
+      }
+
+      Connections {
+        target: page.model
+        function onItemsChanged() { elTimer.running = true }
       }
 
       delegate: Controls.ItemDelegate {
