@@ -3,6 +3,7 @@
 [Desktop Entry]
 Name=FluxKap
 Comment=Web feed aggregator
+Comment[fr]=Aggregateur de flux issus du web
 Version=1.0
 Exec=kfeedreader
 Icon=/usr/share/icons/hicolor/512x512/apps/fluxkap/app.png
