@@ -59,7 +59,7 @@ Kirigami.Page {
     Kirigami.FormLayout {
       Controls.Button {
         Kirigami.FormData.label: i18n("Synchronize")
-        text: "YouTube"
+        text: i18n("YouTube Google Takeout subscriptions")
         onClicked: importYouTubeDialog.open()
       }
     }
