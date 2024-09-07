@@ -106,7 +106,7 @@ Kirigami.Page {
       to: 1
       value: model.progress
       Layout.fillWidth: true
-      Layout.preferredHeight: 10
+      Layout.preferredHeight: 30
     }
   }
 }
