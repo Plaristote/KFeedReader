@@ -11,6 +11,8 @@ Feed {
   id: page
   readOnly: true
   leadingFeedIcon: true
+  fetching: folder.fetching
+  progress: folder.progress
 
   model: KFeedReader.AggregatedFeed {
     id: aggregatedFeed

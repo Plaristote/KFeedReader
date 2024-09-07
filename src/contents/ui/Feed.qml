@@ -9,6 +9,8 @@ Kirigami.ScrollablePage {
   property QtObject model
   property bool readOnly: false
   property bool leadingFeedIcon: false
+  property bool fetching: model.fetching
+  property bool progress: model.progress
   id: page
   title: model.name
   actions: feedActions.actions
@@ -87,10 +89,10 @@ Kirigami.ScrollablePage {
 
   footer: ColumnLayout {
     Controls.ProgressBar {
-      visible: model.fetching
+      visible: page.fetching
       from: 0
       to: 1
-      value: model.progress
+      value: page.progress
       Layout.fillWidth: true
       Layout.preferredHeight: 10
     }
