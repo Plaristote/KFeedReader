@@ -26,10 +26,6 @@
 #include <QQuickWebEngineProfile>
 #include <QtWebEngineQuick/qtwebenginequickglobal.h>
 
-#ifdef Q_OS_ANDROID
-Q_DECL_EXPORT
-#endif
-
 #ifdef Q_OS_WINDOWS
 #include <QDebug>
 #include <iostream>
@@ -37,9 +33,12 @@ Q_DECL_EXPORT
 
 static void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    QTextStream cout(stdout, QIODevice::WriteOnly);
-    std::cout << msg << std::endl;
+    std::cout << msg.toStdString() << std::endl;
 }
+#endif
+
+#ifdef Q_OS_ANDROID
+Q_DECL_EXPORT
 #endif
 
 int main(int argc, char *argv[])
@@ -60,11 +59,12 @@ int main(int argc, char *argv[])
 
 #ifdef Q_OS_WINDOWS
     qInstallMessageHandler(myMessageOutput);
-
+    /*
     if (AttachConsole(ATTACH_PARENT_PROCESS)) {
         freopen("CONOUT$", "w", stdout);
         freopen("CONOUT$", "w", stderr);
     }
+    */
 
     QApplication::setStyle(QStringLiteral("breeze"));
     auto font = app.font();
