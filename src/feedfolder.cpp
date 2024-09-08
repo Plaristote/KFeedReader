@@ -1,4 +1,5 @@
 #include "feedfolder.h"
+#include "aggregatedfeed.h"
 #include "feed.h"
 #include <QJsonArray>
 #include <QJsonObject>
@@ -6,17 +7,25 @@
 FeedFolder::FeedFolder(QObject *parent)
     : MenuItem(parent)
 {
+    createAggregatedFeeds();
 }
 
 FeedFolder::FeedFolder(FeedFolder &parent)
     : MenuItem(parent)
 {
+    createAggregatedFeeds();
 }
 
 FeedFolder::~FeedFolder()
 {
     m_items.clear();
-    Q_EMIT itemsChanged();
+    Q_EMIT itemsChanged(this);
+}
+
+void FeedFolder::createAggregatedFeeds()
+{
+    addItem(AggregatedFeed::createFeed(this));
+    addItem(AggregatedFeed::createUnreadFeed(this));
 }
 
 QModelIndex FeedFolder::selfIndex() const
@@ -115,6 +124,9 @@ void FeedFolder::saveToJson(QJsonObject &root) const
         MenuItem *menuItem = qobject_cast<MenuItem *>(item);
         QJsonObject itemJson;
 
+        if (menuItem->itemType() == AggregateMenuItem) {
+            continue;
+        }
         menuItem->saveToJson(itemJson);
         itemsJson << itemJson;
     }
@@ -176,7 +188,7 @@ void FeedFolder::insertItemAt(QList<QObject *>::iterator it, MenuItem *item)
 {
     m_items.insert(it, item);
     connectItem(item);
-    Q_EMIT itemsChanged();
+    Q_EMIT itemsChanged(this);
     Q_EMIT unreadCountChanged();
 }
 
@@ -188,7 +200,7 @@ void FeedFolder::removeItem(QObject *item)
     if (index >= 0) {
         disconnectItem(menuItem);
         m_items.removeAt(index);
-        Q_EMIT itemsChanged();
+        Q_EMIT itemsChanged(this);
         Q_EMIT unreadCountChanged();
     }
 }

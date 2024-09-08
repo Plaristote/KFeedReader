@@ -52,10 +52,11 @@ public Q_SLOTS:
     void synchronizeWithYouTube(const QUrl &takeoutUrl);
 
 Q_SIGNALS:
-    void itemsChanged();
+    void itemsChanged(FeedFolder *);
     void expandedChanged();
 
 private:
+    void createAggregatedFeeds();
     void connectItem(MenuItem *);
     void disconnectItem(MenuItem *);
     void insertItemAt(QList<QObject *>::iterator, MenuItem *);

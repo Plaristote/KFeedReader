@@ -19,7 +19,7 @@ class MenuItem : public TtlSettings
     Q_PROPERTY(QQmlListProperty<QObject> crumbs READ qmlCrumbs NOTIFY crumbsChanged)
 public:
     enum Role { DisplayNameRole = Qt::UserRole + 1, DescriptionRole, IconUrlRole, MenuItemRole };
-    enum ItemType { NoItemType = 0, FolderMenuItem, FeedMenuItem };
+    enum ItemType { NoItemType = 0, FolderMenuItem, FeedMenuItem, AggregateMenuItem };
     Q_ENUM(ItemType)
 
     MenuItem(QObject *parent = nullptr);

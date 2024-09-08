@@ -6,18 +6,11 @@ import org.kde.kfeedreader 1.0 as KFeedReader
 import "."
 
 Feed {
-  property QtObject folder
-  property alias showUnreadOnly: aggregatedFeed.onlyUnread
   id: page
   readOnly: true
   leadingFeedIcon: true
-  fetching: folder.fetching
-  progress: folder.progress
-
-  model: KFeedReader.AggregatedFeed {
-    id: aggregatedFeed
-    Component.onCompleted: {
-      addFolder(page.folder);
-    }
-  }
+  fetching: model.parent.fetching
+  progress: model.parent.progress
+  Component.onCompleted: model.enabled = true
+  Component.onDestruction: model.enabled = false
 }

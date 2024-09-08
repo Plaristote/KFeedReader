@@ -31,23 +31,6 @@ Kirigami.ScrollablePage {
       spacing: 0
       width: parent.width
 
-      AllFeedListItem {
-        label: i18n("All")
-        iconSource: "mail-message-new-list"
-        model: page.model
-        nextPage: page.nextPage
-        Layout.fillWidth: true
-      }
-
-      AllFeedListItem {
-        unreadOnly: true
-        label: i18n("Unread")
-        iconSource: "mail-mark-unread-new"
-        model: page.model
-        nextPage: page.nextPage
-        Layout.fillWidth: true
-      }
-
       Repeater {
         focus: true
         model: page.model.items.length

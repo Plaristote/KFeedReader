@@ -2,6 +2,7 @@
 #include "feed.h"
 #include "feedarticle.h"
 #include "feedfolder.h"
+#include <KLocalizedString>
 #include <algorithm>
 #define MAX_AGGREGATED_ARTICLE_COUNT 100
 
@@ -14,6 +15,30 @@ AggregatedFeed::AggregatedFeed(QObject *parent)
     m_listMaxLength = MAX_AGGREGATED_ARTICLE_COUNT;
     connect(this, &AggregatedFeed::feedsChanged, this, &AggregatedFeed::updateArticles);
     connect(this, &AggregatedFeed::onlyUnreadChanged, this, &AggregatedFeed::updateArticles);
+    connect(this, &AggregatedFeed::enabledChanged, this, &AggregatedFeed::updateArticles);
+}
+
+AggregatedFeed *AggregatedFeed::createFeed(FeedFolder *parent)
+{
+    AggregatedFeed *feed = new AggregatedFeed(parent);
+
+    feed->setName(i18n("All"));
+    feed->addFolder(parent);
+    return feed;
+}
+
+AggregatedFeed *AggregatedFeed::createUnreadFeed(FeedFolder *parent)
+{
+    AggregatedFeed *feed = createFeed(parent);
+
+    feed->setName(i18n("Unread"));
+    feed->setOnlyUnread(true);
+    return feed;
+}
+
+QUrl AggregatedFeed::faviconUrl() const
+{
+    return QUrl(m_onlyUnread ? QStringLiteral("mail-mark-unread-new") : QStringLiteral("mail-message-new-list"));
 }
 
 QString AggregatedFeed::view() const
@@ -23,7 +48,7 @@ QString AggregatedFeed::view() const
 
 MenuItem::ItemType AggregatedFeed::itemType() const
 {
-    return FeedMenuItem;
+    return AggregateMenuItem;
 }
 
 const QList<FeedArticle *> &AggregatedFeed::articles() const
@@ -71,17 +96,21 @@ void AggregatedFeed::addFeed(Feed *feed)
 
 void AggregatedFeed::addFolder(FeedFolder *folder)
 {
-    static const QMetaObject *feedMetaObject = Feed().metaObject();
-    static const QMetaObject *folderMetaObject = FeedFolder().metaObject();
+    connect(folder, &FeedFolder::itemsChanged, this, &AggregatedFeed::onFolderItemsChanged);
+    connect(folder, &MenuItem::removed, this, &AggregatedFeed::removeAggregatedResource);
+    onFolderItemsChanged(folder);
+}
+
+void AggregatedFeed::onFolderItemsChanged(FeedFolder *folder)
+{
     QList<Feed *> feeds;
 
-    connect(folder, &MenuItem::removed, this, &AggregatedFeed::removeAggregatedResource);
     for (int i = 0; i < folder->childCount(); ++i) {
         MenuItem *item = folder->childAt(i);
 
-        if (item->metaObject() == feedMetaObject)
+        if (item->itemType() == FeedMenuItem)
             feeds.append(reinterpret_cast<Feed *>(item));
-        else if (item->metaObject() == folderMetaObject)
+        else if (item->itemType() == FolderMenuItem)
             addFolder(reinterpret_cast<FeedFolder *>(item));
     }
     addFeeds(feeds);
@@ -118,6 +147,7 @@ void AggregatedFeed::removeFolder(FeedFolder *folder)
     static const QMetaObject *folderMetaObject = FeedFolder().metaObject();
     QList<Feed *> feeds;
 
+    disconnect(folder, &FeedFolder::itemsChanged, this, &AggregatedFeed::onFolderItemsChanged);
     disconnect(folder, &MenuItem::removed, this, &AggregatedFeed::removeAggregatedResource);
     for (int i = 0; i < folder->childCount(); ++i) {
         MenuItem *item = folder->childAt(i);
@@ -137,18 +167,21 @@ void AggregatedFeed::fetch()
 
 void AggregatedFeed::updateArticles()
 {
-    m_articles.clear();
-    for (Feed *feed : m_feeds) {
-        for (FeedArticle *article : feed->articles()) {
-            if (!m_onlyUnread || !article->isRead()) {
-                m_articles.append(article);
+    qDebug() << ">>> AggregatedFeed updateArticles" << m_enabled << m_feeds.size();
+    if (m_enabled) {
+        m_articles.clear();
+        for (Feed *feed : m_feeds) {
+            for (FeedArticle *article : feed->articles()) {
+                if (!m_onlyUnread || !article->isRead()) {
+                    m_articles.append(article);
+                }
             }
         }
+        std::sort(m_articles.begin(), m_articles.end(), [](const FeedArticle *a, const FeedArticle *b) -> bool {
+            return a->publicationDate() > b->publicationDate();
+        });
+        Q_EMIT articlesChanged();
     }
-    std::sort(m_articles.begin(), m_articles.end(), [](const FeedArticle *a, const FeedArticle *b) -> bool {
-        return a->publicationDate() > b->publicationDate();
-    });
-    Q_EMIT articlesChanged();
 }
 
 int AggregatedFeed::indexOf(const QObject *object) const

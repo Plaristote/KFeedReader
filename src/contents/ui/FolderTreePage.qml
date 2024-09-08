@@ -29,23 +29,6 @@ Kirigami.Page {
       Layout.fillWidth: true
     }
 
-    AllFeedListItem {
-      label: i18n("All")
-      iconSource: "mail-message-new-list"
-      model: page.model
-      nextPage: page.nextPage
-      Layout.fillWidth: true
-    }
-
-    AllFeedListItem {
-      unreadOnly: true
-      label: i18n("Unread")
-      iconSource: "mail-mark-unread-new"
-      model: page.model
-      nextPage: page.nextPage
-      Layout.fillWidth: true
-    }
-
     TreeView {
       id: treeView
       Layout.fillWidth: true

@@ -14,9 +14,14 @@ class AggregatedFeed : public MenuItem
     Q_PROPERTY(QQmlListProperty<QObject> articles READ qmlArticles NOTIFY articlesChanged)
     Q_PROPERTY(bool hasTextInput READ hasTextInput CONSTANT)
     Q_PROPERTY(bool onlyUnread MEMBER m_onlyUnread NOTIFY onlyUnreadChanged)
+    Q_PROPERTY(bool enabled MEMBER m_enabled NOTIFY enabledChanged)
 public:
     AggregatedFeed(QObject *parent = nullptr);
 
+    static AggregatedFeed *createFeed(FeedFolder *);
+    static AggregatedFeed *createUnreadFeed(FeedFolder *);
+
+    QUrl faviconUrl() const override;
     qint64 unreadCount() const override;
     bool fetching() const override;
     double progress() const override;
@@ -28,6 +33,12 @@ public:
     const QList<FeedArticle *> &articles() const;
     bool hasTextInput() const;
     qint64 listMaxLength() const;
+
+    void setOnlyUnread(bool value)
+    {
+        m_onlyUnread = value;
+        Q_EMIT onlyUnreadChanged();
+    }
 
     Q_INVOKABLE FeedArticle *findNextArticle(const FeedArticle *);
     Q_INVOKABLE FeedArticle *findPreviousArticle(const FeedArticle *);
@@ -46,6 +57,10 @@ Q_SIGNALS:
     void articlesChanged();
     void feedsChanged();
     void onlyUnreadChanged();
+    void enabledChanged();
+
+private Q_SLOTS:
+    void onFolderItemsChanged(FeedFolder *);
 
 private:
     QQmlListProperty<QObject> qmlArticles();
@@ -54,6 +69,7 @@ private:
     QList<FeedArticle *> m_articles;
     qint64 m_listMaxLength;
     bool m_onlyUnread = false;
+    bool m_enabled = false;
 };
 
 #endif
