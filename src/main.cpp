@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
     app.setFont(font);
 #endif
 
-    KLocalizedString::setApplicationDomain("kfeedreader");
+    KLocalizedString::setApplicationDomain("KFeedReader");
     QCoreApplication::setOrganizationName(QStringLiteral("KDE"));
 
     KAboutData aboutData(
