@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QObject>
+#include <QTimer>
 #include <QUrl>
 
 class QQuickWindow;
@@ -39,4 +40,5 @@ public Q_SLOTS:
 
 private:
     FeedFolder *m_rootFolder;
+    QTimer m_autosaveTimer;
 };

@@ -22,6 +22,9 @@ App::App(QObject *parent)
     : QObject(parent)
 {
     m_rootFolder = new FeedFolder();
+    m_autosaveTimer.setInterval(1000 * 60 * 90); // 1.5h but I couldnt get chrono literals to work
+    m_autosaveTimer.start();
+    connect(&m_autosaveTimer, &QTimer::timeout, this, &App::save);
 }
 
 App::~App()
