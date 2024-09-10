@@ -4,7 +4,7 @@
   SPDX-FileCopyrightText: %{CURRENT_YEAR} %{AUTHOR} <%{EMAIL}>
  -->
 <component type="desktop-application">
-  <id>org.kde.kfeedreader</id>
+  <id>org.kde.fluxkap</id>
   <name>FluxKap Kirigami Application</name>
   <summary>A web feed aggreagtor</summary>
   <metadata_license>FSFAP</metadata_license>
@@ -17,7 +17,8 @@
     </p>
     <p>Non-exhaustive list of features:</p>
     <ul>
-      <li>Aggregate all your unread articles into one feed</li>
+      <li>Organize your feeds into folders</li>
+      <li>Aggregate all your unread articles from any folder into one feed</li>
       <li>Podcast support</li>
       <li>Video support (PeerTube, YouTube, etc)</li>
       <li>Import/export a feed list from OPML files</li>
