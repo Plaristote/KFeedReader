@@ -1,6 +1,3 @@
-# SPDX-License-Identifier: BSD-3-Clause
-# SPDX-FileCopyrightText: %{CURRENT_YEAR} %{AUTHOR} <%{EMAIL}>
-
 set(kfeedreader_src
     opml/import.cpp
     opml/export.cpp
