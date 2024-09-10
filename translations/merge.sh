@@ -45,11 +45,11 @@ if [ -f "template.pot" ]; then
 		addedKeys=`echo "$changes" | grep "> msgid" | cut -c 9- | sort`
 		removedKeys=`echo "$changes" | grep "< msgid" | cut -c 9- | sort`
 		echo ""
-		echoGreen "Added Keys:"
-		echoGreen "$addedKeys"
+		echo "Added Keys:"
+		echo "$addedKeys"
 		echo ""
-		echoRed "Removed Keys:"
-		echoRed "$removedKeys"
+		echo "Removed Keys:"
+		echo "$removedKeys"
 		echo ""
 
 	else
