@@ -5,7 +5,7 @@ import "."
 BrowserView {
   required property QtObject model
   required property QtObject feed
-  Kirigami.ColumnView.pinned: true
+  //Kirigami.ColumnView.pinned: true
 
   id: page
   url: model.link

@@ -28,12 +28,12 @@ set(kfeedreader_src
     resources.qrc)
 
 if (WIN32)
-    add_executable(kfeedreader ${kfeedreader_src} contents/windows.rc)
+    add_executable(fluxkap ${kfeedreader_src} contents/windows.rc)
 else()
-    add_executable(kfeedreader ${kfeedreader_src})
+    add_executable(fluxkap ${kfeedreader_src})
 endif()
 
-target_link_libraries(kfeedreader
+target_link_libraries(fluxkap
     Qt6::Core
     Qt6::Gui
     Qt6::Qml
@@ -58,5 +58,5 @@ if (ANDROID)
     )
 endif()
 
-kconfig_add_kcfg_files(kfeedreader GENERATE_MOC kfeedreaderconfig.kcfgc)
-install(TARGETS kfeedreader ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+kconfig_add_kcfg_files(fluxkap GENERATE_MOC fluxkapconfig.kcfgc)
+install(TARGETS fluxkap ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

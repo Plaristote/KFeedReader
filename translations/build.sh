@@ -3,7 +3,7 @@
 cd "$(dirname "$0")"
 DIR=`pwd`
 packageRoot="../src"
-packageName="KFeedReader"
+packageName="FluxKap"
 
 #---
 echo "[build] Moving translation files to their target folder"

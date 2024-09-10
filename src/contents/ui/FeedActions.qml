@@ -19,7 +19,7 @@ Item {
   Kirigami.Action {
     id: updateAction
     text: i18n("Update")
-    icon.name: "cloud-download"
+    icon.name: "view-refresh"
     tooltip: i18n("Download new articles from the remote server")
     onTriggered: root.model.fetch()
   }

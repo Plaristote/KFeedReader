@@ -32,8 +32,8 @@ class Package(CMakePackageBase):
 
     def createPackage(self):
         self.defines["appname"] = "FluxKap"
-        self.defines["icon"] = self.blueprintDir() / "KFeedReader.ico"                                                     
-        self.defines["icon_png"] = self.sourceDir() / "src/contents/icons/app.png"
+        self.defines["icon"] = self.blueprintDir() / "FluxKap.ico"                                                     
+        self.defines["icon_png"] = self.sourceDir() / "src/contents/icons/org.kde.fluxkap.png"
         #self.defines["shortcuts"]
         if not CraftCore.compiler.isLinux:
             self.ignoredPackages.append("libs/dbus")

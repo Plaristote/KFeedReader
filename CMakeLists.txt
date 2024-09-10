@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-project(kfeedreader VERSION 0.1)
+project(fluxkap VERSION 1.0)
 
 include(FeatureSummary)
 
@@ -27,8 +27,8 @@ if (NOT ANDROID)
 endif()
 
 ecm_setup_version(${PROJECT_VERSION}
-    VARIABLE_PREFIX KFEEDREADER
-    VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/src/version-kfeedreader.h"
+    VARIABLE_PREFIX FLUXKAP
+    VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/src/version-fluxkap.h"
 )
 
 set(QT_EXTRA_COMPONENTS Multimedia Xml WebEngineQuick)
@@ -49,9 +49,9 @@ endif()
 
 add_subdirectory(src)
 
-install(FILES src/contents/icons/app.png DESTINATION share/icons/hicolor/512x512/apps/fluxkap)
-install(FILES org.kde.kfeedreader.desktop DESTINATION ${KDE_INSTALL_APPDIR})
-install(FILES org.kde.kfeedreader.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
+install(FILES src/contents/icons/org.kde.fluxkap.png DESTINATION share/icons/hicolor/512x512/apps)
+install(FILES org.kde.fluxkap.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES org.kde.fluxkap.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 ki18n_install(po)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

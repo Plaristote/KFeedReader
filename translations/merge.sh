@@ -3,7 +3,7 @@
 cd "$(dirname "$0")"
 DIR=`pwd`
 packageRoot="../src"
-packageName="KFeedReader"
+packageName="FluxKap"
 potArgs="--from-code=UTF-8 --width=200 --add-location=file"
 
 echo "[translate/merge] Extracting messages"

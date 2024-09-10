@@ -1,14 +1,14 @@
-# Translation of KFeedReader in LANGUAGE
+# Translation of FluxKap in LANGUAGE
 # Copyright (C) 2024
-# This file is distributed under the same license as the KFeedReader package.
+# This file is distributed under the same license as the FluxKap package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: KFeedReader\n"
+"Project-Id-Version: FluxKap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-07 18:52+0200\n"
+"POT-Creation-Date: 2024-09-10 15:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -355,7 +355,7 @@ msgid "RSS feed aggregator"
 msgstr ""
 
 #: ../src/main.cpp
-msgid "(c) %{CURRENT_YEAR}"
+msgid "(c) 2024"
 msgstr ""
 
 #: ../src/main.cpp

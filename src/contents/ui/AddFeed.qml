@@ -1,11 +1,11 @@
 import QtQuick 2.15
-import org.kde.kfeedreader 1.0 as KFeedReader
+import org.kde.fluxkap 1.0 as FluxKap
 import "."
 
 FeedForm {
   required property QtObject parentFolder
 
-  feed: KFeedReader.Feed {
+  feed: FluxKap.Feed {
     id: newFeed
   }
   onConfirmed: {

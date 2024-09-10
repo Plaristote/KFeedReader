@@ -1,0 +1,56 @@
+{
+    "id": "org.kde.fluxkap",
+    "runtime": "org.kde.Platform",
+    "runtime-version": "6.7",
+    "base": "io.qt.qtwebengine.BaseApp",
+    "base-version": "6.7",
+    "sdk": "org.kde.Sdk",
+    "command": "fluxkap",
+    "finish-args": [
+        "--share=ipc",
+        "--share=network",
+        "--socket=x11",
+        "--socket=wayland",
+        "--device=dri",
+        "--filesystem=home"
+    ],
+    "separate-locales": false,
+
+    "modules": [
+        {
+            "name": "kirigami-addons",
+            "buildsystem": "cmake-ninja",
+            "builddir": true,
+            "cleanup": [
+                 "/include",
+                 "/lib/cmake",
+                 "/lib/pkgconfig",
+                 "/share/kdevappwizard"
+            ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://invent.kde.org/libraries/kirigami-addons.git",
+                    "tag": "v1.4.0",
+                    "x-checker-data": {
+                        "type": "git",
+                        "tag-pattern": "^v([\\d.]+)$"
+                    },
+                    "commit": "1cd7a1cf5c96e365aa01c08544ff7784fd3c8d2d"
+                }
+            ]
+        },
+        {
+            "name": "fluxkap",
+            "buildsystem": "cmake-ninja",
+            "builddir": true,
+            "sources": [
+              {
+                "type": "dir",
+                "path": "."
+              }
+            ]
+        }
+    ]
+}
+

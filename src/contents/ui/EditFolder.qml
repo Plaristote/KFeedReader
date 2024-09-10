@@ -4,7 +4,7 @@ import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kirigamiaddons.treeview 1.0 as TreeView
-import org.kde.kfeedreader 1.0
+import org.kde.fluxkap 1.0
 import "."
 import QtQuick.Dialogs
 

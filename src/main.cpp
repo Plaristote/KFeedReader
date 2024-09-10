@@ -13,7 +13,7 @@
 #endif
 
 #include "app.h"
-#include "version-kfeedreader.h"
+#include "version-fluxkap.h"
 #include <KAboutData>
 #include <KLocalizedContext>
 #include <KLocalizedString>
@@ -22,7 +22,7 @@
 #include "feed.h"
 #include "feedarticle.h"
 #include "feedfolder.h"
-#include "kfeedreaderconfig.h"
+#include "fluxkapconfig.h"
 #include <QQuickWebEngineProfile>
 #include <QtWebEngineQuick/qtwebenginequickglobal.h>
 
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
     app.setFont(font);
 #endif
 
-    KLocalizedString::setApplicationDomain("KFeedReader");
+    KLocalizedString::setApplicationDomain("FluxKap");
     QCoreApplication::setOrganizationName(QStringLiteral("KDE"));
 
     KAboutData aboutData(
@@ -81,13 +81,13 @@ int main(int argc, char *argv[])
         // A displayable program name string.
         i18nc("@title", "FluxKap"),
         // The program version string.
-        QStringLiteral(KFEEDREADER_VERSION_STRING),
+        QStringLiteral(FLUXKAP_VERSION_STRING),
         // Short description of what the app does.
         i18n("RSS feed aggregator"),
         // The license this code is released under.
         KAboutLicense::GPL,
         // Copyright Statement.
-        i18n("(c) %{CURRENT_YEAR}"));
+        i18n("(c) 2024"));
     aboutData.addAuthor(i18nc("@info:credit", "Michael Martin Moro"),
                         i18nc("@info:credit", "Developer"),
                         QStringLiteral("michael@unetresgrossebite.com"),
@@ -103,28 +103,28 @@ int main(int argc, char *argv[])
     QQuickWebEngineProfile *webEngineProfile = QQuickWebEngineProfile::defaultProfile();
     webEngineProfile->setPersistentCookiesPolicy(QQuickWebEngineProfile::ForcePersistentCookies);
     webEngineProfile->setOffTheRecord(false);
-    webEngineProfile->setStorageName(QStringLiteral("KFeedReader"));
+    webEngineProfile->setStorageName(QStringLiteral("FluxKap"));
     webEngineProfile->setCachePath(webEngineProfile->persistentStoragePath() + QStringLiteral("/Cache"));
 
     QQmlApplicationEngine engine;
 
-    auto config = KFeedReaderConfig::self();
+    auto config = FluxKapConfig::self();
 
-    qmlRegisterSingletonInstance("org.kde.kfeedreader", 1, 0, "Config", config);
+    qmlRegisterSingletonInstance("org.kde.fluxkap", 1, 0, "Config", config);
 
-    qmlRegisterSingletonType("org.kde.kfeedreader", 1, 0, "About", [](QQmlEngine *engine, QJSEngine *) -> QJSValue {
+    qmlRegisterSingletonType("org.kde.fluxkap", 1, 0, "About", [](QQmlEngine *engine, QJSEngine *) -> QJSValue {
         return engine->toScriptValue(KAboutData::applicationData());
     });
 
     App application;
-    qmlRegisterSingletonInstance("org.kde.kfeedreader", 1, 0, "App", &application);
+    qmlRegisterSingletonInstance("org.kde.fluxkap", 1, 0, "App", &application);
 
-    qmlRegisterType<MenuItem>("org.kde.kfeedreader", 1, 0, "MenuItem");
-    qmlRegisterType<FeedFolder>("org.kde.kfeedreader", 1, 0, "FeedFolder");
-    qmlRegisterType<FeedArticle>("org.kde.kfeedreader", 1, 0, "FeedArticle");
-    qmlRegisterType<Feed>("org.kde.kfeedreader", 1, 0, "Feed");
-    qmlRegisterUncreatableType<FeedUpdater>("org.kde.kfeedreader", 1, 0, "FeedUpdater", QStringLiteral("access to enums and static methods only"));
-    qmlRegisterType<AggregatedFeed>("org.kde.kfeedreader", 1, 0, "AggregatedFeed");
+    qmlRegisterType<MenuItem>("org.kde.fluxkap", 1, 0, "MenuItem");
+    qmlRegisterType<FeedFolder>("org.kde.fluxkap", 1, 0, "FeedFolder");
+    qmlRegisterType<FeedArticle>("org.kde.fluxkap", 1, 0, "FeedArticle");
+    qmlRegisterType<Feed>("org.kde.fluxkap", 1, 0, "Feed");
+    qmlRegisterUncreatableType<FeedUpdater>("org.kde.fluxkap", 1, 0, "FeedUpdater", QStringLiteral("access to enums and static methods only"));
+    qmlRegisterType<AggregatedFeed>("org.kde.fluxkap", 1, 0, "AggregatedFeed");
     qRegisterMetaType<Feed *>("const Feed*");
     qRegisterMetaType<FeedArticle *>("const FeedArticle*");
 
