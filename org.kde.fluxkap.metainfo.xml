@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  SPDX-License-Identifier: FSFAP
-  SPDX-FileCopyrightText: %{CURRENT_YEAR} %{AUTHOR} <%{EMAIL}>
- -->
 <component type="desktop-application">
   <id>org.kde.fluxkap</id>
   <name>FluxKap Kirigami Application</name>
   <summary>A web feed aggreagtor</summary>
+  <content_rating type="oars-1.0"></content_rating>
   <metadata_license>FSFAP</metadata_license>
-  <project_license>BSD-3-Clause</project_license>
-  <developer_name>Michael Martin Moro</developer_name>
+  <project_license>GPL-3.0</project_license>
+  <url type="homepage">https://github.com/Plaristote/KFeedReader</url>
+  <developer id="io.github.plaristote">
+    <name>Michael Martin Moro</name>
+  </developer>
   <description>
     <p>
       A feed aggregator for all your aggregation needs. Supports RSS, Atom and JSON feeds,
@@ -25,4 +25,27 @@
       <li>Import YouTube subscriptions from a Google Takeout CSV file</li>
     </ul>
   </description>
+  <launchable type="desktop-id">org.kde.fluxkap.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/Plaristote/KFeedReader/b430576aa2e1afbf355b79d90152abf15f618f9e/screenshots/01.png</image>
+      <caption>Reads your web comics</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Plaristote/KFeedReader/b430576aa2e1afbf355b79d90152abf15f618f9e/screenshots/02.png</image>
+      <caption>Aggregates unseen videos from various YouTube channels</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Plaristote/KFeedReader/b430576aa2e1afbf355b79d90152abf15f618f9e/screenshots/03.png</image>
+      <caption>Watching videos inline</caption>
+    </screenshot>
+  </screenshots>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+  <releases>
+    <release version="1.0" date="2024-09-10" />
+  </releases>
 </component>
