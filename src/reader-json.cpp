@@ -30,7 +30,8 @@ enum FeedAttribute {
     MimetypeAttribute,
     FaviconAttribute,
     LogoAttribute,
-    BannerAttribute
+    BannerAttribute,
+    CommentAttribute
 };
 
 static const QMap<FeedAttribute, QString> attributes{{TitleAttribute, QStringLiteral("title")},
@@ -52,15 +53,18 @@ static const QMap<FeedAttribute, QString> attributes{{TitleAttribute, QStringLit
                                                      {MimetypeAttribute, QStringLiteral("mime_type")},
                                                      {FaviconAttribute, QStringLiteral("favicon")},
                                                      {LogoAttribute, QStringLiteral("image")},
-                                                     {BannerAttribute, QStringLiteral("banner_image")}};
+                                                     {BannerAttribute, QStringLiteral("banner_image")},
+                                                     {CommentAttribute, QStringLiteral("_comment")}};
 
 static QDateTime parseJsonDate(const QJsonValue &value, const QDateTime &defaultValue)
 {
     QDateTime result = defaultValue;
 
     if (value.isString()) {
-        static const QString dateFormatRFC3999 = QStringLiteral("yyyy-MM-ddTHH:mm:ss.zttt");
-        result = QDateTime::fromString(value.toString(), dateFormatRFC3999);
+        static const QString dateFormatRFC3999 = QStringLiteral("yyyy-MM-ddTHH:mm:ss");
+        QString truncatedValue = value.toString();
+        truncatedValue.truncate(dateFormatRFC3999.length());
+        result = QDateTime::fromString(truncatedValue, dateFormatRFC3999);
     }
     return result;
 }
@@ -138,6 +142,8 @@ void JsonFeedReader::loadArticle(const QJsonObject &data, FeedArticle &article)
     article.setSource(QUrl(data[attributes[ExternalLinkAttribute]].toString()));
     if (data[attributes[AttachmentsAttribute]].isArray())
         loadAttachments(data[attributes[AttachmentsAttribute]].toArray(), article);
+    if (data[attributes[CommentAttribute]].isString())
+        article.setComments(QUrl(data[attributes[CommentAttribute]].toString()));
 }
 
 static void initializeMedia(FeedArticleEnclosure &media, const QJsonObject &attachment)
