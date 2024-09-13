@@ -38,6 +38,7 @@
         <file alias="SortableFolderTree.qml">contents/ui/SortableFolderTree.qml</file>
         <file alias="SharingServiceSettings.qml">contents/ui/SharingServiceSettings.qml</file>
         <file alias="SharingDialog.qml">contents/ui/SharingDialog.qml</file>
+        <file alias="SkipPreviewCheckBox.qml">contents/ui/SkipPreviewCheckBox.qml</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="icon.png">contents/icons/app.png</file>

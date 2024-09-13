@@ -16,6 +16,7 @@ class MenuItem : public TtlSettings
     Q_PROPERTY(double progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(QString view READ view NOTIFY viewChanged)
     Q_PROPERTY(ItemType type READ itemType CONSTANT)
+    Q_PROPERTY(short skipPreviewSetting READ skipPreviewSetting WRITE setSkipPreviewSetting NOTIFY skipPreviewSettingChanged)
     Q_PROPERTY(QQmlListProperty<QObject> crumbs READ qmlCrumbs NOTIFY crumbsChanged)
 public:
     enum Role { DisplayNameRole = Qt::UserRole + 1, DescriptionRole, IconUrlRole, MenuItemRole };
@@ -49,6 +50,8 @@ public:
     virtual MenuItem *childAt(int) const;
     MenuItem *parentItem() const;
     int row() const;
+    short skipPreviewSetting() const;
+    void setSkipPreviewSetting(short);
 
     Q_INVOKABLE virtual bool matchSearch(const QString &) const;
 
@@ -83,6 +86,7 @@ Q_SIGNALS:
     void parentChanged();
     void beforeSave();
     void removed(QObject *);
+    void skipPreviewSettingChanged();
     void crumbsChanged();
 
 private:
@@ -90,6 +94,7 @@ private:
     QString m_description;
     MenuItem *m_parentItem = nullptr;
     QList<MenuItem *> m_crumbs;
+    short m_skipPreviewSetting = 0;
 };
 
 #endif // MENUITEM_H

@@ -11,6 +11,7 @@ Kirigami.ScrollablePage {
   property bool leadingFeedIcon: false
   property bool fetching: model.fetching
   property bool progress: model.progress
+  property url feedViewUrl: Qt.resolvedUrl(model.skipPreviewSetting !== 2 ? "./Article.qml" : "./BrowserArticleView.qml")
   id: page
   title: model.name
   actions: feedActions.actions
@@ -80,7 +81,7 @@ Kirigami.ScrollablePage {
           action: Controls.Action {
             checkable: true
             checked: pageStack.lastItem.model == item
-            onTriggered: pageStack.push(Qt.resolvedUrl("./Article.qml"), { model: item, feed: page.model })
+            onTriggered: pageStack.push(page.feedViewUrl, { model: item, feed: page.model })
           }
         } // END delegate
       } // END Repeater

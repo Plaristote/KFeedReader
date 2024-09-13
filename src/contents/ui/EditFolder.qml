@@ -42,6 +42,11 @@ Kirigami.Page {
         onActivated: page.model.displayType = currentValue
         Component.onCompleted: currentIndex = indexOfValue(page.model.displayType)
       }
+
+      SkipPreviewCheckBox {
+        Kirigami.FormData.label: i18n("Skip preview")
+        model: page.model
+      }
     }
 
     TtlSettingsForm {

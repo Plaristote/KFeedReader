@@ -279,6 +279,19 @@ void MenuItem::enableAutoUpdate(bool trigger)
     Q_EMIT customTtlChanged();
 }
 
+void MenuItem::setSkipPreviewSetting(short value)
+{
+    m_skipPreviewSetting = value;
+    Q_EMIT skipPreviewSettingChanged();
+}
+
+short MenuItem::skipPreviewSetting() const
+{
+    if (m_skipPreviewSetting == 0 && parentItem())
+        return parentItem()->skipPreviewSetting();
+    return m_skipPreviewSetting;
+}
+
 void MenuItem::updateCrumbs()
 {
     MenuItem *currentItem = this;
@@ -298,6 +311,7 @@ void MenuItem::loadFromJson(QJsonObject &root)
 {
     setName(root.value(QStringLiteral("name")).toString());
     setDescription(root.value(QStringLiteral("description")).toString());
+    setSkipPreviewSetting(root.value(QStringLiteral("skipPreview")).toInt(0));
     TtlSettings::loadFromJson(root);
 }
 
@@ -306,5 +320,7 @@ void MenuItem::saveToJson(QJsonObject &root) const
     root.insert(QStringLiteral("name"), m_name);
     root.insert(QStringLiteral("description"), m_description);
     root.insert(QStringLiteral("type"), static_cast<int>(itemType()));
+    if (m_skipPreviewSetting)
+        root.insert(QStringLiteral("skipPreview"), static_cast<int>(m_skipPreviewSetting));
     TtlSettings::saveToJson(root);
 }

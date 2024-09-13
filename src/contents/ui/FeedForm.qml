@@ -89,6 +89,11 @@ Kirigami.ScrollablePage {
         Layout.fillWidth: true
       }
 
+      SkipPreviewCheckBox {
+        Kirigami.FormData.label: i18n("Skip preview")
+        model: page.feed
+      }
+
       Kirigami.Separator {
         Layout.fillWidth: true
       }
