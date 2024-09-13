@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FluxKap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-10 15:07+0200\n"
+"POT-Creation-Date: 2024-09-14 01:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,6 +77,14 @@ msgstr ""
 msgid "Mark as unread"
 msgstr ""
 
+#: ../src/contents/ui/ArticleActions.qml ../src/contents/ui/SharingDialog.qml
+msgid "Share"
+msgstr ""
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Add this article to your shared feeds using the sharing service"
+msgstr ""
+
 #: ../src/contents/ui/ArticleActions.qml
 msgid "Close"
 msgstr ""
@@ -123,6 +131,10 @@ msgstr ""
 
 #: ../src/contents/ui/EditFolder.qml
 msgid "List"
+msgstr ""
+
+#: ../src/contents/ui/EditFolder.qml ../src/contents/ui/FeedForm.qml
+msgid "Skip preview"
 msgstr ""
 
 #: ../src/contents/ui/EditFolder.qml
@@ -173,7 +185,7 @@ msgstr ""
 msgid "Permanently remove the feed from the application"
 msgstr ""
 
-#: ../src/contents/ui/FeedForm.qml
+#: ../src/contents/ui/FeedForm.qml ../src/contents/ui/SharingServiceSettings.qml
 msgid "URL"
 msgstr ""
 
@@ -302,6 +314,10 @@ msgid "Toggle menu"
 msgstr ""
 
 #: ../src/contents/ui/main.qml
+msgid "Configure sharing service"
+msgstr ""
+
+#: ../src/contents/ui/main.qml
 msgid "About FluxKap"
 msgstr ""
 
@@ -319,6 +335,30 @@ msgstr ""
 
 #: ../src/contents/ui/main.qml
 msgid "Pick a file to export your feeds to"
+msgstr ""
+
+#: ../src/contents/ui/SharingDialog.qml
+msgid "Select the feeds in which you want to share this article"
+msgstr ""
+
+#: ../src/contents/ui/SharingDialog.qml
+msgid "Failed to share the article !"
+msgstr ""
+
+#: ../src/contents/ui/SharingServiceSettings.qml
+msgid "Application token"
+msgstr ""
+
+#: ../src/contents/ui/SharingServiceSettings.qml
+msgid "Status"
+msgstr ""
+
+#: ../src/contents/ui/SharingServiceSettings.qml
+msgid "Ready"
+msgstr ""
+
+#: ../src/contents/ui/SharingServiceSettings.qml
+msgid "Not ready"
 msgstr ""
 
 #: ../src/contents/ui/TtlSettingsForm.qml

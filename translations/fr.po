@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FluxKap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-10 15:07+0200\n"
+"POT-Creation-Date: 2024-09-14 01:43+0200\n"
 "PO-Revision-Date: 2024-09-07 18:55+0200\n"
 "Last-Translator: Michael Martin Moro <michael@unetresgrossebite.com>\n"
 "Language-Team: fr\n"
@@ -77,6 +77,14 @@ msgstr "Ouvrir dans un navigateur web"
 msgid "Mark as unread"
 msgstr "Marquer comme non-lu"
 
+#: ../src/contents/ui/ArticleActions.qml ../src/contents/ui/SharingDialog.qml
+msgid "Share"
+msgstr "Partager"
+
+#: ../src/contents/ui/ArticleActions.qml
+msgid "Add this article to your shared feeds using the sharing service"
+msgstr "Ajoute cet article à un ou plusieurs de vos flux partagés en utilisant le service de partage"
+
 #: ../src/contents/ui/ArticleActions.qml
 msgid "Close"
 msgstr "Fermer"
@@ -124,6 +132,10 @@ msgstr "Arbre"
 #: ../src/contents/ui/EditFolder.qml
 msgid "List"
 msgstr "Liste"
+
+#: ../src/contents/ui/EditFolder.qml ../src/contents/ui/FeedForm.qml
+msgid "Skip preview"
+msgstr "Sauter la page de résumé des articles et aller directement à la vue de navigation"
 
 #: ../src/contents/ui/EditFolder.qml
 msgid "Synchronize"
@@ -173,7 +185,7 @@ msgstr "Supprimer"
 msgid "Permanently remove the feed from the application"
 msgstr "Supprime de façon permanente ce flux de votre application"
 
-#: ../src/contents/ui/FeedForm.qml
+#: ../src/contents/ui/FeedForm.qml ../src/contents/ui/SharingServiceSettings.qml
 msgid "URL"
 msgstr "URL"
 
@@ -302,6 +314,10 @@ msgid "Toggle menu"
 msgstr "Activer/désactiver le menu"
 
 #: ../src/contents/ui/main.qml
+msgid "Configure sharing service"
+msgstr "Configurer le service de partage"
+
+#: ../src/contents/ui/main.qml
 msgid "About FluxKap"
 msgstr "À propos de FluxKap"
 
@@ -320,6 +336,30 @@ msgstr "Structures OPML"
 #: ../src/contents/ui/main.qml
 msgid "Pick a file to export your feeds to"
 msgstr "Choisissez un fichier où exporter vos flux"
+
+#: ../src/contents/ui/SharingDialog.qml
+msgid "Select the feeds in which you want to share this article"
+msgstr "Sélectionnez des flux partagés"
+
+#: ../src/contents/ui/SharingDialog.qml
+msgid "Failed to share the article !"
+msgstr "Echec du partage de l'article"
+
+#: ../src/contents/ui/SharingServiceSettings.qml
+msgid "Application token"
+msgstr "Token applicatif"
+
+#: ../src/contents/ui/SharingServiceSettings.qml
+msgid "Status"
+msgstr "Statut"
+
+#: ../src/contents/ui/SharingServiceSettings.qml
+msgid "Ready"
+msgstr "Prêt"
+
+#: ../src/contents/ui/SharingServiceSettings.qml
+msgid "Not ready"
+msgstr "Paramètres vides ou incorrects"
 
 #: ../src/contents/ui/TtlSettingsForm.qml
 msgid "Enable periodic updates"
