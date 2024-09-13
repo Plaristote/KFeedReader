@@ -52,6 +52,8 @@ public:
     QUrl source() const;
     QString title() const;
     QUrl faviconUrl() const;
+    QUrl remoteFaviconUrl() const;
+    const QList<QObject *> &medias() const;
 
     Q_INVOKABLE bool matchSearch(const QString &) const;
 

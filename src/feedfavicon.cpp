@@ -36,10 +36,11 @@ void FeedFavicon::fetch(const QUrl &url)
     QNetworkReply *reply = m_feed.m_network->get(request);
 
     m_fetchCount++;
+    m_feed.setRemoteFaviconUrl(url);
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         unsigned int status = reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toUInt();
 
-        if (status == 302 && m_fetchCount < maxRedirectCount) {
+        if ((status == 301 || status == 307 || status == 302) && m_fetchCount < maxRedirectCount) {
             fetch(QUrl(reply->header(QNetworkRequest::LocationHeader).toString()));
             return;
         } else if (status >= 200 && status < 300) {

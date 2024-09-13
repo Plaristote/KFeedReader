@@ -18,6 +18,7 @@ void exportAsOpmlDocument(const FeedFolder *folder, QDomDocument &document);
 App::App(QObject *parent)
     : QObject(parent)
 {
+    m_sharingService = new SharingService();
     m_rootFolder = new FeedFolder();
     m_autosaveTimer.setInterval(1000 * 60 * 90); // 1.5h but I couldnt get chrono literals to work
     m_autosaveTimer.start();
@@ -27,6 +28,7 @@ App::App(QObject *parent)
 App::~App()
 {
     save();
+    m_sharingService->deleteLater();
     m_rootFolder->deleteLater();
 }
 

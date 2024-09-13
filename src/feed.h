@@ -65,6 +65,7 @@ public:
     QString storagePrefix() const;
     QString faviconStoragePath() const;
     QUrl faviconUrl() const override;
+    QUrl remoteFaviconUrl() const;
     FeedArticle *findArticleByGuid(const QString &guid) const;
     FeedArticle *findArticleByLink(const QUrl &link) const;
     Q_INVOKABLE FeedArticle *findNextArticle(const FeedArticle *);
@@ -192,6 +193,7 @@ public:
     }
 
     void setFaviconUrl(const QUrl &value);
+    void setRemoteFaviconUrl(const QUrl &value);
 
     bool isSkippedHour(unsigned short index) const override;
     bool isSkippedDay(unsigned short index) const override;
@@ -262,6 +264,7 @@ private:
 
     QString m_uuid;
     QUrl m_faviconUrl;
+    QUrl m_remoteFaviconUrl;
     QUrl m_xmlUrl;
     int m_maxArticleAge = 0;
     int m_maxArticleNumber = 0;

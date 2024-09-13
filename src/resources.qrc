@@ -36,6 +36,8 @@
         <file alias="ListItemDelegate.qml">contents/ui/ListItemDelegate.qml</file>
         <file alias="TreeItemDelegate.qml">contents/ui/TreeItemDelegate.qml</file>
         <file alias="SortableFolderTree.qml">contents/ui/SortableFolderTree.qml</file>
+        <file alias="SharingServiceSettings.qml">contents/ui/SharingServiceSettings.qml</file>
+        <file alias="SharingDialog.qml">contents/ui/SharingDialog.qml</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="icon.png">contents/icons/app.png</file>

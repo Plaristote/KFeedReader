@@ -33,6 +33,11 @@ void FeedArticle::clearMedias()
     m_medias.clear();
 }
 
+const QList<QObject *> &FeedArticle::medias() const
+{
+    return m_medias;
+}
+
 void FeedArticle::loadFromJson(QJsonObject &root)
 {
     QJsonValue attachments = root.value(QStringLiteral("attachments"));
@@ -259,8 +264,12 @@ QUrl FeedArticle::faviconUrl() const
     return reinterpret_cast<Feed *>(parent())->faviconUrl();
 }
 
+QUrl FeedArticle::remoteFaviconUrl() const
+{
+    return reinterpret_cast<Feed *>(parent())->remoteFaviconUrl();
+}
+
 QQmlListProperty<QObject> FeedArticle::qmlCrumbs()
 {
-    qDebug() << "Feed::qmlCrumbs" << parent();
     return qobject_cast<MenuItem *>(parent())->qmlCrumbs();
 }

@@ -55,6 +55,11 @@ Kirigami.ApplicationWindow {
         return null;
     }
 
+    function openSharingDialog(article) {
+        sharingDialog.model = article;
+        sharingDialog.open();
+    }
+
     globalDrawer: Kirigami.GlobalDrawer {
         title: i18n("FluxKap")
         titleIcon: "applications-graphics"
@@ -80,6 +85,11 @@ Kirigami.ApplicationWindow {
                 icon.name: "show-menu"
                 shortcut: "Ctrl+M"
                 onTriggered: window.menuBar.visible = !window.menuBar.visible
+            },
+            Kirigami.Action {
+                text: i18n("Configure sharing service")
+                icon.name: "preferences-system-network-share"
+                onTriggered: pageStack.layers.push("qrc:SharingServiceSettings.qml")
             },
             Kirigami.Action {
                 text: i18n("About FluxKap")
@@ -112,6 +122,10 @@ Kirigami.ApplicationWindow {
         id: fullScreenContainer
         color: children.length ? "black" : "transparent"
         anchors.fill: parent
+    }
+
+    SharingDialog {
+        id: sharingDialog
     }
 
     FileDialog {

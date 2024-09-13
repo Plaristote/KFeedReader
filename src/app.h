@@ -1,5 +1,6 @@
 #pragma once
 
+#include "sharingservice.h"
 #include <QObject>
 #include <QTimer>
 #include <QUrl>
@@ -12,6 +13,7 @@ class App : public QObject
     Q_OBJECT
 
     Q_PROPERTY(FeedFolder *rootFolder READ rootFolder CONSTANT)
+    Q_PROPERTY(SharingService *sharingService READ sharingService CONSTANT)
 public:
     App(QObject *parent = nullptr);
     ~App();
@@ -21,9 +23,14 @@ public:
     // Save current window geometry
     Q_INVOKABLE void saveWindowGeometry(QQuickWindow *window, const QString &group = QStringLiteral("main")) const;
 
-    FeedFolder *rootFolder()
+    FeedFolder *rootFolder() const
     {
         return m_rootFolder;
+    }
+
+    SharingService *sharingService() const
+    {
+        return m_sharingService;
     }
 
     static QString storagePath();
@@ -37,5 +44,6 @@ public Q_SLOTS:
 
 private:
     FeedFolder *m_rootFolder;
+    SharingService *m_sharingService;
     QTimer m_autosaveTimer;
 };

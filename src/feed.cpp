@@ -191,6 +191,16 @@ QUrl Feed::faviconUrl() const
     return FeedFavicon(*const_cast<Feed *>(this)).url();
 }
 
+QUrl Feed::remoteFaviconUrl() const
+{
+    return m_remoteFaviconUrl;
+}
+
+void Feed::setRemoteFaviconUrl(const QUrl &value)
+{
+    m_remoteFaviconUrl = value;
+}
+
 void Feed::setLogoUrl(const QUrl &value)
 {
     if (value != m_logoUrl) {
