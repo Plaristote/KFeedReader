@@ -42,6 +42,8 @@ public:
         return m_url;
     }
 
+    Q_INVOKABLE QString youtubeVideoTag() const;
+
 public Q_SLOTS:
     void setTitle(const QString &);
     void setType(const QString &);

@@ -13,6 +13,8 @@ QUrl FeedArticleEnclosure::qmlView() const
         return QUrl(QStringLiteral("qrc:/ArticleImageEnclosure.qml"));
     } else if (m_type.startsWith(QStringLiteral("video/")) || m_type.startsWith(QStringLiteral("audio/"))) {
         return QUrl(QStringLiteral("qrc:/ArticleEnclosure.qml"));
+    } else if (m_url.host() == QStringLiteral("www.youtube.com")) {
+        return QUrl(QStringLiteral("qrc:/ArticleYoutube.qml"));
     }
     return QUrl();
 }
@@ -72,4 +74,9 @@ void FeedArticleEnclosure::setUrl(const QUrl &value)
         m_url = value;
         Q_EMIT urlChanged(value);
     }
+}
+
+QString FeedArticleEnclosure::youtubeVideoTag() const
+{
+    return m_url.path().split(QStringLiteral("/")).last();
 }

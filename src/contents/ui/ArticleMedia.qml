@@ -6,7 +6,7 @@ import org.kde.fluxkap 1.0
 
 ColumnLayout {
   property alias contentComponent: content.sourceComponent
-  property size mediaSize: model.thumbnailSize
+  property size mediaSize: model.thumbnailSize || Qt.size(640, 360)
   property size contentSize: mediaSize
   property bool fullScreen: false
   id: layout
