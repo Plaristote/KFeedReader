@@ -86,7 +86,7 @@ static QJsonObject toShareJson(FeedArticle &article, const QList<unsigned long> 
     if (!article.author().isEmpty())
         author[QStringLiteral("name")] = article.author();
     if (attachments.size() > 0)
-        data[QStringLiteral("attachments")] = attachments;
+        root[QStringLiteral("article-attachments")] = attachments;
     root[QStringLiteral("article-share")] = data;
     return root;
 }
