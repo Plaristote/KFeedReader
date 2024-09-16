@@ -5,7 +5,7 @@ import org.kde.kirigami 2.19 as Kirigami
 import "."
 
 Kirigami.Page {
-  required property url url
+  property alias url: webview.url
   property var crumbs: []
 
   function toggleSearch() {

@@ -9,6 +9,7 @@ QtObject {
   property QtObject previousArticle: feed.findPreviousArticle(model)
 
   signal requestArticleChange(QtObject article)
+  signal requestArticleOpen(QtObject article)
 
   property list<QtObject> contextualActions: {
     let array = [nextAction, previousAction];
@@ -51,9 +52,9 @@ QtObject {
       id: openAction
       text: i18n("Open")
       icon.name: "window-new"
-      tooltip: i18n("Open the current article in a web browser")
+      tooltip: i18n("Open in a web browser")
       shortcut: "Ctrl+Alt+O"
-      onTriggered: Qt.openUrlExternally(page.model.link)
+      onTriggered: requestArticleOpen(page.model)
     },
     Kirigami.Action {
       id: unreadAction

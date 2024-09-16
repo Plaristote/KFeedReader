@@ -38,6 +38,7 @@ Kirigami.ScrollablePage {
     model: page.model
     feed: page.feed
     onRequestArticleChange: page.model = article
+    onRequestArticleOpen: Qt.openUrlExternally(page.model.link)
   }
 
   Item {
