@@ -18,7 +18,7 @@ QtObject {
       array.push(commentsAction);
     if (shareAction.enabled)
       array.push(shareAction);
-    return array.concat(openAction, unreadAction, closeAction);
+    return array.concat(openAction, unreadAction);
   }
 
   property list<QtObject> allActions: [
