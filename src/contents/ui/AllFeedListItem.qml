@@ -10,6 +10,7 @@ Controls.ItemDelegate {
   required property var nextPage
   property bool unreadOnly: false
 
+  highlighted: root.action.checked
   contentItem: ListItemDelegate {
     title: root.label
     iconSource: root.iconSource
@@ -17,7 +18,7 @@ Controls.ItemDelegate {
   }
   action: Controls.Action {
     checkable: true
-    checked: nextPage != null && nextPage.folder == root.model
+    checked: nextPage != null && nextPage.folder == root.model && nextPage.showUnreadOnly == unreadOnly
     onTriggered: pageStack.push(Qt.resolvedUrl("./AggregatedFeed.qml"), {
       folder: root.model,
       showUnreadOnly: root.unreadOnly
