@@ -48,6 +48,7 @@ Kirigami.Page {
       Layout.fillWidth: true
       Layout.preferredHeight: 50
       contentWidth: breadcrumbs.width
+      clip: true
       Breadcrumbs {
         id: breadcrumbs
         crumbs: page.crumbs

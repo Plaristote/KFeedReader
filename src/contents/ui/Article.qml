@@ -51,6 +51,7 @@ Kirigami.ScrollablePage {
         Layout.fillWidth: true
         Layout.preferredHeight: 50
         contentWidth: breadcrumbs.width
+        clip: true
         Breadcrumbs {
           id: breadcrumbs
           crumbs: page.model.crumbs
