@@ -9,9 +9,12 @@ BrowserView {
 
   id: page
   url: model.link
-  crumbs: model.crumbs
   actions: pageActions.contextualActions
   onModelChanged: model.read = true
+
+  topBar: ArticleInfobar {
+    model: page.model
+  }
 
   ArticleActions {
     id: pageActions

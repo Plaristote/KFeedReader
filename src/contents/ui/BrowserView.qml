@@ -6,7 +6,7 @@ import "."
 
 Kirigami.Page {
   property alias url: webview.url
-  property var crumbs: []
+  property alias topBar: topBarLoader.sourceComponent
 
   function toggleSearch() {
     searchField.visible = !searchField.visible;
@@ -43,17 +43,9 @@ Kirigami.Page {
   ColumnLayout {
     anchors.fill: parent
 
-    Flickable {
-      visible: page.crumbs.length
+    Loader {
+      id: topBarLoader
       Layout.fillWidth: true
-      Layout.preferredHeight: 50
-      contentWidth: breadcrumbs.width
-      clip: true
-      Breadcrumbs {
-        id: breadcrumbs
-        crumbs: page.crumbs
-        anchors { top: parent.top; right: parent.right }
-      }
     }
 
     Item {

@@ -48,46 +48,9 @@ Kirigami.ScrollablePage {
       id: contentItem
       width: parent.width
 
-      Flickable {
+      ArticleInfobar {
         Layout.fillWidth: true
-        Layout.preferredHeight: 50
-        contentWidth: breadcrumbs.width
-        clip: true
-        Breadcrumbs {
-          id: breadcrumbs
-          crumbs: page.model.crumbs
-          anchors { top: parent.top; right: parent.right }
-        }
-      }
-
-      RowLayout {
-        id: metaDataActions
-
-        Item { Layout.fillWidth: true }
-
-        Controls.Button {
-          id: dateLabel
-          icon.name: "view-calendar-day"
-          text: page.model.publicationDate.toLocaleDateString()
-          flat: true
-        }
-
-        Controls.Button {
-          id: categoryLabel
-          visible: page.model.category.length > 0
-          icon.name: "category"
-          text: page.model.category
-          flat: true
-        }
-
-        Controls.Button {
-          id: authorButton
-          visible: page.model.author.length > 0
-          icon.name: "user-identity"
-          text: page.model.author
-          flat: !page.model.authorUrl.toString().length
-          onClicked: Qt.openUrlExternally(page.model.authorUrl)
-        }
+        model: page.model
       }
 
       Repeater {

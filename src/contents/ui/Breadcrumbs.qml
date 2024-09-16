@@ -35,8 +35,4 @@ RowLayout {
       }
     }
   }
-  Controls.Button {
-    Layout.fillWidth: true
-    text: page.model.title
-  }
 }
