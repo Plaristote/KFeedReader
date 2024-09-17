@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FluxKap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-14 01:43+0200\n"
+"POT-Creation-Date: 2024-09-17 13:35+0200\n"
 "PO-Revision-Date: 2024-09-07 18:55+0200\n"
 "Last-Translator: Michael Martin Moro <michael@unetresgrossebite.com>\n"
 "Language-Team: fr\n"
@@ -70,7 +70,7 @@ msgid "Open"
 msgstr "Ouvrir"
 
 #: ../src/contents/ui/ArticleActions.qml
-msgid "Open the current article in a web browser"
+msgid "Open in a web browser"
 msgstr "Ouvrir dans un navigateur web"
 
 #: ../src/contents/ui/ArticleActions.qml
@@ -135,7 +135,7 @@ msgstr "Liste"
 
 #: ../src/contents/ui/EditFolder.qml ../src/contents/ui/FeedForm.qml
 msgid "Skip preview"
-msgstr "Sauter la page de résumé des articles et aller directement à la vue de navigation"
+msgstr "Afficher le contenu sans prévisualisation"
 
 #: ../src/contents/ui/EditFolder.qml
 msgid "Synchronize"
@@ -412,9 +412,3 @@ msgstr "Développeur"
 msgctxt "@info:credit"
 msgid "Louis Schul"
 msgstr "Louis Schul"
-
-#~ msgid "(c) %{CURRENT_YEAR}"
-#~ msgstr "(c) %{CURRENT_YEAR}"
-
-#~ msgid "Author"
-#~ msgstr "Auteur"

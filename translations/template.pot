@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FluxKap\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-14 01:43+0200\n"
+"POT-Creation-Date: 2024-09-17 13:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,7 +70,7 @@ msgid "Open"
 msgstr ""
 
 #: ../src/contents/ui/ArticleActions.qml
-msgid "Open the current article in a web browser"
+msgid "Open in a web browser"
 msgstr ""
 
 #: ../src/contents/ui/ArticleActions.qml
