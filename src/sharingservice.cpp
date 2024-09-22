@@ -20,12 +20,6 @@ static QUrl makeShareUrl(QUrl url)
     return url;
 }
 
-static void decorateRequest(QNetworkRequest &request, const QByteArray &authToken)
-{
-    request.setRawHeader(QStringLiteral("Accept").toUtf8(), QStringLiteral("application/json").toUtf8());
-    request.setRawHeader(QStringLiteral("X-AppToken").toUtf8(), authToken);
-}
-
 static QJsonObject enclosureToAttachment(FeedArticleEnclosure *model)
 {
     QJsonObject data;
@@ -91,43 +85,24 @@ static QJsonObject toShareJson(FeedArticle &article, const QList<unsigned long> 
     return root;
 }
 
-SharingService::SharingService(QObject *parent)
-    : QObject(parent)
+SharingService::SharingService(CloudProvider &parent)
+    : QObject(&parent)
+    , m_cloudProvider(parent)
 {
-    QSettings settings(QStringLiteral("sharingService"));
-
-    m_url = settings.value("url").toUrl();
-    m_authToken = settings.value("token").toByteArray();
     connect(this, &SharingService::feedsChanged, this, &SharingService::enabledChanged);
     connect(this, &SharingService::shared, this, &SharingService::inProgressChanged);
     connect(this, &SharingService::failedToShare, this, &SharingService::inProgressChanged);
-    connect(this, &SharingService::urlChanged, this, &SharingService::enabledChanged);
-    connect(this, &SharingService::urlChanged, this, &SharingService::refreshFeeds);
-    connect(this, &SharingService::authTokenChanged, this, &SharingService::enabledChanged);
-    connect(this, &SharingService::authTokenChanged, this, &SharingService::refreshFeeds);
-    refreshFeeds();
-}
-
-void SharingService::setSettings(const QUrl &url, const QByteArray &token)
-{
-    QSettings settings(QStringLiteral("sharingService"));
-
-    m_url = url;
-    m_authToken = token;
-    settings.setValue("url", m_url);
-    settings.setValue("token", m_authToken);
+    connect(&parent, &CloudProvider::urlChanged, this, &SharingService::enabledChanged);
+    connect(&parent, &CloudProvider::urlChanged, this, &SharingService::refreshFeeds);
+    connect(&parent, &CloudProvider::authTokenChanged, this, &SharingService::enabledChanged);
+    connect(&parent, &CloudProvider::authTokenChanged, this, &SharingService::refreshFeeds);
     refreshFeeds();
 }
 
 bool SharingService::isEnabled() const
 {
     qDebug() << "isEnabled called";
-    return isAuthentifiable() && m_feeds.size() > 0;
-}
-
-bool SharingService::isAuthentifiable() const
-{
-    return m_authToken.length() && !m_url.isEmpty();
+    return m_cloudProvider.isAuthentifiable() && m_feeds.size() > 0;
 }
 
 unsigned long SharingService::idForFeedName(const QString &feedName) const
@@ -154,15 +129,15 @@ void SharingService::share(const QStringList &feedNames, FeedArticle *article)
 
 void SharingService::share(const QList<unsigned long> &ids, FeedArticle *article)
 {
-    QNetworkRequest request(makeShareUrl(m_url));
+    QNetworkRequest request(makeShareUrl(m_cloudProvider.url()));
     QNetworkReply *reply;
     QJsonObject articleJson = toShareJson(*article, ids);
     QJsonDocument document(articleJson);
     QByteArray body = document.toJson();
 
-    decorateRequest(request, m_authToken);
+    m_cloudProvider.decorateRequest(request);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json").toUtf8());
-    reply = m_network.post(request, body);
+    reply = m_cloudProvider.network().post(request, body);
     m_inProgress = true;
     connect(reply, &QNetworkReply::finished, this, [this, reply, article]() {
         unsigned int status = reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toUInt();
@@ -179,18 +154,18 @@ void SharingService::share(const QList<unsigned long> &ids, FeedArticle *article
 
 void SharingService::refreshFeeds()
 {
-    if (isAuthentifiable()) {
+    if (m_cloudProvider.isAuthentifiable()) {
         fetchFeeds();
     }
 }
 
 void SharingService::fetchFeeds()
 {
-    QNetworkRequest request(makeFeedUrl(m_url));
+    QNetworkRequest request(makeFeedUrl(m_cloudProvider.url()));
     QNetworkReply *reply;
 
-    decorateRequest(request, m_authToken);
-    reply = m_network.get(request);
+    m_cloudProvider.decorateRequest(request);
+    reply = m_cloudProvider.network().get(request);
     m_inProgress = true;
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         unsigned int status = reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toUInt();

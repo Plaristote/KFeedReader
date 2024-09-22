@@ -2,8 +2,11 @@
 #define FEEDFOLDER_H
 
 #include "menuitem.h"
+#include <QDateTime>
 #include <QQmlListProperty>
 #include <QUrl>
+
+class Feed;
 
 class FeedFolder : public MenuItem
 {
@@ -29,13 +32,18 @@ public:
     ItemType itemType() const override;
     void loadFromJson(QJsonObject &) override;
     void saveToJson(QJsonObject &) const override;
-    static FeedFolder *createFromJson(QJsonObject &, FeedFolder *parent = nullptr);
+    static FeedFolder *createFromJson(QJsonObject &);
     int indexOf(const QObject *) const override;
     int childCount() const override;
     MenuItem *childAt(int) const override;
     DisplayType displayType() const;
     bool expanded() const;
     void markAsRead() override;
+    QDateTime lastModified() const;
+    void setLastModified(QDateTime);
+
+    FeedFolder *findFolder(const QString &name) const;
+    Feed *findFeed(const QString &uuid) const;
 
     Q_INVOKABLE bool matchSearch(const QString &) const override;
 
@@ -68,6 +76,7 @@ private:
     QList<QObject *> m_items;
     DisplayType m_displayType = ListDisplay;
     bool m_expanded = false;
+    QDateTime m_lastModified;
 };
 
 #endif // FEEDFOLDER_H

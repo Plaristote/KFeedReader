@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QDomDocument>
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QQuickWindow>
@@ -18,7 +19,9 @@ void exportAsOpmlDocument(const FeedFolder *folder, QDomDocument &document);
 App::App(QObject *parent)
     : QObject(parent)
 {
-    m_sharingService = new SharingService();
+    m_cloudProvider = new CloudProvider();
+    m_sharingService = new SharingService(*m_cloudProvider);
+    m_syncService = new SyncService(*m_cloudProvider);
     m_rootFolder = new FeedFolder();
     m_autosaveTimer.setInterval(1000 * 60 * 90); // 1.5h but I couldnt get chrono literals to work
     m_autosaveTimer.start();
@@ -28,7 +31,7 @@ App::App(QObject *parent)
 App::~App()
 {
     save();
-    m_sharingService->deleteLater();
+    m_cloudProvider->deleteLater();
     m_rootFolder->deleteLater();
 }
 
@@ -59,10 +62,15 @@ void App::load()
     QFile file(storagePath());
 
     if (file.open(QIODevice::ReadOnly)) {
+        QFileInfo info(file);
         QJsonDocument document = QJsonDocument::fromJson(file.readAll());
         QJsonObject root = document.object();
 
         m_rootFolder->loadFromJson(root);
+        m_rootFolder->setLastModified(info.lastModified());
+        if (m_cloudProvider->isAuthentifiable()) {
+            m_syncService->synchronize(*m_rootFolder);
+        }
     } else
         qDebug() << "App::load: failed to open" << storagePath();
 }
@@ -76,7 +84,11 @@ void App::save()
 
         m_rootFolder->triggerBeforeSave();
         m_rootFolder->saveToJson(root);
+        m_rootFolder->setLastModified(QDateTime::currentDateTime());
         file.write(QJsonDocument(root).toJson());
+        if (m_cloudProvider->isAuthentifiable()) {
+            m_syncService->synchronize(*m_rootFolder);
+        }
     } else
         qDebug() << "App::save: failed to open" << storagePath();
 }

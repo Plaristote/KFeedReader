@@ -72,12 +72,46 @@ MenuItem::ItemType FeedFolder::itemType() const
     return MenuItem::FolderMenuItem;
 }
 
-FeedFolder *FeedFolder::createFromJson(QJsonObject &root, FeedFolder *parent)
+FeedFolder *FeedFolder::createFromJson(QJsonObject &root)
 {
-    FeedFolder *item = new FeedFolder(*parent);
+    FeedFolder *item = new FeedFolder();
 
     item->loadFromJson(root);
     return item;
+}
+
+FeedFolder *FeedFolder::findFolder(const QString &name) const
+{
+    for (QObject *item : m_items) {
+        if (item->property("type").toInt() == FolderMenuItem && item->property("name").toString() == name) {
+            return reinterpret_cast<FeedFolder *>(item);
+        }
+    }
+    return nullptr;
+}
+
+Feed *FeedFolder::findFeed(const QString &uuid) const
+{
+    for (QObject *item : m_items) {
+        Feed *feed = item->property("type").toInt() == FeedMenuItem ? reinterpret_cast<Feed *>(item) : nullptr;
+        if (feed && feed->uuid() == uuid) {
+            return feed;
+        }
+    }
+    return nullptr;
+}
+
+template<typename ITEM>
+static void
+reloadOrAddItem(FeedFolder &self, const QString &itemId, QJsonObject &json, ITEM *(FeedFolder::*finder)(const QString &) const, ITEM *(*creator)(QJsonObject &))
+{
+    ITEM *item = (self.*finder)(itemId);
+
+    if (item) {
+        item->loadFromJson(json);
+    } else {
+        self.addItem(creator(json));
+    }
 }
 
 void FeedFolder::loadFromJson(QJsonObject &root)
@@ -88,15 +122,18 @@ void FeedFolder::loadFromJson(QJsonObject &root)
     m_expanded = root.value(QStringLiteral("expanded")).toBool(false);
     MenuItem::loadFromJson(root);
     for (QJsonValue value : jsonItems) {
+        QString itemId;
         QJsonObject jsonItem = value.toObject();
         ItemType type = static_cast<ItemType>(jsonItem.value(QStringLiteral("type")).toInt(0));
 
         switch (type) {
         case FolderMenuItem:
-            addItem(createFromJson(jsonItem));
+            itemId = jsonItem[QStringLiteral("name")].toString();
+            reloadOrAddItem<FeedFolder>(*this, itemId, jsonItem, &FeedFolder::findFolder, &FeedFolder::createFromJson);
             break;
         case FeedMenuItem:
-            addItem(Feed::createFromJson(jsonItem));
+            itemId = jsonItem[QStringLiteral("uuid")].toString();
+            reloadOrAddItem<Feed>(*this, itemId, jsonItem, &FeedFolder::findFeed, &Feed::createFromJson);
             break;
         default:
             break;
@@ -297,4 +334,14 @@ bool FeedFolder::matchSearch(const QString &search) const
             return true;
     }
     return false;
+}
+
+QDateTime FeedFolder::lastModified() const
+{
+    return m_lastModified;
+}
+
+void FeedFolder::setLastModified(QDateTime value)
+{
+    m_lastModified = value;
 }

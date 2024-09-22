@@ -11,7 +11,7 @@ Kirigami.ScrollablePage {
     id: settingsUpdateTimer
     interval: 750
     onTriggered: {
-      App.sharingService.setSettings(urlField.text, authTokenField.text)
+      App.cloudProvider.setSettings(urlField.text, authTokenField.text)
     }
   }
 
@@ -22,14 +22,14 @@ Kirigami.ScrollablePage {
       Controls.TextField {
         id: urlField
         Kirigami.FormData.label: i18n("URL")
-        text: App.sharingService.url
+        text: App.cloudProvider.url
         onTextChanged: settingsUpdateTimer.start()
       }
 
       Controls.TextField {
         id: authTokenField
         Kirigami.FormData.label: i18n("Application token")
-        text: App.sharingService.authToken
+        text: App.cloudProvider.authToken
         onTextChanged: settingsUpdateTimer.start()
       }
 
@@ -38,13 +38,14 @@ Kirigami.ScrollablePage {
       }
 
       Text {
-        Kirigami.FormData.label: i18n("Status")
+        Kirigami.FormData.label: i18n("Sharing status")
         text: App.sharingService.enabled ? i18n("Ready") : i18n("Not ready")
       }
-    }
 
-    Controls.BusyIndicator {
-      visible: App.sharingService.inProgress
+      Controls.BusyIndicator {
+        Kirigami.FormData.label: i18n("Loading sharing service")
+        visible: App.sharingService.inProgress
+      }
     }
   }
 }

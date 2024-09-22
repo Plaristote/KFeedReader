@@ -13,6 +13,7 @@ class QNetworkAccessManager;
 class QNetworkReply;
 class QDomNode;
 class QDomElement;
+class QJsonArray;
 
 class Feed : public MenuItem
 {
@@ -88,7 +89,9 @@ public:
     QStringList persistentProperties() const;
     void loadFromJson(QJsonObject &) override;
     void saveToJson(QJsonObject &) const override;
-    static Feed *createFromJson(QJsonObject &, QObject *parent = nullptr);
+    void saveArticlesToJson(QJsonArray &) const;
+    void loadArticlesFromJson(const QJsonArray &);
+    static Feed *createFromJson(QJsonObject &);
 
     bool hasTextInput() const
     {

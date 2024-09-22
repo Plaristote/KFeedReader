@@ -89,6 +89,24 @@ void Feed::loadFromJson(QJsonObject &root)
     m_feedUpdater.restartUpdateTimer();
 }
 
+void Feed::loadArticlesFromJson(const QJsonArray &articlesJson)
+{
+    for (auto *article : m_articles)
+        article->deleteLater();
+    m_articles.clear();
+    for (QJsonValue articleJson : articlesJson) {
+        FeedArticle *article = newArticle();
+        QJsonObject articleJsonObject = articleJson.toObject();
+
+        article->loadFromJson(articleJsonObject);
+        if (!findArticleByGuid(article->guid()))
+            m_articles << article;
+        else
+            delete article;
+    }
+    Q_EMIT articlesChanged();
+}
+
 void Feed::loadArticleFile()
 {
     QFile file(storagePath());
@@ -97,20 +115,7 @@ void Feed::loadArticleFile()
         QJsonArray articlesJson = QJsonDocument::fromJson(file.readAll()).array();
 
         qDebug() << "Successfully loaded article JSON";
-        for (auto *article : m_articles)
-            article->deleteLater();
-        m_articles.clear();
-        for (QJsonValue articleJson : articlesJson) {
-            FeedArticle *article = newArticle();
-            QJsonObject articleJsonObject = articleJson.toObject();
-
-            article->loadFromJson(articleJsonObject);
-            if (!findArticleByGuid(article->guid()))
-                m_articles << article;
-            else
-                delete article;
-        }
-        Q_EMIT articlesChanged();
+        loadArticlesFromJson(articlesJson);
     } else
         qDebug() << "Failed to load JSON article file" << storagePath();
 }
@@ -134,6 +139,16 @@ void Feed::saveToJson(QJsonObject &root) const
     saveArticleFile();
 }
 
+void Feed::saveArticlesToJson(QJsonArray &articlesJson) const
+{
+    for (FeedArticle *article : m_articles) {
+        QJsonObject articleJson;
+
+        article->saveToJson(articleJson);
+        articlesJson << articleJson;
+    }
+}
+
 void Feed::saveArticleFile() const
 {
     QFile file(storagePath());
@@ -141,19 +156,14 @@ void Feed::saveArticleFile() const
     if (file.open(QIODevice::WriteOnly)) {
         QJsonArray articlesJson;
 
-        for (FeedArticle *article : m_articles) {
-            QJsonObject articleJson;
-
-            article->saveToJson(articleJson);
-            articlesJson << articleJson;
-        }
+        saveArticlesToJson(articlesJson);
         file.write(QJsonDocument(articlesJson).toJson());
     }
 }
 
-Feed *Feed::createFromJson(QJsonObject &root, QObject *parent)
+Feed *Feed::createFromJson(QJsonObject &root)
 {
-    Feed *item = new Feed(parent);
+    Feed *item = new Feed();
 
     item->loadFromJson(root);
     return item;

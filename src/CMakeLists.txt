@@ -22,7 +22,9 @@ set(kfeedreader_src
     reader-json.cpp
     ttlsettings.cpp
     htmlprobe.cpp
+    cloudprovider.cpp
     sharingservice.cpp
+    syncservice.cpp
     resources.qrc)
 
 if (WIN32)
