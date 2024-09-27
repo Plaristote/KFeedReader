@@ -25,6 +25,21 @@ set(kfeedreader_src
     sharingservice.cpp
     resources.qrc)
 
+set(kfeedreader_link_libraries
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Qml
+    Qt6::Quick
+    Qt6::QuickControls2
+    Qt6::Svg
+    Qt6::Multimedia
+    Qt6::Xml
+    Qt6::${WEBVIEW_PROVIDER}
+    KF6::I18n
+    KF6::CoreAddons
+    KF6::ConfigCore
+    KF6::ConfigGui)
+
 if (${WEBVIEW_PROVIDER} EQUAL "WebEngineQuick")
   set(kfeedreader_src ${kfeedreader_src} webengine.qrc)
 else()
@@ -37,21 +52,13 @@ else()
     add_executable(fluxkap ${kfeedreader_src})
 endif()
 
-target_link_libraries(fluxkap
-    Qt6::Core
-    Qt6::Gui
-    Qt6::Qml
-    Qt6::Quick
-    Qt6::QuickControls2
-    Qt6::Svg
-    Qt6::Multimedia
-    Qt6::Xml
-    Qt6::${WEBVIEW_PROVIDER}
-    Qt6::Widgets
-    KF6::I18n
-    KF6::CoreAddons
-    KF6::ConfigCore
-    KF6::ConfigGui)
+if (NOT ANDROID)
+  set(kfeedreader_link_libraries
+    ${kfeedreader_link_libraries}
+    Qt6::Widgets)
+endif()
+
+target_link_libraries(fluxkap ${kfeedreader_link_libraries})
 
 if (ANDROID)
     kirigami_package_breeze_icons(ICONS
