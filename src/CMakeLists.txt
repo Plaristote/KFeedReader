@@ -25,6 +25,12 @@ set(kfeedreader_src
     sharingservice.cpp
     resources.qrc)
 
+if (${WEBVIEW_PROVIDER} EQUAL "WebEngineQuick")
+  set(kfeedreader_src ${kfeedreader_src} webengine.qrc)
+else()
+  set(kfeedreader_src ${kfeedreader_src} webview.qrc)
+endif()
+
 if (WIN32)
     add_executable(fluxkap ${kfeedreader_src} contents/windows.rc)
 else()
@@ -40,7 +46,7 @@ target_link_libraries(fluxkap
     Qt6::Svg
     Qt6::Multimedia
     Qt6::Xml
-    Qt6::WebEngineQuick
+    Qt6::${WEBVIEW_PROVIDER}
     Qt6::Widgets
     KF6::I18n
     KF6::CoreAddons

@@ -5,6 +5,9 @@ import QtQuick.Controls as Controls
 WebEngineView {
   id: webView
   property bool fullScreen: false
+  readonly property bool fullScreenEnabled: true
+  readonly property bool searchEnabled: true
+  readonly property size frameMargin: Qt.size(0, 0)
 
   profile.persistentCookiesPolicy: WebEngineProfile.ForcePersistentCookies
   profile.offTheRecord: false

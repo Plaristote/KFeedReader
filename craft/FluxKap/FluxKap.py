@@ -12,14 +12,17 @@ class subinfo(info.infoclass):
     def setDependencies(self):
         self.buildDependencies["dev-utils/pkg-config"] = "default"
         self.runtimeDependencies["libs/qt/qtbase"] = "default"
-        self.runtimeDependencies["libs/qt/qtwebengine"] = "default"
         self.runtimeDependencies["kirigami"] = "default"
         self.runtimeDependencies["kirigami-addons"] = "default"
         self.runtimeDependencies["kcoreaddons"] = "default"
         self.runtimeDependencies["ki18n"] = "default"
-        self.runtimeDependencies["breeze"] = "default"
-        self.runtimeDependencies["breeze-icons"] = "default"
         self.runtimeDependencies["kiconthemes"] = "default"
+        if not CraftCore.compiler.isAndroid:
+            self.runtimeDependencies["libs/qt/qtwebengine"] = "default"
+            self.runtimeDependencies["breeze"] = "default"
+            self.runtimeDependencies["breeze-icons"] = "default"
+        else:
+            self.runtimeDependencies["libs/qt/qtwebview"] = "default"
         if CraftCore.compiler.isMinGW():
             self.runtimeDependencies["libs/runtime"] = None
 

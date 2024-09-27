@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickStyle>
+#include <QResource>
 #include <QUrl>
 #ifdef Q_OS_ANDROID
 #include <GuiQApplication>
@@ -20,8 +21,12 @@
 #include "feedarticle.h"
 #include "feedfolder.h"
 #include "fluxkapconfig.h"
+#ifdef APP_WEBENGINE_DISABLED
+#include <QtWebView>
+#else
 #include <QQuickWebEngineProfile>
 #include <QtWebEngineQuick/qtwebenginequickglobal.h>
+#endif
 
 #ifdef Q_OS_WINDOWS
 #include <QDebug>
@@ -40,7 +45,11 @@ Q_DECL_EXPORT
 
 int main(int argc, char *argv[])
 {
+#ifdef APP_WEBENGINE_DISABLED
+    QtWebView::initialize();
+#else
     QtWebEngineQuick::initialize();
+#endif
 
 #ifdef Q_OS_ANDROID
     QGuiApplication app(argc, argv);
@@ -72,6 +81,12 @@ int main(int argc, char *argv[])
     KLocalizedString::setApplicationDomain("FluxKap");
     QCoreApplication::setOrganizationName(QStringLiteral("KDE"));
 
+#ifdef APP_WEBENGINE_DISABLED
+    QResource::registerResource(QStringLiteral("webview.rcc"));
+#else
+    QResource::registerResource(QStringLiteral("webengine.rcc"));
+#endif
+
     KAboutData aboutData(
         // The program name used internally.
         QStringLiteral("kfeedreader"),
@@ -97,11 +112,13 @@ int main(int argc, char *argv[])
     KAboutData::setApplicationData(aboutData);
     QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/icon.png")));
 
+#ifndef APP_WEBENGINE_DISABLED
     QQuickWebEngineProfile *webEngineProfile = QQuickWebEngineProfile::defaultProfile();
     webEngineProfile->setPersistentCookiesPolicy(QQuickWebEngineProfile::ForcePersistentCookies);
     webEngineProfile->setOffTheRecord(false);
     webEngineProfile->setStorageName(QStringLiteral("FluxKap"));
     webEngineProfile->setCachePath(webEngineProfile->persistentStoragePath() + QStringLiteral("/Cache"));
+#endif
 
     QQmlApplicationEngine engine;
 

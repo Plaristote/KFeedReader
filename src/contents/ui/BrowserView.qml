@@ -9,13 +9,16 @@ Kirigami.Page {
   property alias topBar: topBarLoader.sourceComponent
 
   function toggleSearch() {
-    searchField.visible = !searchField.visible;
-    if (searchField.visible)
-      searchTextField.forceActiveFocus()
+    if (webview.searchEnabled) {
+      searchField.visible = !searchField.visible;
+      if (searchField.visible)
+        searchTextField.forceActiveFocus()
+    }
   }
 
   Shortcut {
     sequence: "Ctrl+F"
+    enabled: webview.searchEnabled
     onActivatedAmbiguously: toggleSearch()
     onActivated: toggleSearch()
   }

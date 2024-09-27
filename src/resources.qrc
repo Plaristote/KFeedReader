@@ -30,7 +30,6 @@
         <file alias="FeedSearchField.qml">contents/ui/FeedSearchField.qml</file>
         <file alias="FeedActions.qml">contents/ui/FeedActions.qml</file>
         <file alias="FolderActions.qml">contents/ui/FolderActions.qml</file>
-        <file alias="AppWebView.qml">contents/ui/AppWebView.qml</file>
         <file alias="Breadcrumbs.qml">contents/ui/Breadcrumbs.qml</file>
         <file alias="MainMenuBar.qml">contents/ui/MainMenuBar.qml</file>
         <file alias="PageMenu.qml">contents/ui/PageMenu.qml</file>

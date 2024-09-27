@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="AppWebView.qml">contents/ui/qtwebview/AppWebView.qml</file>
+    </qresource>
+</RCC>

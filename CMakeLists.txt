@@ -28,9 +28,21 @@ ecm_setup_version(${PROJECT_VERSION}
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/src/version-fluxkap.h"
 )
 
-set(QT_EXTRA_COMPONENTS Multimedia Xml WebEngineQuick)
+set(QT_EXTRA_COMPONENTS Multimedia Xml)
 if (NOT ANDROID)
     list(APPEND QT_EXTRA_COMPONENTS Widgets)
+    set(WEBVIEW_PROVIDER WebEngineQuick)
+else()
+    set(WEBVIEW_PROVIDER WebView)
+endif()
+
+#set(WEBVIEW_PROVIDER WebView) # Uncomment to use WebView instead of WebEngine
+
+list(APPEND QT_EXTRA_COMPONENTS ${WEBVIEW_PROVIDER})
+
+if (NOT ${WEBVIEW_PROVIDER} STREQUAL "WebEngineQuick")
+    message(STATUS "Using ${WEBVIEW_PROVIDER} instead of WebEngineQuick")
+    add_compile_definitions(APP_WEBENGINE_DISABLED)
 endif()
 
 find_package(Qt6 ${QT6_MIN_VERSION} REQUIRED COMPONENTS Core Gui Qml QuickControls2 Svg ${QT_EXTRA_COMPONENTS})
