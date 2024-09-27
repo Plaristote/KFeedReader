@@ -5,7 +5,7 @@
 #include <QResource>
 #include <QUrl>
 #ifdef Q_OS_ANDROID
-#include <GuiQApplication>
+#include <QGuiApplication>
 #else
 #include <QApplication>
 #endif
