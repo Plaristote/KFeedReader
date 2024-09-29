@@ -7,6 +7,7 @@ import "."
 Kirigami.Page {
   property alias url: webview.url
   property alias topBar: topBarLoader.sourceComponent
+  property alias fullTitle: webview.title
 
   function toggleSearch() {
     if (webview.searchEnabled) {

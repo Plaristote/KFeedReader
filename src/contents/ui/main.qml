@@ -14,7 +14,11 @@ Kirigami.ApplicationWindow {
     property int titleMaxLength: 40
     id: window
 
-    title: i18n("FluxKap")
+    title: {
+        if (pageStack.currentItem.model != App.rootFolder)
+            return pageStack.currentItem.fullTitle || pageStack.currentItem.title;
+        return i18n("FluxKap");
+    }
 
     minimumWidth: Kirigami.Units.gridUnit * 20
     minimumHeight: Kirigami.Units.gridUnit * 20
@@ -37,8 +41,6 @@ Kirigami.ApplicationWindow {
         interval: 1000
         onTriggered: App.saveWindowGeometry(window)
     }
-
-    property int counter: 0
 
     menuBar: MainMenuBar {
       globalActions: window.globalDrawer.actions

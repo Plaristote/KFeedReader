@@ -6,6 +6,5 @@ import "."
 BrowserView {
   required property QtObject model
 
-  title: model.comments.toString()
   url: model.comments
 }
