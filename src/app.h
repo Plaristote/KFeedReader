@@ -7,12 +7,14 @@
 
 class QQuickWindow;
 class FeedFolder;
+class JavaScriptPlugins;
 
 class App : public QObject
 {
     Q_OBJECT
 
     Q_PROPERTY(FeedFolder *rootFolder READ rootFolder CONSTANT)
+    Q_PROPERTY(JavaScriptPlugins *javaScriptPlugins READ javaScriptPlugins CONSTANT)
     Q_PROPERTY(SharingService *sharingService READ sharingService CONSTANT)
 public:
     App(QObject *parent = nullptr);
@@ -26,6 +28,11 @@ public:
     FeedFolder *rootFolder() const
     {
         return m_rootFolder;
+    }
+
+    JavaScriptPlugins *javaScriptPlugins() const
+    {
+        return m_javaScriptPlugins;
     }
 
     SharingService *sharingService() const
@@ -44,6 +51,7 @@ public Q_SLOTS:
 
 private:
     FeedFolder *m_rootFolder;
+    JavaScriptPlugins *m_javaScriptPlugins;
     SharingService *m_sharingService;
     QTimer m_autosaveTimer;
 };
