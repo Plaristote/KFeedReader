@@ -23,6 +23,7 @@ set(kfeedreader_src
     ttlsettings.cpp
     htmlprobe.cpp
     sharingservice.cpp
+    javascriptplugins.cpp
     resources.qrc)
 
 set(kfeedreader_link_libraries

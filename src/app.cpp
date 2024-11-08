@@ -2,6 +2,7 @@
 #include "feed.h"
 #include "feedfetch.h"
 #include "feedfolder.h"
+#include "javascriptplugins.h"
 #include <KSharedConfig>
 #include <KWindowConfig>
 #include <QDebug>
@@ -18,6 +19,7 @@ void exportAsOpmlDocument(const FeedFolder *folder, QDomDocument &document);
 App::App(QObject *parent)
     : QObject(parent)
 {
+    m_javaScriptPlugins = new JavaScriptPlugins();
     m_sharingService = new SharingService();
     m_rootFolder = new FeedFolder();
     m_autosaveTimer.setInterval(1000 * 60 * 90); // 1.5h but I couldnt get chrono literals to work
@@ -28,6 +30,7 @@ App::App(QObject *parent)
 App::~App()
 {
     save();
+    m_javaScriptPlugins->deleteLater();
     m_sharingService->deleteLater();
     m_rootFolder->deleteLater();
 }

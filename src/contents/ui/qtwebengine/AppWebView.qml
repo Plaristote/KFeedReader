@@ -1,6 +1,7 @@
 import QtQuick
 import QtWebEngine
 import QtQuick.Controls as Controls
+import org.kde.fluxkap 1.0
 
 WebEngineView {
   id: webView
@@ -32,6 +33,16 @@ WebEngineView {
     webView.fullScreen = false;
     webView.fullScreenCancelled();
     window.showNormal();
+  }
+
+  onLoadingChanged: function (loadRequest) {
+    if (loadRequest.status == WebEngineView.LoadSucceededStatus) {
+      for (let plugin of App.javaScriptPlugins.plugins) {
+        if (plugin.matchesDomain(loadRequest.url)) {
+          webView.runJavaScript(plugin.source);
+        }
+      }
+    }
   }
 
   Shortcut {
