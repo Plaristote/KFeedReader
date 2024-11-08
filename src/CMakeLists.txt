@@ -41,9 +41,11 @@ set(kfeedreader_link_libraries
     KF6::ConfigCore
     KF6::ConfigGui)
 
-if (${WEBVIEW_PROVIDER} EQUAL "WebEngineQuick")
+if ("${WEBVIEW_PROVIDER}" STREQUAL "WebEngineQuick")
+  message(STATUS "Using webengine.qrc")
   set(kfeedreader_src ${kfeedreader_src} webengine.qrc)
 else()
+  message(STATUS "Using webview.qrc")
   set(kfeedreader_src ${kfeedreader_src} webview.qrc)
 endif()
 
