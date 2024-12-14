@@ -41,6 +41,7 @@ public:
     }
 
     static QString storagePath();
+    static QString backupStoragePath();
 
 public Q_SLOTS:
     void load();

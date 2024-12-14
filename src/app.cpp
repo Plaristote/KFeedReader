@@ -57,6 +57,11 @@ QString App::storagePath()
     return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QStringLiteral("/feeds.json");
 }
 
+QString App::backupStoragePath()
+{
+    return storagePath() + QStringLiteral(".backup");
+}
+
 void App::load()
 {
     QFile file(storagePath());
@@ -66,6 +71,7 @@ void App::load()
         QJsonObject root = document.object();
 
         m_rootFolder->loadFromJson(root);
+        QFile::copy(storagePath(), backupStoragePath());
     } else
         qDebug() << "App::load: failed to open" << storagePath();
 }
