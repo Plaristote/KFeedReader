@@ -33,6 +33,21 @@ static QUrl makeUrlFromHref(const QUrl &oldUrl, QString href)
     return QUrl(href);
 }
 
+static void planReFetch(FeedFetcher &feedFetcher, QUrl newUrl)
+{
+    Feed *feed = &(feedFetcher.feed());
+    QTimer *timer = new QTimer(feed);
+
+    QObject::connect(timer, &QTimer::timeout, feed, [feed, timer, newUrl]() {
+        FeedFetcher *fetcher = new FeedFetcher(*feed);
+        fetcher->redirectTo(newUrl);
+        timer->deleteLater();
+    });
+    timer->setInterval(300);
+    timer->setSingleShot(true);
+    timer->start();
+}
+
 void probeHtmlForFeedAndRefetch(const QByteArray &body, FeedFetcher &feedFetcher)
 {
     static const QStringList formatPatterns = QStringList()
@@ -64,7 +79,7 @@ void probeHtmlForFeedAndRefetch(const QByteArray &body, FeedFetcher &feedFetcher
         if (hrefMatch.hasMatch()) {
             QUrl newUrl = makeUrlFromHref(feed.xmlUrl(), hrefMatch.captured(1));
 
-            feedFetcher.redirectTo(QUrl(newUrl));
+            planReFetch(feedFetcher, QUrl(newUrl));
             break;
         }
     }
