@@ -6,8 +6,11 @@
 #include "reader-rss.h"
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QRegularExpression>
 
 void probeHtmlForFeedAndRefetch(const QByteArray &body, FeedFetcher &);
+
+extern const QMap<const char *, std::function<QNetworkRequest(QUrl)>> customRequestCreators;
 
 QNetworkReply *FeedFetcher::g_pendingReply = nullptr;
 QVector<FeedFetcher *> FeedFetcher::g_pendingFetchers;
@@ -61,13 +64,32 @@ Feed &FeedFetcher::feed()
     return m_feed;
 }
 
+static QNetworkRequest createRequest(QUrl url)
+{
+    QString host = url.host();
+
+    qDebug() << "createRequest for host" << host;
+    for (auto it = customRequestCreators.begin(); it != customRequestCreators.end(); ++it) {
+        QByteArray pattern = QByteArray("(.*\\.)?") + QByteArray(it.key()).replace(".", "\\.");
+        QRegularExpression matcher(QString::fromUtf8(pattern));
+
+        if (host.contains(matcher)) {
+            qDebug() << "createRequest:" << it.key() << "detected";
+            return it.value()(url);
+        }
+    }
+    qDebug() << "createRequest: nothing of note";
+    return QNetworkRequest(url);
+}
+
 void FeedFetcher::fetch()
 {
     if (g_pendingReply) {
         g_pendingFetchers.push_back(this);
         onStarted();
     } else if (m_requestCounter < 5) {
-        QNetworkRequest request(m_feed.m_xmlUrl);
+        QNetworkRequest request = createRequest(m_feed.m_xmlUrl);
+        request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::ManualRedirectPolicy);
         request.setRawHeader("Accept", "application/rss+xml, application/atom+xml, application/feed+json, text/xml, text/html");
         QNetworkReply *reply = m_feed.m_network->get(request);
 

@@ -9,6 +9,7 @@ set(kfeedreader_src
     feedfolder.cpp
     feed.cpp
     feedfetch.cpp
+    feedfetch_customrequestcreators.cpp
     feedupdate.cpp
     feedfavicon.cpp
     feedarticle.cpp
