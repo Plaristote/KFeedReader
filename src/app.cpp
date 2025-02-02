@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QDomDocument>
 #include <QFile>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QQuickWindow>
@@ -85,7 +86,10 @@ void App::save()
 
         m_rootFolder->triggerBeforeSave();
         m_rootFolder->saveToJson(root);
-        file.write(QJsonDocument(root).toJson());
+        if (root[QStringLiteral("items")].toArray().size() > 0)
+            file.write(QJsonDocument(root).toJson());
+        else
+            qDebug() << "App::save: not writing to disk, items array is empty";
     } else
         qDebug() << "App::save: failed to open" << storagePath();
 }
