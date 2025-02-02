@@ -5,19 +5,27 @@
 #include <QFile>
 #include <QStandardPaths>
 
+static const QString builtinFolder = QStringLiteral(":/javascript/");
+
 static QString pluginsFolder()
 {
     return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QStringLiteral("/javascript/");
 }
 
-static QString settingsPath()
+static QString javaScriptPath(const QString &path, bool builtin)
 {
-    return pluginsFolder() + QStringLiteral("plugins.json");
+    return (builtin ? builtinFolder : pluginsFolder()) + path;
 }
 
 JavaScriptPlugins::JavaScriptPlugins(QObject* parent) : QObject(parent)
 {
-    QFile file(settingsPath());
+    load(builtinFolder + QStringLiteral("plugins.json"), true);
+    load(pluginsFolder() + QStringLiteral("plugins.json"), false);
+}
+
+void JavaScriptPlugins::load(const QString &path, bool builtin)
+{
+    QFile file(path);
 
     if (file.open(QIODevice::ReadOnly)) {
         QJsonDocument document = QJsonDocument::fromJson(file.readAll());
@@ -25,11 +33,13 @@ JavaScriptPlugins::JavaScriptPlugins(QObject* parent) : QObject(parent)
 
         for (QJsonValue value : document.array()) {
             if (value.isObject()) {
-                m_plugins << JavaScriptPlugin::factory(this, value.toObject());
+                m_plugins << JavaScriptPlugin::factory(this, value.toObject(), builtin);
             } else {
                 qDebug() << "JavaScriptPlugins: plugins.json: malformed value";
             }
         }
+    } else {
+        qDebug() << "JavaScriptPlugins: failed to load" << path;
     }
 }
 
@@ -37,14 +47,14 @@ JavaScriptPlugin::JavaScriptPlugin(QObject* parent) : QObject(parent)
 {
 }
 
-JavaScriptPlugin * JavaScriptPlugin::factory(QObject *parent, const QJsonObject &data)
+JavaScriptPlugin *JavaScriptPlugin::factory(QObject *parent, const QJsonObject &data, bool builtin)
 {
     JavaScriptPlugin* plugin = new JavaScriptPlugin(parent);
     QJsonValue domains = data[QStringLiteral("domains")];
     QJsonValue source = data[QStringLiteral("src")];
 
     if (source.isString()) {
-        QString filepath = pluginsFolder() + source.toString();
+        QString filepath = javaScriptPath(source.toString(), builtin);
         QFile file(filepath);
 
         plugin->m_name = file.fileName();

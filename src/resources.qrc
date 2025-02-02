@@ -46,4 +46,8 @@
         <file alias="feed.png">contents/icons/feed.png</file>
         <file alias="folder.png">contents/icons/folder.png</file>
     </qresource>
+    <qresource prefix="/javascript">
+        <file alias="plugins.json">contents/javascript/plugins.json</file>
+        <file alias="youtubeads.js">contents/javascript/youtubeads.js</file>
+    </qresource>
 </RCC>

@@ -15,7 +15,7 @@ class JavaScriptPlugin : public QObject
 public:
     explicit JavaScriptPlugin(QObject *parent = nullptr);
 
-    static JavaScriptPlugin* factory(QObject *parent, const QJsonObject&);
+    static JavaScriptPlugin *factory(QObject *parent, const QJsonObject &, bool builtin = false);
 
     const QString& name() const
     {
@@ -48,5 +48,7 @@ public:
     }
 
 private:
+    void load(const QString &path, bool builtin);
+
     QList<JavaScriptPlugin*> m_plugins;
 };
