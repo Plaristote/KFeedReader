@@ -54,7 +54,7 @@ Item {
     text: i18n("Edit")
     icon.name: "edit-entry"
     tooltip: i18n("Change the settings of a feed")
-    onTriggered: pageStack.push(Qt.resolvedUrl("./EditFeed.qml"), { source: root.model })
+    onTriggered: pageStack.layers.push(Qt.resolvedUrl("./EditFeed.qml"), { source: root.model })
   }
 
   Kirigami.Action {

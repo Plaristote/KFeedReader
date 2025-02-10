@@ -63,7 +63,7 @@ Item {
       text: i18n("Configure")
       icon.name: "configure"
       tooltip: i18n("Change a folder's identity and re-arrange its contents")
-      onTriggered: pageStack.push(Qt.resolvedUrl("EditFolder.qml"), { model: root.model })
+      onTriggered: pageStack.layers.push(Qt.resolvedUrl("EditFolder.qml"), { model: root.model })
     },
     Kirigami.Action {
       text: i18n("Remove")
