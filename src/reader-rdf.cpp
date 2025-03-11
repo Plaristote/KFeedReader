@@ -92,7 +92,7 @@ void RdfFeedReader::loadArticle(const QDomElement &itemElement, FeedArticle &art
     QDomElement encodedContentElement = findElementWithOptionalNamespace(itemElement, QStringLiteral("content:encoded"));
 
     article.setTitle(titleElement.isNull() ? QString() : titleElement.text());
-    article.setPublicationDate(dateElement.isNull() ? QDateTime() : QDateTime::fromString(dateElement.text(), Qt::ISODateWithMs));
+    article.updatePublicationDate(dateElement.isNull() ? QDateTime() : QDateTime::fromString(dateElement.text(), Qt::ISODateWithMs));
     article.setLink(QUrl(itemElement.attribute(QStringLiteral("rdf:about"))));
     article.setDescription(descriptionElement.isNull() ? QString() : descriptionElement.text());
 }

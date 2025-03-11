@@ -67,6 +67,7 @@ public Q_SLOTS:
     void setGuid(const QString &guid);
     void setLink(const QUrl &link);
     void setPublicationDate(const QDateTime &publicationDate);
+    void updatePublicationDate(const QDateTime &publicationDate);
     void setSource(const QUrl &source);
     void setTitle(const QString &title);
 

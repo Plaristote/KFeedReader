@@ -88,7 +88,7 @@ void AtomFeedReader::loadArticle(const QDomElement &node, FeedArticle &article)
     article.setDescription(summaryElement.isNull() ? QString() : summaryElement.text());
     article.setGuid(guidElement.isNull() ? QString() : guidElement.text());
     article.setLink(linkElement.isNull() ? QUrl() : QUrl(linkElement.attribute(QStringLiteral("href"))));
-    article.setPublicationDate(publishedElement.isNull() ? QDateTime() : QDateTime::fromString(publishedElement.text(), Qt::ISODate));
+    article.updatePublicationDate(QDateTime::fromString(publishedElement.text(), Qt::ISODate));
     article.setTitle(titleElement.isNull() ? QString() : titleElement.text());
 
     for (QDomElement mediaGroup = node.firstChildElement(QStringLiteral("media:group")); !mediaGroup.isNull();

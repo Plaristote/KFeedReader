@@ -138,7 +138,7 @@ void JsonFeedReader::loadArticle(const QJsonObject &data, FeedArticle &article)
         article.setAuthor(author[attributes[NameAttribute]].toString());
         article.setAuthorUrl(QUrl(author[attributes[UrlAttribute]].toString()));
     }
-    article.setPublicationDate(parseJsonDate(dateValue, modificationDate));
+    article.updatePublicationDate(parseJsonDate(dateValue, modificationDate));
     article.setSource(QUrl(data[attributes[ExternalLinkAttribute]].toString()));
     if (data[attributes[AttachmentsAttribute]].isArray())
         loadAttachments(data[attributes[AttachmentsAttribute]].toArray(), article);

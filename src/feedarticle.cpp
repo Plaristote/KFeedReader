@@ -221,12 +221,19 @@ QDateTime FeedArticle::publicationDate() const
 
 void FeedArticle::setPublicationDate(const QDateTime &publicationDate)
 {
-    if (m_publicationDate == publicationDate) {
+    QDateTime newValue = publicationDate.isValid() ? publicationDate : QDateTime::currentDateTime();
+
+    if (m_publicationDate == newValue) {
         return;
     }
-
-    m_publicationDate = publicationDate;
+    m_publicationDate = newValue;
     Q_EMIT publicationDateChanged(m_publicationDate);
+}
+
+void FeedArticle::updatePublicationDate(const QDateTime &publicationDate)
+{
+    if (publicationDate.isValid() || !m_publicationDate.isValid())
+        setPublicationDate(publicationDate);
 }
 
 QUrl FeedArticle::source() const
