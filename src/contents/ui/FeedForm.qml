@@ -132,12 +132,6 @@ Kirigami.ScrollablePage {
       icon.name: "dialog-ok-apply"
       tooltip: i18n("Adds this feed to the current folder")
       onTriggered: page.confirmed()
-    },
-    Kirigami.Action {
-      text: i18n("Cancel")
-      icon.name: "dialog-cancel"
-      tooltip: i18n("Discard changes and go back to the previous page")
-      onTriggered: pageStack.pop();
     }
   ]
 }
