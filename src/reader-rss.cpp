@@ -123,6 +123,7 @@ void RssFeedReader::loadArticle(const QDomElement &node, FeedArticle &article)
     article.setDescription(descriptionElement.isNull() ? QString() : descriptionElement.text());
     article.setGuid(guidElement.isNull() ? QString() : guidElement.text());
     article.setLink(linkElement.isNull() ? QUrl() : QUrl(linkElement.text()));
+    article.setTitle(titleElement.isNull() ? QString() : titleElement.text());
     article.updatePublicationDate(getPubDateTime(pubDateElement));
 
     if (!enclosureElement.isNull()) {
