@@ -1,4 +1,5 @@
 #include "feedfetch.h"
+#include <QDebug>
 #include <QMap>
 #include <QNetworkRequest>
 
@@ -17,6 +18,11 @@ const QMap<const char *, std::function<QNetworkRequest(QUrl)>> customRequestCrea
      [](QUrl url) {
          url.setPath(url.path().replace(QStringLiteral("/list"), QStringLiteral("/rss")));
          return QNetworkRequest(url);
-     }}
+     }},
 
-};
+    {"twitch.tv", [](QUrl url) {
+         QString username = url.path();
+         QUrl altUrl(QStringLiteral("https://twitchrss.appspot.com/vod") + username);
+         qDebug() << QStringLiteral("Fetching instead") << altUrl;
+         return QNetworkRequest(altUrl);
+     }}};
