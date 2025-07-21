@@ -57,6 +57,21 @@ Kirigami.ApplicationWindow {
         return null;
     }
 
+    function pushListView(fromView, newView, attributes) {
+        let deleteViews = false;
+        for (let i = 0 ; i < window.pageStack.items.length ; ++i) {
+            const view = window.pageStack.items[i];
+            if (!deleteViews) {
+                if (view == fromView) {
+                    deleteViews = true;
+                }
+            } else {
+                pageStack.removePage(view);
+            }
+        }
+        pageStack.push(newView, attributes);
+    }
+
     function openSharingDialog(article) {
         sharingDialog.model = article;
         sharingDialog.open();

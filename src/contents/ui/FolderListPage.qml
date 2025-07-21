@@ -67,7 +67,7 @@ Kirigami.ScrollablePage {
           action: Controls.Action {
             checkable: true
             checked: nextPage != null && nextPage.model == item
-            onTriggered: pageStack.push(item.view, { model: item })
+            onTriggered: window.pushListView(page, item.view, { model: item })
           }
         } // END delegate
       } // END Repeater

@@ -16,6 +16,11 @@ Kirigami.ScrollablePage {
   title: model.name
   actions: feedActions.actions
 
+  function isLastPageStackItemAnArticle() {
+    const model = pageStack.lastItem?.model;
+    return model && model.toString().indexOf("FeedArticle(") == 0;
+  }
+
   Item {
     implicitWidth: 0 // Workaround supposed KF6 Kirigami issue with page width
     implicitHeight: contentItem.height
@@ -81,7 +86,16 @@ Kirigami.ScrollablePage {
           action: Controls.Action {
             checkable: true
             checked: pageStack.lastItem.model == item
-            onTriggered: pageStack.push(page.feedViewUrl, { model: item, feed: page.model })
+            onTriggered: {
+              if (isLastPageStackItemAnArticle()) {
+                pageStack.lastItem.model = item;
+                pageStack.lastItem.feed = page.model;
+              } else {
+                pageStack.push(page.feedViewUrl, {
+                  model: item, feed: page.model
+                });
+              }
+            }
           }
         } // END delegate
       } // END Repeater

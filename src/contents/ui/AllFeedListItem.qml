@@ -19,7 +19,7 @@ Controls.ItemDelegate {
   action: Controls.Action {
     checkable: true
     checked: nextPage != null && nextPage.folder == root.model && nextPage.showUnreadOnly == unreadOnly
-    onTriggered: pageStack.push(Qt.resolvedUrl("./AggregatedFeed.qml"), {
+    onTriggered: window.pushListView(page, Qt.resolvedUrl("./AggregatedFeed.qml"), {
       folder: root.model,
       showUnreadOnly: root.unreadOnly
     })

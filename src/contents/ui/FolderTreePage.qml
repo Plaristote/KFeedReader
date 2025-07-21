@@ -93,7 +93,7 @@ Kirigami.Page {
         action: Controls.Action {
           checkable: true
           checked: nextPage != null && nextPage.model == menuItem
-          onTriggered: pageStack.push(menuItem.view, { model: menuItem })
+          onTriggered: window.pushListView(page, menuItem.view, { model: menuItem })
         }
       }
     }
