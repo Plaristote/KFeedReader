@@ -22,6 +22,7 @@ public:
     double progress() const override;
     ItemType itemType() const override;
     QString view() const override;
+    void markAsRead() override;
     int indexOf(const QObject *) const override;
     int childCount() const override;
     void fetch() override;

@@ -129,6 +129,12 @@ void AggregatedFeed::removeFolder(FeedFolder *folder)
     }
 }
 
+void AggregatedFeed::markAsRead()
+{
+    for (Feed *feed : m_feeds)
+        feed->markAsRead();
+}
+
 void AggregatedFeed::fetch()
 {
     for (Feed *feed : m_feeds)
