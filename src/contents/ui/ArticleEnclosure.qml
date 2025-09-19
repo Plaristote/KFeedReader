@@ -9,6 +9,15 @@ ColumnLayout {
   property bool withVideo: model.type.startsWith("video/")
   id: layout
 
+  function durationToTime(duration) {
+    duration = Math.ceil(duration / 1000);
+    let seconds = duration % 60;
+    let minutes = Math.ceil((duration - seconds) / 60) % 60;
+    let hours   = Math.ceil((duration - seconds - minutes * 60) / 60);
+    let pad     = value => String(value).padStart(2, '0');
+    return `${hours}:${pad(minutes)}:${pad(seconds)}`;
+  }
+
   states: [
     State {
       name: "fullscreen"
@@ -124,6 +133,10 @@ ColumnLayout {
               if (value != mediaPlayer.position)
                 mediaPlayer.position = value;
             }
+          }
+
+          Controls.Label {
+            text: durationToTime(mediaPlayer.position) + " / " + durationToTime(mediaPlayer.duration)
           }
 
           Controls.Button {
